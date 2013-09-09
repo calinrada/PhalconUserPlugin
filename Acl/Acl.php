@@ -1,12 +1,12 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Acl;
+namespace Crada\UserPlugin\Acl;
 
 use Phalcon\Mvc\User\Component,
     Phalcon\Acl\Adapter\Memory as AclMemory,
     Phalcon\Acl\Role as AclRole,
     Phalcon\Acl\Resource as AclResource,
-    Crada\Phalcon\UserPlugin\Models\User\User,
-    Crada\Phalcon\UserPlugin\Models\User\UserGroups;
+    Crada\UserPlugin\Models\User\User,
+    Crada\UserPlugin\Models\User\UserGroups;
 
 /**
  * Crada\Phalcon\UserPlugin\Acl\Acl

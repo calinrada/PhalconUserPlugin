@@ -1,7 +1,7 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Models\User;
+namespace Crada\UserPlugin\Models\User;
 
-class UserFailedLogins extends \Phalcon\Mvc\Model
+class UserPasswordChanges extends \Phalcon\Mvc\Model
 {
     /**
      *
@@ -23,9 +23,15 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
+     * @var string
      */
-    protected $attempted;
+    protected $user_agent;
+
+    /**
+     *
+     * @var string
+     */
+    protected $created_at;
 
     /**
      * Method to set the value of field id
@@ -64,14 +70,26 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field attempted
+     * Method to set the value of field user_agent
      *
-     * @param integer $attempted
+     * @param string $user_agent
      * @return $this
      */
-    public function setAttempted($attempted)
+    public function setUserAgent($user_agent)
     {
-        $this->attempted = $attempted;
+        $this->user_agent = $user_agent;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field created_at
+     *
+     * @param string $created_at
+     * @return $this
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
         return $this;
     }
 
@@ -106,22 +124,32 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field attempted
+     * Returns the value of field user_agent
      *
-     * @return integer
+     * @return string
      */
-    public function getAttempted()
+    public function getUserAgent()
     {
-        return $this->attempted;
+        return $this->user_agent;
+    }
+
+    /**
+     * Returns the value of field created_at
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
     }
 
     public function getSource()
     {
-        return 'user_failed_logins';
+        return 'user_password_changes';
     }
 
     /**
-     * @return UserFailedLogins[]
+     * @return UserPasswordChanges[]
      */
     public static function find($parameters = array())
     {
@@ -129,7 +157,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @return UserFailedLogins
+     * @return UserPasswordChanges
      */
     public static function findFirst($parameters = array())
     {
@@ -144,7 +172,8 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
             'id' => 'id',
             'user_id' => 'user_id',
             'ip_address' => 'ip_address',
-            'attempted' => 'attempted'
+            'user_agent' => 'user_agent',
+            'created_at' => 'created_at'
         );
     }
 }

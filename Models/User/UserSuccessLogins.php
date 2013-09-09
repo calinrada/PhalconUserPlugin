@@ -1,7 +1,7 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Models\User;
+namespace Crada\UserPlugin\Models\User;
 
-class UserPermissions extends \Phalcon\Mvc\Model
+class UserSuccessLogins extends \Phalcon\Mvc\Model
 {
     /**
      *
@@ -13,19 +13,19 @@ class UserPermissions extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $group_id;
+    protected $user_id;
 
     /**
      *
      * @var string
      */
-    protected $resource;
+    protected $ip_address;
 
     /**
      *
      * @var string
      */
-    protected $action;
+    protected $user_agent;
 
     /**
      * Method to set the value of field id
@@ -40,38 +40,38 @@ class UserPermissions extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field group_id
+     * Method to set the value of field user_id
      *
-     * @param integer $group_id
+     * @param integer $user_id
      * @return $this
      */
-    public function setGroupId($group_id)
+    public function setUserId($user_id)
     {
-        $this->group_id = $group_id;
+        $this->user_id = $user_id;
         return $this;
     }
 
     /**
-     * Method to set the value of field resource
+     * Method to set the value of field ip_address
      *
-     * @param string $resource
+     * @param string $ip_address
      * @return $this
      */
-    public function setResource($resource)
+    public function setIpAddress($ip_address)
     {
-        $this->resource = $resource;
+        $this->ip_address = $ip_address;
         return $this;
     }
 
     /**
-     * Method to set the value of field action
+     * Method to set the value of field user_agent
      *
-     * @param string $action
+     * @param string $user_agent
      * @return $this
      */
-    public function setAction($action)
+    public function setUserAgent($user_agent)
     {
-        $this->action = $action;
+        $this->user_agent = $user_agent;
         return $this;
     }
 
@@ -86,42 +86,42 @@ class UserPermissions extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field group_id
+     * Returns the value of field user_id
      *
      * @return integer
      */
-    public function getGroupId()
+    public function getUserId()
     {
-        return $this->group_id;
+        return $this->user_id;
     }
 
     /**
-     * Returns the value of field resource
+     * Returns the value of field ip_address
      *
      * @return string
      */
-    public function getResource()
+    public function getIpAddress()
     {
-        return $this->resource;
+        return $this->ip_address;
     }
 
     /**
-     * Returns the value of field action
+     * Returns the value of field user_agent
      *
      * @return string
      */
-    public function getAction()
+    public function getUserAgent()
     {
-        return $this->action;
+        return $this->user_agent;
     }
 
     public function getSource()
     {
-        return 'user_permissions';
+        return 'user_success_logins';
     }
 
     /**
-     * @return UserPermissions[]
+     * @return UserSuccessLogins[]
      */
     public static function find($parameters = array())
     {
@@ -129,7 +129,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @return UserPermissions
+     * @return UserSuccessLogins
      */
     public static function findFirst($parameters = array())
     {
@@ -142,9 +142,9 @@ class UserPermissions extends \Phalcon\Mvc\Model
     public function columnMap() {
         return array(
             'id' => 'id',
-            'group_id' => 'group_id',
-            'resource' => 'resource',
-            'action' => 'action'
+            'user_id' => 'user_id',
+            'ip_address' => 'ip_address',
+            'user_agent' => 'user_agent'
         );
     }
 }

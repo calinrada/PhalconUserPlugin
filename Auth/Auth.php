@@ -1,11 +1,11 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Auth;
+namespace Crada\UserPlugin\Auth;
 
 use Phalcon\Mvc\User\Component,
-    Crada\Phalcon\UserPlugin\Models\User\User,
-    Crada\Phalcon\UserPlugin\Models\User\UserRememberTokens,
-    Crada\Phalcon\UserPlugin\Models\User\UserSuccessLogins,
-    Crada\Phalcon\UserPlugin\Models\User\UserFailedLogins;
+    Crada\UserPlugin\Models\User\User,
+    Crada\UserPlugin\Models\User\UserRememberTokens,
+    Crada\UserPlugin\Models\User\UserSuccessLogins,
+    Crada\UserPlugin\Models\User\UserFailedLogins;
 
 /**
  * Crada\Phalcon\UserPlugin\Auth\Auth

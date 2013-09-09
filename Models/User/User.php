@@ -1,5 +1,5 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Models\User;
+namespace Crada\UserPlugin\Models\User;
 
 class User extends \Phalcon\Mvc\Model
 {

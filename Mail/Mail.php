@@ -1,11 +1,11 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Mail;
+namespace Crada\UserPlugin\Mail;
 
 use Phalcon\Mvc\User\Component,
     Phalcon\Mvc\View,
     Swift_Message as Message,
     Swift_SmtpTransport as Smtp,
-    Crada\Phalcon\UserPlugin\Models\User\User;
+    Crada\UserPlugin\Models\User\User;
 
 /**
  * Crada\Phalcon\UserPlugin\Mail\Mail

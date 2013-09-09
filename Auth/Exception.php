@@ -1,5 +1,5 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Auth;
+namespace Crada\UserPlugin\Auth;
 
 class Exception extends \Exception
 {

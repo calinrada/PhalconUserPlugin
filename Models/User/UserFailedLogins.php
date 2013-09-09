@@ -1,7 +1,7 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Models\User;
+namespace Crada\UserPlugin\Models\User;
 
-class UserRememberTokens extends \Phalcon\Mvc\Model
+class UserFailedLogins extends \Phalcon\Mvc\Model
 {
     /**
      *
@@ -19,19 +19,13 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $token;
-
-    /**
-     *
-     * @var string
-     */
-    protected $user_agent;
+    protected $ip_address;
 
     /**
      *
      * @var integer
      */
-    protected $created_at;
+    protected $attempted;
 
     /**
      * Method to set the value of field id
@@ -58,38 +52,26 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field token
+     * Method to set the value of field ip_address
      *
-     * @param string $token
+     * @param string $ip_address
      * @return $this
      */
-    public function setToken($token)
+    public function setIpAddress($ip_address)
     {
-        $this->token = $token;
+        $this->ip_address = $ip_address;
         return $this;
     }
 
     /**
-     * Method to set the value of field user_agent
+     * Method to set the value of field attempted
      *
-     * @param string $user_agent
+     * @param integer $attempted
      * @return $this
      */
-    public function setUserAgent($user_agent)
+    public function setAttempted($attempted)
     {
-        $this->user_agent = $user_agent;
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field created_at
-     *
-     * @param integer $created_at
-     * @return $this
-     */
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
+        $this->attempted = $attempted;
         return $this;
     }
 
@@ -114,42 +96,32 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field token
+     * Returns the value of field ip_address
      *
      * @return string
      */
-    public function getToken()
+    public function getIpAddress()
     {
-        return $this->token;
+        return $this->ip_address;
     }
 
     /**
-     * Returns the value of field user_agent
-     *
-     * @return string
-     */
-    public function getUserAgent()
-    {
-        return $this->user_agent;
-    }
-
-    /**
-     * Returns the value of field created_at
+     * Returns the value of field attempted
      *
      * @return integer
      */
-    public function getCreatedAt()
+    public function getAttempted()
     {
-        return $this->created_at;
+        return $this->attempted;
     }
 
     public function getSource()
     {
-        return 'user_remember_tokens';
+        return 'user_failed_logins';
     }
 
     /**
-     * @return UserRememberTokens[]
+     * @return UserFailedLogins[]
      */
     public static function find($parameters = array())
     {
@@ -157,7 +129,7 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @return UserRememberTokens
+     * @return UserFailedLogins
      */
     public static function findFirst($parameters = array())
     {
@@ -171,9 +143,8 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
         return array(
             'id' => 'id',
             'user_id' => 'user_id',
-            'token' => 'token',
-            'user_agent' => 'user_agent',
-            'created_at' => 'created_at'
+            'ip_address' => 'ip_address',
+            'attempted' => 'attempted'
         );
     }
 }

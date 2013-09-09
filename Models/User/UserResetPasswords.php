@@ -1,7 +1,7 @@
 <?php
-namespace Crada\Phalcon\UserPlugin\Models\User;
+namespace Crada\UserPlugin\Models\User;
 
-class UserPasswordChanges extends \Phalcon\Mvc\Model
+class UserResetPasswords extends \Phalcon\Mvc\Model
 {
     /**
      *
@@ -19,19 +19,25 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $ip_address;
-
-    /**
-     *
-     * @var string
-     */
-    protected $user_agent;
+    protected $code;
 
     /**
      *
      * @var string
      */
     protected $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    protected $modified_at;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $reset;
 
     /**
      * Method to set the value of field id
@@ -58,26 +64,14 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field ip_address
+     * Method to set the value of field code
      *
-     * @param string $ip_address
+     * @param string $code
      * @return $this
      */
-    public function setIpAddress($ip_address)
+    public function setCode($code)
     {
-        $this->ip_address = $ip_address;
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field user_agent
-     *
-     * @param string $user_agent
-     * @return $this
-     */
-    public function setUserAgent($user_agent)
-    {
-        $this->user_agent = $user_agent;
+        $this->code = $code;
         return $this;
     }
 
@@ -90,6 +84,30 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field modified_at
+     *
+     * @param string $modified_at
+     * @return $this
+     */
+    public function setModifiedAt($modified_at)
+    {
+        $this->modified_at = $modified_at;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field reset
+     *
+     * @param integer $reset
+     * @return $this
+     */
+    public function setReset($reset)
+    {
+        $this->reset = $reset;
         return $this;
     }
 
@@ -114,23 +132,13 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field ip_address
+     * Returns the value of field code
      *
      * @return string
      */
-    public function getIpAddress()
+    public function getCode()
     {
-        return $this->ip_address;
-    }
-
-    /**
-     * Returns the value of field user_agent
-     *
-     * @return string
-     */
-    public function getUserAgent()
-    {
-        return $this->user_agent;
+        return $this->code;
     }
 
     /**
@@ -143,13 +151,33 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
         return $this->created_at;
     }
 
-    public function getSource()
+    /**
+     * Returns the value of field modified_at
+     *
+     * @return string
+     */
+    public function getModifiedAt()
     {
-        return 'user_password_changes';
+        return $this->modified_at;
     }
 
     /**
-     * @return UserPasswordChanges[]
+     * Returns the value of field reset
+     *
+     * @return integer
+     */
+    public function getReset()
+    {
+        return $this->reset;
+    }
+
+    public function getSource()
+    {
+        return 'user_reset_passwords';
+    }
+
+    /**
+     * @return UserResetPasswords[]
      */
     public static function find($parameters = array())
     {
@@ -157,7 +185,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @return UserPasswordChanges
+     * @return UserResetPasswords
      */
     public static function findFirst($parameters = array())
     {
@@ -171,9 +199,10 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
         return array(
             'id' => 'id',
             'user_id' => 'user_id',
-            'ip_address' => 'ip_address',
-            'user_agent' => 'user_agent',
-            'created_at' => 'created_at'
+            'code' => 'code',
+            'created_at' => 'created_at',
+            'modified_at' => 'modified_at',
+            'reset' => 'reset'
         );
     }
 }
