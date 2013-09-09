@@ -23,7 +23,6 @@
     "autoload": {
         "psr-0": { "Crada": "src/" }
     },
-    "target-dir": "Phalcon/UserPlugin",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.0-dev"
