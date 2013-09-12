@@ -60,7 +60,7 @@ class Auth extends Component
     /**
      * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Crada\UserPlugin\Models\User\User $user
+     * @param Phalcon\UserPlugin\Models\User\User $user
      */
     public function saveSuccessLogin($user)
     {
@@ -117,7 +117,7 @@ class Auth extends Component
     /**
      * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Crada\UserPlugin\Models\User\User $user
+     * @param Phalcon\UserPlugin\Models\User\User $user
      */
     public function createRememberEnviroment(User $user)
     {
@@ -198,7 +198,7 @@ class Auth extends Component
     /**
      * Checks if the user is banned/inactive/suspended
      *
-     * @param Crada\UserPlugin\Models\User\User $user
+     * @param Phalcon\UserPlugin\Models\User\User $user
      */
     public function checkUserFlags(User $user)
     {
@@ -282,7 +282,7 @@ class Auth extends Component
     /**
      * Get the entity related to user in the active identity
      *
-     * @return Crada\UserPlugin\Models\User\User
+     * @return Phalcon\UserPlugin\Models\User\User
      */
     public function getUser()
     {
