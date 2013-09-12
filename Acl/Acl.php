@@ -1,15 +1,15 @@
 <?php
-namespace Crada\UserPlugin\Acl;
+namespace Phalcon\UserPlugin\Acl;
 
 use Phalcon\Mvc\User\Component,
-    Phalcon\Acl\Adapter\Memory as AclMemory,
+    Phalcon\Acl\Adapter\Memory as AclAdapter,
     Phalcon\Acl\Role as AclRole,
     Phalcon\Acl\Resource as AclResource,
-    Crada\UserPlugin\Models\User\User,
-    Crada\UserPlugin\Models\User\UserGroups;
+    Phalcon\UserPlugin\Models\User\User,
+    Phalcon\UserPlugin\Models\User\UserGroups;
 
 /**
- * Crada\Phalcon\UserPlugin\Acl\Acl
+ * Phalcon\UserPlugin\Acl\Acl
  */
 class Acl extends Component
 {
@@ -18,7 +18,7 @@ class Acl extends Component
     private $_filePath = '/../../cache/acl/data.txt';
 
     private $_privateResources = array(
-        'users' => array('index', 'search', 'edit', 'create', 'delete', 'changePassword'),
+        'user' => array('index', 'search', 'edit', 'create', 'delete', 'changePassword'),
         'profiles' => array('index', 'search', 'edit', 'create', 'delete'),
         'permissions' => array('index')
     );
@@ -44,16 +44,16 @@ class Acl extends Component
     }
 
     /**
-     * Checks if the current profile is allowed to access a resource
+     * Checks if the current group is allowed to access a resource
      *
-     * @param string $profile
+     * @param string $group
      * @param string $controller
      * @param string $action
      * @return boolean
      */
-    public function isAllowed($profile, $controller, $action)
+    public function isAllowed($group, $controller, $action)
     {
-        return $this->getAcl()->isAllowed($profile, $controller, $action);
+        return $this->getAcl()->isAllowed($group, $controller, $action);
     }
 
     /**
@@ -96,15 +96,15 @@ class Acl extends Component
     }
 
     /**
-     * Returns the permissions assigned to a profile
+     * Returns the permissions assigned to a roup
      *
      * @param Profiles $profile
      * @return array
      */
-    public function getPermissions(Profiles $profile)
+    public function getPermissions(Group $group)
     {
         $permissions = array();
-        foreach ($profile->getPermissions() as $permission) {
+        foreach ($group->getPermissions() as $permission) {
             $permissions[$permission->resource . '.' . $permission->action] = true;
         }
         return $permissions;
@@ -141,7 +141,7 @@ class Acl extends Component
      */
     public function rebuild()
     {
-        $acl = new AclMemory();
+        $acl = new AclAdapter();
 
         $acl->setDefaultAction(\Phalcon\Acl::DENY);
 

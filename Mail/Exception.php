@@ -1,6 +1,10 @@
 <?php
-namespace Crada\UserPlugin\Mail;
+namespace Phalcon\UserPlugin\Mail;
 
+/**
+ * Phalcon\UserPlugin\Mail\Exception
+ *
+ */
 class Exception extends \Exception
 {
 

@@ -1,5 +1,5 @@
 <?php
-namespace Crada\UserPlugin\Mail;
+namespace Phalcon\UserPlugin\Mail;
 
 use Phalcon\Mvc\User\Component,
     Phalcon\Mvc\View,
@@ -8,7 +8,7 @@ use Phalcon\Mvc\User\Component,
     Crada\UserPlugin\Models\User\User;
 
 /**
- * Crada\Phalcon\UserPlugin\Mail\Mail
+ * Phalcon\UserPlugin\Mail\Mail
  *
  * Sends e-mails based on pre-defined templates
  */

@@ -21,9 +21,9 @@
         "files": ["lib/swift_required.php"]
     },
     "autoload": {
-        "psr-0": { "Crada": "" }
+        "psr-0": { "Phalcon": "" }
     },
-    "target-dir": "Crada/UserPlugin",
+    "target-dir": "Phalcon/UserPlugin",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.0-dev"

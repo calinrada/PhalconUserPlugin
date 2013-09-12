@@ -1,6 +1,9 @@
 <?php
-namespace Crada\UserPlugin\Models\User;
+namespace Phalcon\UserPlugin\Models\User;
 
+/**
+ * Phalcon\UserPlugin\Models\User\UserEmailConfirmations
+ */
 class UserEmailConfirmations extends \Phalcon\Mvc\Model
 {
     /**

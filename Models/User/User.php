@@ -1,6 +1,9 @@
 <?php
-namespace Crada\UserPlugin\Models\User;
+namespace Phalcon\UserPlugin\Models\User;
 
+/**
+ * Phalcon\UserPlugin\Models\User\User
+ */
 class User extends \Phalcon\Mvc\Model
 {
     /**

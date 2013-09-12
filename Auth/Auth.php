@@ -1,14 +1,14 @@
 <?php
-namespace Crada\UserPlugin\Auth;
+namespace Phalcon\UserPlugin\Auth;
 
 use Phalcon\Mvc\User\Component,
-    Crada\UserPlugin\Models\User\User,
-    Crada\UserPlugin\Models\User\UserRememberTokens,
-    Crada\UserPlugin\Models\User\UserSuccessLogins,
-    Crada\UserPlugin\Models\User\UserFailedLogins;
+    Phalcon\UserPlugin\Models\User\User,
+    Phalcon\UserPlugin\Models\User\UserRememberTokens,
+    Phalcon\UserPlugin\Models\User\UserSuccessLogins,
+    Phalcon\UserPlugin\Models\User\UserFailedLogins;
 
 /**
- * Crada\Phalcon\UserPlugin\Auth\Auth
+ * Phalcon\UserPlugin\Auth\Auth
  *
  * Manages Authentication/Identity Management
  */
@@ -24,14 +24,16 @@ class Auth extends Component
     {
 
         //Check if the user exist
-        $user = Users::findFirstByEmail($credentials['email']);
-        if ($user == false) {
+        $user = User::findFirstByEmail($credentials['email']);
+        if ($user == false)
+        {
             $this->registerUserThrottling(0);
             throw new Exception('Wrong email/password combination');
         }
 
         //Check the password
-        if (!$this->security->checkHash($credentials['password'], $user->password)) {
+        if (!$this->security->checkHash($credentials['password'], $user->password))
+        {
             $this->registerUserThrottling($user->id);
             throw new Exception('Wrong email/password combination');
         }
@@ -43,7 +45,8 @@ class Auth extends Component
         $this->saveSuccessLogin($user);
 
         //Check if the remember me was selected
-        if (isset($credentials['remember'])) {
+        if (isset($credentials['remember']))
+        {
             $this->createRememberEnviroment($user);
         }
 
@@ -57,15 +60,17 @@ class Auth extends Component
     /**
      * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Crada\Phalcon\UserPlugin\Models\User\User $user
+     * @param Crada\UserPlugin\Models\User\User $user
      */
     public function saveSuccessLogin($user)
     {
-        $successLogin = new SuccessLogins();
-        $successLogin->usersId = $user->id;
-        $successLogin->ipAddress = $this->request->getClientAddress();
-        $successLogin->userAgent = $this->request->getUserAgent();
-        if (!$successLogin->save()) {
+        $successLogin = new UserSuccessLogins();
+        $successLogin->setUserId($user->id);
+        $successLogin->setIpAddress($this->request->getClientAddress());
+        $successLogin->setUserAgent($this->request->getUserAgent());
+
+        if (!$successLogin->save())
+        {
             $messages = $successLogin->getMessages();
             throw new Exception($messages[0]);
         }
@@ -79,14 +84,14 @@ class Auth extends Component
      */
     public function registerUserThrottling($userId)
     {
-        $failedLogin = new FailedLogins();
-        $failedLogin->usersId = $userId;
-        $failedLogin->ipAddress = $this->request->getClientAddress();
-        $failedLogin->attempted = time();
+        $failedLogin = new UserFailedLogins();
+        $failedLogin->setUserId($userId);
+        $failedLogin->setIpAddress($this->request->getClientAddress());
+        $failedLogin->setAttempted(time());
         $failedLogin->save();
 
-        $attempts = FailedLogins::count(array(
-            'ipAddress = ?0 AND attempted >= ?1',
+        $attempts = UserFailedLogins::count(array(
+            'ip_address = ?0 AND attempted >= ?1',
             'bind' => array(
                 $this->request->getClientAddress(),
                 time() - 3600 * 6
@@ -112,25 +117,25 @@ class Auth extends Component
     /**
      * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Crada\Phalcon\UserPlugin\Models\User\User $user
+     * @param Crada\UserPlugin\Models\User\User $user
      */
-    public function createRememberEnviroment(Users $user)
+    public function createRememberEnviroment(User $user)
     {
-
-        $userAgent = $this->request->getUserAgent();
+        $user_agent = $this->request->getUserAgent();
         $token = md5($user->email . $user->password . $userAgent);
 
-        $remember = new RememberTokens();
-        $remember->usersId = $user->id;
+        $remember = new UserRememberTokens();
+        $remember->setUserId($user->id);
+        $remember->setToken($token);
+        $remember->setUserAgent($user_agent);
         $remember->token = $token;
-        $remember->userAgent = $userAgent;
 
-        if ($remember->save() != false) {
+        if ($remember->save() != false)
+        {
             $expire = time() + 86400 * 8;
             $this->cookies->set('RMU', $user->id, $expire);
             $this->cookies->set('RMT', $token, $expire);
         }
-
     }
 
     /**
@@ -153,66 +158,62 @@ class Auth extends Component
         $userId = $this->cookies->get('RMU')->getValue();
         $cookieToken = $this->cookies->get('RMT')->getValue();
 
-        $user = Users::findFirstById($userId);
-        if ($user) {
-
+        $user = User::findFirstById($userId);
+        if ($user)
+        {
             $userAgent = $this->request->getUserAgent();
             $token = md5($user->email . $user->password . $userAgent);
 
-            if ($cookieToken == $token) {
-
-                $remember = RememberTokens::findFirst(array(
+            if ($cookieToken == $token)
+            {
+                $remember = UserRememberTokens::findFirst(array(
                     'usersId = ?0 AND token = ?1',
                     'bind' => array($user->id, $token)
                 ));
-                if ($remember) {
-
+                if ($remember)
+                {
                     //Check if the cookie has not expired
-                    if ((time() - (86400 * 8)) < $remember->createdAt) {
-
-                        //Check if the user was flagged
+                    if ((time() - (86400 * 8)) < $remember->createdAt)
+                    {
                         $this->checkUserFlags($user);
-
-                        //Register identity
                         $this->session->set('auth-identity', array(
                             'id' => $user->id,
                             'name' => $user->name,
                             'profile' => $user->profile->name
                         ));
-
-                        //Register the successful login
                         $this->saveSuccessLogin($user);
 
-                        return $this->response->redirect('users');
+                        return $this->response->redirect('user/profile');
                     }
                 }
-
             }
-
         }
 
         $this->cookies->get('RMU')->delete();
         $this->cookies->get('RMT')->delete();
 
-        return $this->response->redirect('session/login');
+        return $this->response->redirect('user/login');
     }
 
     /**
      * Checks if the user is banned/inactive/suspended
      *
-     * @param Crada\Phalcon\UserPlugin\Models\User\User $user
+     * @param Crada\UserPlugin\Models\User\User $user
      */
-    public function checkUserFlags(Users $user)
+    public function checkUserFlags(User $user)
     {
-        if ($user->active <> 'Y')  {
+        if ($user->active <> 1)
+        {
             throw new Exception('The user is inactive');
         }
 
-        if ($user->banned <> 'N')  {
+        if ($user->banned <> 0)
+        {
             throw new Exception('The user is banned');
         }
 
-        if ($user->suspended <> 'N')  {
+        if ($user->suspended <> 0)
+        {
             throw new Exception('The user is suspended');
         }
     }
@@ -243,10 +244,13 @@ class Auth extends Component
      */
     public function remove()
     {
-        if ($this->cookies->has('RMU')) {
+        if ($this->cookies->has('RMU'))
+        {
             $this->cookies->get('RMU')->delete();
         }
-        if ($this->cookies->has('RMT')) {
+
+        if ($this->cookies->has('RMT'))
+        {
             $this->cookies->get('RMT')->delete();
         }
 
@@ -260,8 +264,9 @@ class Auth extends Component
      */
     public function authUserById($id)
     {
-        $user = Users::findFirstById($id);
-        if ($user == false) {
+        $user = User::findFirstById($id);
+        if ($user == false)
+        {
             throw new Exception('The user does not exist');
         }
 
@@ -277,15 +282,16 @@ class Auth extends Component
     /**
      * Get the entity related to user in the active identity
      *
-     * @return Crada\Phalcon\UserPlugin\Models\User\User
+     * @return Crada\UserPlugin\Models\User\User
      */
     public function getUser()
     {
         $identity = $this->session->get('auth-identity');
-        if (isset($identity['id'])) {
-
-            $user = Users::findFirstById($identity['id']);
-            if ($user == false) {
+        if (isset($identity['id']))
+        {
+            $user = User::findFirstById($identity['id']);
+            if ($user == false)
+            {
                 throw new Exception('The user does not exist');
             }
 

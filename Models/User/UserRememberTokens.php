@@ -1,6 +1,9 @@
 <?php
-namespace Crada\UserPlugin\Models\User;
+namespace Phalcon\UserPlugin\Models\User;
 
+/**
+ * Phalcon\UserPlugin\Models\User\UserRememberTokens
+ */
 class UserRememberTokens extends \Phalcon\Mvc\Model
 {
     /**
