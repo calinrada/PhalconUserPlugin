@@ -64,6 +64,7 @@ controller:
 
     'pup' => array(
         'resources' => array(
+            'redirect' => 'user/login',
             'type' => 'public',
             'resources' => array(
                 '*' => array( // All except
@@ -81,6 +82,7 @@ In the exampe bellow, the ONLY PUBLIC resurces are the actions LOGIN and REGISTE
 
     'pup' => array(
         'resources' => array(
+            'redirect' => 'user/login',
             'type' => 'public',
             'resources' => array(
                 'user' => array('login', 'register')
@@ -97,6 +99,7 @@ controller:
 
     'pup' => array(
         'resources' => array(
+            'redirect' => 'user/login',
             'type' => 'private',
             'resources' => array(
                 '*' => array( // All except
@@ -114,6 +117,7 @@ In the exampe bellow, the ONLY PRIVATE resurces are the actions ACCOUNT and PROF
 
     'pup' => array(
         'resources' => array(
+            'redirect' => 'user/login',
             'type' => 'private',
             'resources' => array(
                 'user' => array('account', 'profile')
@@ -123,5 +127,28 @@ In the exampe bellow, the ONLY PRIVATE resurces are the actions ACCOUNT and PROF
 
 ```
 
+Configuration example with facebook:
+
+```php
+
+    'pup' => array( // phalcon-user-plugin
+        'resources' => array(
+            'type' => 'public',
+            'redirect' => 'user/login',
+            'resources' => array(
+                '*' => array( // All except
+                    'user' => array('account', 'profile')
+                ),
+            )
+         ),
+         'connectors' => array(
+             'facebook' => array(
+                 'appId' => 'YOUR_FACEBOOK_APP_ID',
+                 'secret' => 'YOUR_FACEBOOK_APP_SECRET'
+             )
+         )
+    )
+
+```
 
 
