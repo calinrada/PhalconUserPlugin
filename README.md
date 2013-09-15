@@ -182,4 +182,56 @@ Configuration example with facebook:
 
 ```
 
+### Example controller
+
+```php
+class UserController extends Controller
+{
+    /**
+     * Login user
+     * @return \Phalcon\Http\ResponseInterface
+     */
+    public function loginAction()
+    {
+        if(true === $this->auth->isUserSignedIn())
+        {
+            $this->response->redirect(array('action' => 'profile'));
+        }
+
+        $form = new LoginForm();
+
+        try {
+            $this->auth->login($form);
+        } catch (AuthException $e) {
+            $this->flash->error($e->getMessage());
+        }
+
+        $this->view->form = $form;
+    }
+
+    /**
+     * Login with Facebook account
+     */
+    public function loginWithFacebookAction()
+    {
+        try {
+            $this->view->disable();
+            return $this->auth->loginWithFacebook();
+        } catch(AuthException $e) {
+            $this->flash->error('There was an error connectiong to Facebook.');
+        }
+    }
+
+    /**
+     * Logout user and clear the data from session
+     *
+     * @return \Phalcon\Http\ResponseInterface
+     */
+    public function signoutAction()
+    {
+        $this->auth->remove();
+        return $this->response->redirect('/', true);
+    }
+```
+
 
