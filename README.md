@@ -50,6 +50,22 @@ Full example code:
     
 ```
 
+Register Auth, Mail and Acl services
+
+```php
+    $di['auth'] = function(){
+        return new \Phalcon\UserPlugin\Auth\Auth();
+    };
+
+    $di['mail'] = function() {
+        return new \Phalcon\UserPlugin\Acl\Acl();
+    };
+
+    $di['acl'] = function() {
+        return new \Phalcon\UserPlugin\Mail\Mail();
+    };
+```
+
 ### Configuration
 
 You must add configuration keys to your config.php file. If you are using a multimodule application, i recommend 
@@ -63,8 +79,11 @@ controller:
 ```php
 
     'pup' => array(
+        'redirect' => array(
+            'success' => 'user/profile',
+            'failure' => 'user/login'
+        ),    
         'resources' => array(
-            'redirect' => 'user/login',
             'type' => 'public',
             'resources' => array(
                 '*' => array( // All except
@@ -81,8 +100,11 @@ In the exampe bellow, the ONLY PUBLIC resurces are the actions LOGIN and REGISTE
 ```php
 
     'pup' => array(
+        'redirect' => array(
+            'success' => 'user/profile',
+            'failure' => 'user/login'
+        ),    
         'resources' => array(
-            'redirect' => 'user/login',
             'type' => 'public',
             'resources' => array(
                 'user' => array('login', 'register')
@@ -98,8 +120,11 @@ controller:
 ```php
 
     'pup' => array(
+        'redirect' => array(
+            'success' => 'user/profile',
+            'failure' => 'user/login'
+        ),    
         'resources' => array(
-            'redirect' => 'user/login',
             'type' => 'private',
             'resources' => array(
                 '*' => array( // All except
@@ -116,8 +141,11 @@ In the exampe bellow, the ONLY PRIVATE resurces are the actions ACCOUNT and PROF
 ```php
 
     'pup' => array(
+        'redirect' => array(
+            'success' => 'user/profile',
+            'failure' => 'user/login'
+        ),    
         'resources' => array(
-            'redirect' => 'user/login',
             'type' => 'private',
             'resources' => array(
                 'user' => array('account', 'profile')
@@ -132,9 +160,12 @@ Configuration example with facebook:
 ```php
 
     'pup' => array( // phalcon-user-plugin
+        'redirect' => array(
+            'success' => 'user/profile',
+            'failure' => 'user/login'
+        ),    
         'resources' => array(
             'type' => 'public',
-            'redirect' => 'user/login',
             'resources' => array(
                 '*' => array( // All except
                     'user' => array('account', 'profile')
