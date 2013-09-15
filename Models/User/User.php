@@ -1,6 +1,8 @@
 <?php
 namespace Phalcon\UserPlugin\Models\User;
 
+use Phalcon\Mvc\Model\Validator\Uniqueness;
+
 /**
  * Phalcon\UserPlugin\Models\User\User
  */
@@ -16,12 +18,6 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $username;
-
-    /**
-     *
-     * @var string
-     */
     protected $email;
 
     /**
@@ -29,6 +25,24 @@ class User extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $password;
+
+    /**
+     *
+     * @var string
+     */
+    protected $facebook_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $facebook_name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $facebook_data;
 
     /**
      *
@@ -73,18 +87,6 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field username
-     *
-     * @param string $username
-     * @return $this
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-        return $this;
-    }
-
-    /**
      * Method to set the value of field email
      *
      * @param string $email
@@ -105,6 +107,42 @@ class User extends \Phalcon\Mvc\Model
     public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field facebook_id
+     *
+     * @param string $facebook_id
+     * @return $this
+     */
+    public function setFacebookId($facebook_id)
+    {
+        $this->facebook_id = $facebook_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field facebook_name
+     *
+     * @param string $facebook_name
+     * @return $this
+     */
+    public function setFacebookName($facebook_name)
+    {
+        $this->facebook_name = $facebook_name;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field facebook_data
+     *
+     * @param string $facebook_data
+     * @return $this
+     */
+    public function setFacebookData($facebook_data)
+    {
+        $this->facebook_data = $facebook_data;
         return $this;
     }
 
@@ -179,16 +217,6 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
      * Returns the value of field email
      *
      * @return string
@@ -206,6 +234,36 @@ class User extends \Phalcon\Mvc\Model
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Returns the value of field facebook_id
+     *
+     * @return string
+     */
+    public function getFacebookId()
+    {
+        return $this->facebook_id;
+    }
+
+    /**
+     * Returns the value of field facebook_name
+     *
+     * @return string
+     */
+    public function getFacebookName()
+    {
+        return $this->facebook_name;
+    }
+
+    /**
+     * Returns the value of field facebook_data
+     *
+     * @return string
+     */
+    public function getFacebookData()
+    {
+        return $this->facebook_data;
     }
 
     /**
@@ -263,17 +321,22 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
-        $this->validate(
-            new Email(
-                array(
-                    "field"    => "email",
-                    "required" => true,
-                )
+        $this->validate(new Uniqueness(
+            array(
+                "field"   => "email",
+                "message" => "The email is already registered"
             )
-        );
-        if ($this->validationHasFailed() == true) {
-            return false;
-        }
+        ));
+
+        return $this->validationHasFailed() != true;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->setSchema("aiodi");
     }
 
     public function getSource()
@@ -303,9 +366,11 @@ class User extends \Phalcon\Mvc\Model
     public function columnMap() {
         return array(
             'id' => 'id',
-            'username' => 'username',
             'email' => 'email',
             'password' => 'password',
+            'facebook_id' => 'facebook_id',
+            'facebook_name' => 'facebook_name',
+            'facebook_data' => 'facebook_data',
             'must_change_password' => 'must_change_password',
             'group_id' => 'group_id',
             'banned' => 'banned',

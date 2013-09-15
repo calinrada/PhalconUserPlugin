@@ -30,20 +30,28 @@ class Security extends Plugin
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
+        if ($this->auth->hasRememberMe())
+        {
+            $this->auth->loginWithRememberMe(false);
+        }
+
         $config = $dispatcher->getDI()->get('config');
         $pupConfig = $this->getConfigStructure($config);
 
         $needsIdentity = $this->needsIdentity($pupConfig, $dispatcher);
 
+        $identity = $this->auth->getIdentity();
+
         if(true === $needsIdentity)
         {
-            $identity = $this->auth->getIdentity();
             if (!is_array($identity))
             {
                 $this->flash->notice('Private area. Please login.');
                 return $this->response->redirect($config->pup->resources->redirect);
             }
         }
+
+        $this->view->setVar('identity', $identity);
     }
 
     /**

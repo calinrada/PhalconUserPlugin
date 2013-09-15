@@ -5,7 +5,8 @@ use Phalcon\Mvc\User\Component,
     Phalcon\UserPlugin\Models\User\User,
     Phalcon\UserPlugin\Models\User\UserRememberTokens,
     Phalcon\UserPlugin\Models\User\UserSuccessLogins,
-    Phalcon\UserPlugin\Models\User\UserFailedLogins;
+    Phalcon\UserPlugin\Models\User\UserFailedLogins,
+    Phalcon\UserPlugin\Connectors\FacebookConnector;
 
 /**
  * Phalcon\UserPlugin\Auth\Auth
@@ -22,8 +23,6 @@ class Auth extends Component
      */
     public function check($credentials)
     {
-
-        //Check if the user exist
         $user = User::findFirstByEmail($credentials['email']);
         if ($user == false)
         {
@@ -31,30 +30,143 @@ class Auth extends Component
             throw new Exception('Wrong email/password combination');
         }
 
-        //Check the password
-        if (!$this->security->checkHash($credentials['password'], $user->password))
+        if (!$this->security->checkHash($credentials['password'], $user->getPassword()))
         {
-            $this->registerUserThrottling($user->id);
+            $this->registerUserThrottling($user->getId());
             throw new Exception('Wrong email/password combination');
         }
 
-        //Check if the user was flagged
         $this->checkUserFlags($user);
-
-        //Register the successful login
         $this->saveSuccessLogin($user);
 
-        //Check if the remember me was selected
         if (isset($credentials['remember']))
         {
             $this->createRememberEnviroment($user);
         }
 
         $this->session->set('auth-identity', array(
-            'id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile->name
+            'id' => $user->getId(),
+            'email' => $user->getEmail()
         ));
+    }
+
+    /**
+     * Login user - normal way
+     *
+     * @param \Phalcon\UserPlugin\Forms\User\LoginForm $form
+     * @return \Phalcon\Http\ResponseInterface
+     */
+    public function login($form)
+    {
+        if (!$this->request->isPost())
+        {
+            if ($this->hasRememberMe())
+            {
+                return $this->loginWithRememberMe();
+            }
+        }
+        else
+        {
+            if ($form->isValid($this->request->getPost()) == false)
+            {
+                foreach ($form->getMessages() as $message)
+                 {
+                    $this->flash->error($message);
+                }
+            }
+            else
+            {
+                $this->check(array(
+                        'email' => $this->request->getPost('email'),
+                        'password' => $this->request->getPost('password'),
+                        'remember' => $this->request->getPost('remember')
+                ));
+
+                $pupRedirect = $this->getDI()->get('config')->pup->redirect;
+
+                return $this->response->redirect($pupRedirect->success);
+            }
+        }
+    }
+
+    /**
+     * Login with facebook account
+     */
+    public function loginWithFacebook()
+    {
+        $di = $this->getDI();
+        $facebook = new FacebookConnector($di);
+        $facebookUser = $facebook->getUser();
+
+        if ($facebookUser)
+        {
+            try {
+                $facebookUserProfile = $facebook->api('/me');
+                error_log(json_encode($facebookUserProfile).PHP_EOL, 3, '/tmp/fblogin.log');
+            } catch (\FacebookApiException $e) {
+                $di->logger->begin();
+                $di->logger->error($e->getMessage());
+                $di->logger->commit();
+                $facebookUser = null;
+            }
+        }
+        else
+        {
+            return $this->response->redirect($facebook->getLoginUrl(), true);
+        }
+
+        if($facebookUser)
+        {
+            $pupRedirect = $di->get('config')->pup->redirect;
+
+            $user = User::findFirstByFacebookId($facebookUserProfile['id']);
+
+            if ($user)
+            {
+                $this->checkUserFlags($user);
+                $this->session->set('auth-identity', array(
+                        'id' => $user->getId(),
+                        'email' => $user->getEmail()
+                ));
+
+                $this->saveSuccessLogin($user);
+
+                return $this->response->redirect($pupRedirect->success);
+            }
+            else
+            {
+                $password = $this->generatePassword();
+                error_log('Password: '.$password.PHP_EOL, 3, '/tmp/fblogin.log');
+                $user = new User();
+                $user->setEmail(isset($facebookUserProfile['email']) ? $facebookUserProfile['email'] : 'a@a.com');
+                $user->setPassword($di->get('security')->hash($password));
+                $user->setFacebookId($facebookUserProfile['id']);
+                $user->setFacebookName($facebookUserProfile['name']);
+                $user->setFacebookData(json_encode($facebookUserProfile));
+                $user->setMustChangePassword(0);
+                $user->setGroupId(2);
+                $user->setBanned(0);
+                $user->setSuspended(0);
+                $user->setActive(1);
+
+                if(true == $user->create())
+                {
+                    $this->session->set('auth-identity', array(
+                            'id' => $user->getId(),
+                            'email' => $user->getEmail()
+                    ));
+
+                    $this->saveSuccessLogin($user);
+
+                    return $this->response->redirect($pupRedirect->success, true);
+                }
+                else
+                {
+                    $this->flash->error('Error on facebook');
+                    return $this->response->redirect($pupRedirect->failure, true);
+                }
+            }
+        }
     }
 
     /**
@@ -65,7 +177,7 @@ class Auth extends Component
     public function saveSuccessLogin($user)
     {
         $successLogin = new UserSuccessLogins();
-        $successLogin->setUserId($user->id);
+        $successLogin->setUserId($user->getId());
         $successLogin->setIpAddress($this->request->getClientAddress());
         $successLogin->setUserAgent($this->request->getUserAgent());
 
@@ -122,18 +234,18 @@ class Auth extends Component
     public function createRememberEnviroment(User $user)
     {
         $user_agent = $this->request->getUserAgent();
-        $token = md5($user->email . $user->password . $userAgent);
+        $token = md5($user->getEmail() . $user->getPassword() . $user_agent);
 
         $remember = new UserRememberTokens();
-        $remember->setUserId($user->id);
+        $remember->setUserId($user->getId());
         $remember->setToken($token);
         $remember->setUserAgent($user_agent);
-        $remember->token = $token;
+        $remember->setCreatedAt(time());
 
         if ($remember->save() != false)
         {
-            $expire = time() + 86400 * 8;
-            $this->cookies->set('RMU', $user->id, $expire);
+            $expire = time() + 86400 * 30;
+            $this->cookies->set('RMU', $user->getId(), $expire);
             $this->cookies->set('RMT', $token, $expire);
         }
     }
@@ -153,37 +265,45 @@ class Auth extends Component
      *
      * @return Phalcon\Http\Response
      */
-    public function loginWithRememberMe()
+    public function loginWithRememberMe($redirect = true)
     {
         $userId = $this->cookies->get('RMU')->getValue();
         $cookieToken = $this->cookies->get('RMT')->getValue();
 
         $user = User::findFirstById($userId);
+
+        $pupRedirect = $this->getDI()->get('config')->pup->redirect;
+
         if ($user)
         {
             $userAgent = $this->request->getUserAgent();
-            $token = md5($user->email . $user->password . $userAgent);
+            $token = md5($user->getEmail() . $user->getPassword() . $userAgent);
 
             if ($cookieToken == $token)
             {
+
                 $remember = UserRememberTokens::findFirst(array(
-                    'usersId = ?0 AND token = ?1',
-                    'bind' => array($user->id, $token)
+                    'user_id = ?0 AND token = ?1',
+                    'bind' => array($user->getId(), $token)
                 ));
+
                 if ($remember)
                 {
-                    //Check if the cookie has not expired
-                    if ((time() - (86400 * 8)) < $remember->createdAt)
+                    if ((time() - (86400 * 30)) < $remember->getCreatedAt())
                     {
                         $this->checkUserFlags($user);
                         $this->session->set('auth-identity', array(
-                            'id' => $user->id,
-                            'name' => $user->name,
-                            'profile' => $user->profile->name
+                            'id' => $user->getId(),
+                            'email' => $user->getEmail()
                         ));
                         $this->saveSuccessLogin($user);
 
-                        return $this->response->redirect('user/profile');
+                        if(true === $redirect)
+                        {
+                            return $this->response->redirect($pupRedirect->success);
+                        }
+
+                        return;
                     }
                 }
             }
@@ -192,7 +312,22 @@ class Auth extends Component
         $this->cookies->get('RMU')->delete();
         $this->cookies->get('RMT')->delete();
 
-        return $this->response->redirect('user/login');
+        return $this->response->redirect($pupRedirect->failure);
+    }
+
+    /**
+     * Check if the user is signed in
+     *
+     * @return boolean
+     */
+    public function isUserSignedIn()
+    {
+        $identity = $this->getIdentity();
+        if(!is_array($identity) || isset($identity['id']))
+        {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -202,17 +337,17 @@ class Auth extends Component
      */
     public function checkUserFlags(User $user)
     {
-        if ($user->active <> 1)
+        if ($user->getActive() <> 1)
         {
             throw new Exception('The user is inactive');
         }
 
-        if ($user->banned <> 0)
+        if ($user->getBanned() <> 0)
         {
             throw new Exception('The user is banned');
         }
 
-        if ($user->suspended <> 0)
+        if ($user->getSuspended() <> 0)
         {
             throw new Exception('The user is suspended');
         }
@@ -244,6 +379,9 @@ class Auth extends Component
      */
     public function remove()
     {
+        $pupConfig = $this->getDI()->get('config')->pup;
+        $fbAppId = $pupConfig->connectors->facebook->appId;
+
         if ($this->cookies->has('RMU'))
         {
             $this->cookies->get('RMU')->delete();
@@ -255,6 +393,9 @@ class Auth extends Component
         }
 
         $this->session->remove('auth-identity');
+        $this->session->remove('fb_'.$fbAppId.'_code');
+        $this->session->remove('fb_'.$fbAppId.'_access_token');
+        $this->session->remove('fb_'.$fbAppId.'_user_id');
     }
 
     /**
@@ -273,9 +414,8 @@ class Auth extends Component
         $this->checkUserFlags($user);
 
         $this->session->set('auth-identity', array(
-            'id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile->name
+            'id' => $user->getId(),
+            'email' => $user->getEmail()
         ));
     }
 
@@ -299,5 +439,17 @@ class Auth extends Component
         }
 
         return false;
+    }
+
+    /**
+     * Generate a random password
+     *
+     * @param integer $length
+     * @return string
+     */
+    public function generatePassword($length = 8)
+    {
+        $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789#@%_.";
+        return substr(str_shuffle($chars),0,$length);
     }
 }
