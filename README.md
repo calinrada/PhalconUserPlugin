@@ -253,4 +253,8 @@ class UserController extends Controller
     }
 ```
 
+### TODO
+- Implement Twitter connector
+- Implement Google+ connector
+- Implement CRUD templates for ACl, UserManagement, etc
 
