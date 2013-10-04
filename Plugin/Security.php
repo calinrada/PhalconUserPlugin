@@ -35,6 +35,17 @@ class Security extends Plugin
             $this->auth->loginWithRememberMe(false);
         }
 
+        if($this->auth->isUserSignedIn())
+        {
+            $actionName     = $dispatcher->getActionName();
+            $controllerName = $dispatcher->getControllerName();
+
+            if($controllerName == 'user' && $actionName == 'login')
+            {
+                return $this->response->redirect($config->pup->resources->redirect->success);
+            }
+        }
+
         $config = $dispatcher->getDI()->get('config');
         $pupConfig = $this->getConfigStructure($config);
 
@@ -47,7 +58,7 @@ class Security extends Plugin
             if (!is_array($identity))
             {
                 $this->flash->notice('Private area. Please login.');
-                return $this->response->redirect($config->pup->resources->redirect);
+                return $this->response->redirect($config->pup->resources->redirect->failure);
             }
         }
 

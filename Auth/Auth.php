@@ -5,7 +5,9 @@ use Phalcon\Mvc\User\Component,
     Phalcon\UserPlugin\Models\User\User,
     Phalcon\UserPlugin\Models\User\UserRememberTokens,
     Phalcon\UserPlugin\Models\User\UserSuccessLogins,
-    Phalcon\UserPlugin\Models\User\UserFailedLogins,
+    Phalcon\UserPlugin\Models\User\UserFailedLogins;
+
+use Phalcon\UserPlugin\Connectors\LinkedInConnector,
     Phalcon\UserPlugin\Connectors\FacebookConnector;
 
 /**
@@ -118,8 +120,8 @@ class Auth extends Component
         if($facebookUser)
         {
             $pupRedirect = $di->get('config')->pup->redirect;
-
-            $user = User::findFirstByFacebookId($facebookUserProfile['id']);
+            $email = isset($facebookUserProfile['email']) ? $facebookUserProfile['email'] : 'a@a.com';
+            $user = User::findFirst(" email='$email' OR facebook_id='".$facebookUserProfile['id']."' ");
 
             if ($user)
             {
@@ -138,7 +140,7 @@ class Auth extends Component
                 $password = $this->generatePassword();
                 error_log('Password: '.$password.PHP_EOL, 3, '/tmp/fblogin.log');
                 $user = new User();
-                $user->setEmail(isset($facebookUserProfile['email']) ? $facebookUserProfile['email'] : 'a@a.com');
+                $user->setEmail($email);
                 $user->setPassword($di->get('security')->hash($password));
                 $user->setFacebookId($facebookUserProfile['id']);
                 $user->setFacebookName($facebookUserProfile['name']);
@@ -167,6 +169,107 @@ class Auth extends Component
                 }
             }
         }
+    }
+
+    /**
+     * Login with LinkedIn account
+     *
+     * @return \Phalcon\Http\ResponseInterface
+     */
+    public function loginWithLinkedIn()
+    {
+        $di = $this->getDI();
+        $config = $di->get('config')->pup->connectors->linkedIn->toArray();
+        $config['callback_url'] = $config['callback_url'].$di->get('cookies')->get('preferredLanguage').'/user/loginWithLinkedIn';
+        $li = new LinkedInConnector($config);
+
+        $token = $this->session->get('linkedIn_token');
+        $token_expires = $this->session->get('linkedIn_token_expires_on', 0);
+
+        if($token && $token_expires > time())
+        {
+            $pupRedirect = $di->get('config')->pup->redirect;
+            $li->setAccessToken($this->session->get('linkedIn_token'));
+            $email = $li->get('/people/~/email-address');
+            $info = $li->get('/people/~');
+
+            preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
+            $linkedInId = str_replace("id=", "", $matches[0]);
+
+            $user = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
+
+            if ($user)
+            {
+                $this->checkUserFlags($user);
+                $this->session->set('auth-identity', array(
+                        'id' => $user->getId(),
+                        'email' => $user->getEmail()
+                ));
+
+                $this->saveSuccessLogin($user);
+
+                if(!$user->getLinkedinId())
+                {
+                    $user->setLinkedinId($linkedInId);
+                    $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
+                    $user->update();
+                }
+
+                return $this->response->redirect($pupRedirect->success);
+            }
+            else
+            {
+                $password = $this->generatePassword();
+                error_log('Password: '.$password.PHP_EOL, 3, '/tmp/lilogin.log');
+                $user = new User();
+                $user->setEmail($email);
+                $user->setPassword($di->get('security')->hash($password));
+                $user->setLinkedinId($linkedInId);
+                $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
+                $user->setLinkedinData(json_encode($info));
+                $user->setMustChangePassword(0);
+                $user->setGroupId(2);
+                $user->setBanned(0);
+                $user->setSuspended(0);
+                $user->setActive(1);
+
+                if(true == $user->create())
+                {
+                    $this->session->set('auth-identity', array(
+                            'id' => $user->getId(),
+                            'email' => $user->getEmail()
+                    ));
+
+                    $this->saveSuccessLogin($user);
+
+                    return $this->response->redirect($pupRedirect->success);
+                }
+                else
+                {
+                    foreach($user->getMessages() as $message)
+                    {
+                        $this->flashSession->error($message->getMessage());
+                    }
+                    return $this->response->redirect($pupRedirect->failure);
+                }
+            }
+
+        }
+        else // If token is not set
+        {
+            if($this->request->get('code'))
+            {
+                $token = $li->getAccessToken($this->request->get('code'));
+                $token_expires = $li->getAccessTokenExpiration();
+                $this->session->set('linkedIn_token', $token);
+                $this->session->set('linkedIn_token_expires_on', time() + $token_expires);
+            }
+        }
+
+        $state = uniqid();
+        $url = $li->getLoginUrl(array(LinkedInConnector::SCOPE_BASIC_PROFILE, LinkedInConnector::SCOPE_EMAIL_ADDRESS), $state);
+
+        return $this->response->redirect($url, true);
     }
 
     /**

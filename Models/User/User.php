@@ -48,6 +48,60 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $linkedin_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $linkedin_name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $linkedin_data;
+
+    /**
+     *
+     * @var string
+     */
+    protected $gplus_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $gplus_name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $gplus_data;
+
+    /**
+     *
+     * @var string
+     */
+    protected $twitter_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $twitter_name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $twitter_data;
+
+    /**
+     *
+     * @var integer
+     */
     protected $must_change_password;
 
     /**
@@ -143,6 +197,114 @@ class User extends \Phalcon\Mvc\Model
     public function setFacebookData($facebook_data)
     {
         $this->facebook_data = $facebook_data;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field linkedin_id
+     *
+     * @param integer $linkedin_id
+     * @return $this
+     */
+    public function setLinkedinId($linkedin_id)
+    {
+        $this->linkedin_id = $linkedin_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field linkedin_name
+     *
+     * @param string $linkedin_name
+     * @return $this
+     */
+    public function setLinkedinName($linkedin_name)
+    {
+        $this->linkedin_name = $linkedin_name;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field linkedin_data
+     *
+     * @param string $linkedin_data
+     * @return $this
+     */
+    public function setLinkedinData($linkedin_data)
+    {
+        $this->linkedin_data = $linkedin_data;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field gplus_id
+     *
+     * @param string $gplus_id
+     * @return $this
+     */
+    public function setGplusId($gplus_id)
+    {
+        $this->gplus_id = $gplus_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field gplus_name
+     *
+     * @param string $gplus_name
+     * @return $this
+     */
+    public function setGplusName($gplus_name)
+    {
+        $this->gplus_name = $gplus_name;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field gplus_data
+     *
+     * @param string $gplus_data
+     * @return $this
+     */
+    public function setGplusData($gplus_data)
+    {
+        $this->gplus_data = $gplus_data;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field twitter_id
+     *
+     * @param string $twitter_id
+     * @return $this
+     */
+    public function setTwitterId($twitter_id)
+    {
+        $this->twitter_id = $twitter_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field twitter_name
+     *
+     * @param string $twitter_name
+     * @return $this
+     */
+    public function setTwitterName($twitter_name)
+    {
+        $this->twitter_name = $twitter_name;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field twitter_data
+     *
+     * @param string $twitter_data
+     * @return $this
+     */
+    public function setTwitterData($twitter_data)
+    {
+        $this->twitter_data = $twitter_data;
         return $this;
     }
 
@@ -267,6 +429,96 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field linkedin_id
+     *
+     * @return integer
+     */
+    public function getLinkedinId()
+    {
+        return $this->linkedin_id;
+    }
+
+    /**
+     * Returns the value of field linkedin_name
+     *
+     * @return string
+     */
+    public function getLinkedinName()
+    {
+        return $this->linkedin_name;
+    }
+
+    /**
+     * Returns the value of field linkedin_data
+     *
+     * @return string
+     */
+    public function getLinkedinData()
+    {
+        return $this->linkedin_data;
+    }
+
+    /**
+     * Returns the value of field gplus_id
+     *
+     * @return string
+     */
+    public function getGplusId()
+    {
+        return $this->gplus_id;
+    }
+
+    /**
+     * Returns the value of field gplus_name
+     *
+     * @return string
+     */
+    public function getGplusName()
+    {
+        return $this->gplus_name;
+    }
+
+    /**
+     * Returns the value of field gplus_data
+     *
+     * @return string
+     */
+    public function getGplusData()
+    {
+        return $this->gplus_data;
+    }
+
+    /**
+     * Returns the value of field twitter_id
+     *
+     * @return string
+     */
+    public function getTwitterId()
+    {
+        return $this->twitter_id;
+    }
+
+    /**
+     * Returns the value of field twitter_name
+     *
+     * @return string
+     */
+    public function getTwitterName()
+    {
+        return $this->twitter_name;
+    }
+
+    /**
+     * Returns the value of field twitter_data
+     *
+     * @return string
+     */
+    public function getTwitterData()
+    {
+        return $this->twitter_data;
+    }
+
+    /**
      * Returns the value of field must_change_password
      *
      * @return integer
@@ -365,17 +617,26 @@ class User extends \Phalcon\Mvc\Model
      */
     public function columnMap() {
         return array(
-            'id' => 'id',
-            'email' => 'email',
-            'password' => 'password',
-            'facebook_id' => 'facebook_id',
-            'facebook_name' => 'facebook_name',
-            'facebook_data' => 'facebook_data',
-            'must_change_password' => 'must_change_password',
-            'group_id' => 'group_id',
-            'banned' => 'banned',
-            'suspended' => 'suspended',
-            'active' => 'active'
+                'id' => 'id',
+                'email' => 'email',
+                'password' => 'password',
+                'facebook_id' => 'facebook_id',
+                'facebook_name' => 'facebook_name',
+                'facebook_data' => 'facebook_data',
+                'linkedin_id' => 'linkedin_id',
+                'linkedin_name' => 'linkedin_name',
+                'linkedin_data' => 'linkedin_data',
+                'gplus_id' => 'gplus_id',
+                'gplus_name' => 'gplus_name',
+                'gplus_data' => 'gplus_data',
+                'twitter_id' => 'twitter_id',
+                'twitter_name' => 'twitter_name',
+                'twitter_data' => 'twitter_data',
+                'must_change_password' => 'must_change_password',
+                'group_id' => 'group_id',
+                'banned' => 'banned',
+                'suspended' => 'suspended',
+                'active' => 'active'
         );
     }
 }
