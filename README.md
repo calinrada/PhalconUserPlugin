@@ -5,10 +5,11 @@ a production environment.
 
 ### Features
 
-- Protect different areas from your website, where a user must be loged in, in order to have access
-- Protect different actions, based on the ACL list for each user
 - Login / Register with Facebook account
 - Login / Register with LinkedIn account
+- Login / Register with Twitter account
+- Protect different areas from your website, where a user must be loged in, in order to have access
+- Protect different actions, based on the ACL list for each user
 
 ### Installation
 
