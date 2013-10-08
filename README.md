@@ -182,6 +182,11 @@ Configuration example with connectors:
                  'api_key' => 'YOUR_LINKED_IN_APP_ID',
                  'api_secret' => 'YOUR_LINKED_IN_APP_SECRET',
                  'callback_url' => 'CALLBACK_URL'
+             ),  
+             'twitter' => array(
+                 'consumer_key' => 'TWITTER_CONSUMER_KEY',
+                 'consumer_secret' => 'TWITTER_CONSUMER_SECRET',
+                 'user_agent' => 'YOUR_APPLICATION_NAME', // Leave empty if you don't want to set it
              ),             
          )
     )
@@ -239,6 +244,19 @@ class UserController extends Controller
         } catch(AuthException $e) {
             $this->flash->error('There was an error connectiong to LinkedIn.');
         }
+    }   
+    
+    /**
+     * Login with Twitter account
+     */
+    public function loginWithTwitterAction()
+    {
+        try {
+            $this->view->disable();
+            $this->auth->loginWithTwitter();
+        } catch(AuthException $e) {
+            $this->flash->error('There was an error connectiong to Twitter.');
+        }
     }    
 
     /**
@@ -253,8 +271,10 @@ class UserController extends Controller
     }
 ```
 
+### KNOWN ISSUES
+- Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
+
 ### TODO
-- Implement Twitter connector
 - Implement Google+ connector
 - Implement CRUD templates for ACl, UserManagement, etc
 
