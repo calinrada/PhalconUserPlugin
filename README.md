@@ -8,6 +8,7 @@ a production environment.
 - Protect different areas from your website, where a user must be loged in, in order to have access
 - Protect different actions, based on the ACL list for each user
 - Login / Register with Facebook account
+- Login / Register with LinkedIn account
 
 ### Installation
 
@@ -155,7 +156,7 @@ In the exampe bellow, the ONLY PRIVATE resurces are the actions ACCOUNT and PROF
 
 ```
 
-Configuration example with facebook:
+Configuration example with connectors:
 
 ```php
 
@@ -176,7 +177,12 @@ Configuration example with facebook:
              'facebook' => array(
                  'appId' => 'YOUR_FACEBOOK_APP_ID',
                  'secret' => 'YOUR_FACEBOOK_APP_SECRET'
-             )
+             ),
+             'linkedIn' => array(
+                 'api_key' => 'YOUR_LINKED_IN_APP_ID',
+                 'api_secret' => 'YOUR_LINKED_IN_APP_SECRET',
+                 'callback_url' => 'CALLBACK_URL'
+             ),             
          )
     )
 
@@ -221,6 +227,19 @@ class UserController extends Controller
             $this->flash->error('There was an error connectiong to Facebook.');
         }
     }
+    
+    /**
+     * Login with LinkedIn account
+     */
+    public function loginWithLinkedInAction()
+    {
+        try {
+            $this->view->disable();
+            $this->auth->loginWithLinkedIn();
+        } catch(AuthException $e) {
+            $this->flash->error('There was an error connectiong to LinkedIn.');
+        }
+    }    
 
     /**
      * Logout user and clear the data from session
@@ -234,4 +253,8 @@ class UserController extends Controller
     }
 ```
 
+### TODO
+- Implement Twitter connector
+- Implement Google+ connector
+- Implement CRUD templates for ACl, UserManagement, etc
 
