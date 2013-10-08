@@ -1,16 +1,28 @@
 # Phalcon User Plugin (alpha)
 
+* [About](#about)
+* [Features](#features)
+* [Installation](#installation)
+* [Plug it](#plug-it)
+* [Configuration](#configuration)
+* [Example controller](#example-controller)
+* [Known issues](#known-issues)
+* [TODO](#todo)
+
+### <a id="about"></a>About
+
 It is a plugin based on Vokuro ACL idea. This is an alpha version and i do not recommend you to use it in 
 a production environment.
 
-### Features
+### <a id="features"></a>Features
 
-- Protect different areas from your website, where a user must be loged in, in order to have access
-- Protect different actions, based on the ACL list for each user
 - Login / Register with Facebook account
 - Login / Register with LinkedIn account
+- Login / Register with Twitter account
+- Protect different areas from your website, where a user must be loged in, in order to have access
+- Protect different actions, based on the ACL list for each user
 
-### Installation
+### <a id="installation"></a>Installation
 
 The recommended installation is via compososer. Just add the following line to your composer.json:
 
@@ -24,7 +36,7 @@ The recommended installation is via compososer. Just add the following line to y
 $ php composer.phar update
 ```
 
-### Plug it
+### <a id="plug-it"></a>Plug it
 
 Add the following lines where to your events manager:
 
@@ -67,7 +79,7 @@ Register Auth, Mail and Acl services
     };
 ```
 
-### Configuration
+### <a id="configuration"></a>Configuration
 
 You must add configuration keys to your config.php file. If you are using a multimodule application, i recommend 
 you to set up the configuration separately for each module.
@@ -182,13 +194,18 @@ Configuration example with connectors:
                  'api_key' => 'YOUR_LINKED_IN_APP_ID',
                  'api_secret' => 'YOUR_LINKED_IN_APP_SECRET',
                  'callback_url' => 'CALLBACK_URL'
+             ),  
+             'twitter' => array(
+                 'consumer_key' => 'TWITTER_CONSUMER_KEY',
+                 'consumer_secret' => 'TWITTER_CONSUMER_SECRET',
+                 'user_agent' => 'YOUR_APPLICATION_NAME', // Leave empty if you don't want to set it
              ),             
          )
     )
 
 ```
 
-### Example controller
+### <a id="example-controller"></a>Example controller
 
 ```php
 class UserController extends Controller
@@ -239,6 +256,19 @@ class UserController extends Controller
         } catch(AuthException $e) {
             $this->flash->error('There was an error connectiong to LinkedIn.');
         }
+    }   
+    
+    /**
+     * Login with Twitter account
+     */
+    public function loginWithTwitterAction()
+    {
+        try {
+            $this->view->disable();
+            $this->auth->loginWithTwitter();
+        } catch(AuthException $e) {
+            $this->flash->error('There was an error connectiong to Twitter.');
+        }
     }    
 
     /**
@@ -253,8 +283,10 @@ class UserController extends Controller
     }
 ```
 
-### TODO
-- Implement Twitter connector
+### <a id="known-issues"></a>Known issues
+- Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
+
+### <a id="todo"></a>TODO
 - Implement Google+ connector
 - Implement CRUD templates for ACl, UserManagement, etc
 
