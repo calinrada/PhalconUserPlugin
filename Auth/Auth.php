@@ -2,13 +2,14 @@
 namespace Phalcon\UserPlugin\Auth;
 
 use Phalcon\Mvc\User\Component,
-    Phalcon\UserPlugin\Models\User\User,
+    Phalcon\UserPlugin\Repository\User\UserRepository as User,
     Phalcon\UserPlugin\Models\User\UserRememberTokens,
     Phalcon\UserPlugin\Models\User\UserSuccessLogins,
     Phalcon\UserPlugin\Models\User\UserFailedLogins;
 
 use Phalcon\UserPlugin\Connectors\LinkedInConnector,
-    Phalcon\UserPlugin\Connectors\FacebookConnector;
+    Phalcon\UserPlugin\Connectors\FacebookConnector,
+    Phalcon\UserPlugin\Connectors\TwitterConnector;
 
 /**
  * Phalcon\UserPlugin\Auth\Auth
@@ -220,7 +221,7 @@ class Auth extends Component
             else
             {
                 $password = $this->generatePassword();
-                error_log('Password: '.$password.PHP_EOL, 3, '/tmp/lilogin.log');
+
                 $user = new User();
                 $user->setEmail($email);
                 $user->setPassword($di->get('security')->hash($password));
@@ -270,6 +271,104 @@ class Auth extends Component
         $url = $li->getLoginUrl(array(LinkedInConnector::SCOPE_BASIC_PROFILE, LinkedInConnector::SCOPE_EMAIL_ADDRESS), $state);
 
         return $this->response->redirect($url, true);
+    }
+
+    /**
+     * Login with Twitter account
+     */
+    public function loginWithTwitter()
+    {
+        $di          = $this->getDI();
+        $pupRedirect = $di->get('config')->pup->redirect;
+        $oauth       = $this->session->get('twitterOauth');
+        $config      = $di->get('config')->pup->connectors->twitter->toArray();
+        $config      = array_merge($config, array('token' => $oauth['token'], 'secret' => $oauth['secret']));
+
+        $twitter = new TwitterConnector($config, $di);
+        if($this->request->get('oauth_token'))
+        {
+            $twitter->access_token();
+
+            $code = $twitter->user_request(array(
+                'url' => $twitter->url('1.1/account/verify_credentials')
+            ));
+
+            if ($code == 200) {
+                $data = json_decode($twitter->response['response'], true);
+
+                if($data['screen_name'])
+                {
+                    $code = $twitter->user_request(array(
+                            'url' => $twitter->url('1.1/users/show'),
+                            'params' => array(
+                                'screen_name' => $data['screen_name']
+                            )
+                    ));
+
+                    if ($code == 200) {
+                        $response = json_decode($twitter->response['response'], true);
+                        $twitterId = $response['id'];
+                        $user = User::findFirst("twitter_id='$twitterId'");
+
+                        if ($user)
+                        {
+                            $this->checkUserFlags($user);
+                            $this->session->set('auth-identity', array(
+                                    'id' => $user->getId(),
+                                    'email' => $user->getEmail()
+                            ));
+
+                            $this->saveSuccessLogin($user);
+
+                            return $this->response->redirect($pupRedirect->success);
+                        }
+                        else
+                        {
+                            $password = $this->generatePassword();
+                            $email = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
+                            $user = new User();
+                            $user->setEmail($email);
+                            $user->setPassword($di->get('security')->hash($password));
+                            $user->setTwitterId($response['id']);
+                            $user->setTwitterName($response['name']);
+                            $user->setTwitterData(json_encode($response));
+                            $user->setMustChangePassword(0);
+                            $user->setGroupId(2);
+                            $user->setBanned(0);
+                            $user->setSuspended(0);
+                            $user->setActive(1);
+
+                            if(true == $user->create())
+                            {
+                                $this->session->set('auth-identity', array(
+                                        'id' => $user->getId(),
+                                        'email' => $user->getEmail()
+                                ));
+
+                                $this->saveSuccessLogin($user);
+                                $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
+
+                                return $this->response->redirect($pupRedirect->success);
+                            }
+                            else
+                            {
+                                foreach($user->getMessages() as $message)
+                                {
+                                    $this->flashSession->error($message->getMessage());
+                                }
+                                return $this->response->redirect($pupRedirect->failure);
+                            }
+                        }
+                    }
+                }
+            } else {
+                $di->get('logger')->begin();
+                $di->get('logger')->error(json_encode($twitter->response));
+                $di->get('logger')->commit();
+            }
+        } else {
+            return $this->response->redirect($twitter->request_token(), true);
+        }
     }
 
     /**
