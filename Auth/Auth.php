@@ -9,6 +9,7 @@ use Phalcon\Mvc\User\Component,
 
 use Phalcon\UserPlugin\Connectors\LinkedInConnector,
     Phalcon\UserPlugin\Connectors\FacebookConnector,
+    Phalcon\UserPlugin\Connectors\GoogleConnector,
     Phalcon\UserPlugin\Connectors\TwitterConnector;
 
 /**
@@ -61,26 +62,18 @@ class Auth extends Component
      */
     public function login($form)
     {
-        if (!$this->request->isPost())
-        {
-            if ($this->hasRememberMe())
-            {
+        if (!$this->request->isPost()) {
+            if ($this->hasRememberMe()) {
                 return $this->loginWithRememberMe();
             }
-        }
-        else
-        {
-            if ($form->isValid($this->request->getPost()) == false)
-            {
-                foreach ($form->getMessages() as $message)
-                 {
+        } else {
+            if ($form->isValid($this->request->getPost()) == false) {
+                foreach ($form->getMessages() as $message) {
                     $this->flash->error($message);
                 }
-            }
-            else
-            {
+            } else {
                 $this->check(array(
-                        'email' => $this->request->getPost('email'),
+                        'email'    => $this->request->getPost('email'),
                         'password' => $this->request->getPost('password'),
                         'remember' => $this->request->getPost('remember')
                 ));
@@ -105,7 +98,6 @@ class Auth extends Component
         {
             try {
                 $facebookUserProfile = $facebook->api('/me');
-                error_log(json_encode($facebookUserProfile).PHP_EOL, 3, '/tmp/fblogin.log');
             } catch (\FacebookApiException $e) {
                 $di->logger->begin();
                 $di->logger->error($e->getMessage());
@@ -115,7 +107,8 @@ class Auth extends Component
         }
         else
         {
-            return $this->response->redirect($facebook->getLoginUrl(), true);
+            $scope = array('scope' => 'email,user_birthday,user_location');
+            return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
 
         if($facebookUser)
@@ -128,9 +121,16 @@ class Auth extends Component
             {
                 $this->checkUserFlags($user);
                 $this->session->set('auth-identity', array(
-                        'id' => $user->getId(),
-                        'email' => $user->getEmail()
+                    'id' => $user->getId(),
+                    'email' => $user->getEmail()
                 ));
+                if(!$user->getFacebookId())
+                {
+                    $user->setFacebookId($facebookUserProfile['id']);
+                    $user->setFacebookName($facebookUserProfile['name']);
+                    $user->setFacebookData(serialize($facebookUserProfile));
+                    $user->update();
+                }
 
                 $this->saveSuccessLogin($user);
 
@@ -139,13 +139,13 @@ class Auth extends Component
             else
             {
                 $password = $this->generatePassword();
-                error_log('Password: '.$password.PHP_EOL, 3, '/tmp/fblogin.log');
+
                 $user = new User();
                 $user->setEmail($email);
                 $user->setPassword($di->get('security')->hash($password));
                 $user->setFacebookId($facebookUserProfile['id']);
                 $user->setFacebookName($facebookUserProfile['name']);
-                $user->setFacebookData(json_encode($facebookUserProfile));
+                $user->setFacebookData(serialize($facebookUserProfile));
                 $user->setMustChangePassword(0);
                 $user->setGroupId(2);
                 $user->setBanned(0);
@@ -161,7 +161,7 @@ class Auth extends Component
 
                     $this->saveSuccessLogin($user);
 
-                    return $this->response->redirect($pupRedirect->success, true);
+                    return $this->response->redirect($pupRedirect->success);
                 }
                 else
                 {
@@ -369,6 +369,87 @@ class Auth extends Component
         } else {
             return $this->response->redirect($twitter->request_token(), true);
         }
+    }
+
+    public function loginWithGoogle()
+    {
+        $di       = $this->getDI();
+        $config   = $di->get('config')->pup->connectors->google->toArray();
+        $language = $di->get('cookies')->get('preferredLanguage');
+
+        $pupRedirect            = $di->get('config')->pup->redirect;
+        $config['redirect_uri'] = $config['redirect_uri'].$language.'/user/loginWithGoogle';
+
+        $google = new GoogleConnector($config);
+
+        $response = $google->connect($di);
+
+        if($response['status'] == 0) {
+            return $this->response->redirect($response['redirect'], true);
+        } else {
+            $gplusId = $response['userinfo']['id'];
+            $email   = $response['userinfo']['email'];
+            $name    = $response['userinfo']['name'];
+            $user    = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
+
+            if ($user)
+            {
+                $this->checkUserFlags($user);
+                $this->session->set('auth-identity', array(
+                    'id' => $user->getId(),
+                    'email' => $user->getEmail()
+                ));
+
+                if(!$user->getGplusId())
+                {
+                    $user->setGplusId($gplusId);
+                    $user->setGplusName($name);
+                    $user->setGplusData(serialize($response['userinfo']));
+                    $user->update();
+                }
+
+                $this->saveSuccessLogin($user);
+
+                return $this->response->redirect($pupRedirect->success);
+            }
+            else
+            {
+                $password = $this->generatePassword();
+
+                $user = new User();
+                $user->setEmail($email);
+                $user->setPassword($di->get('security')->hash($password));
+                $user->setGplusId($gplusId);
+                $user->setGplusName($name);
+                $user->setGplusData(serialize($response['userinfo']));
+                $user->setMustChangePassword(0);
+                $user->setGroupId(2);
+                $user->setBanned(0);
+                $user->setSuspended(0);
+                $user->setActive(1);
+
+                if(true == $user->create())
+                {
+                    $this->session->set('auth-identity', array(
+                            'id' => $user->getId(),
+                            'email' => $user->getEmail()
+                    ));
+
+                    $this->saveSuccessLogin($user);
+
+                    return $this->response->redirect($pupRedirect->success);
+                }
+                else
+                {
+                    foreach($user->getMessages() as $message)
+                    {
+                        $this->flashSession->error($message->getMessage());
+                    }
+                    return $this->response->redirect($pupRedirect->failure);
+                }
+            }
+        }
+
     }
 
     /**
@@ -598,6 +679,7 @@ class Auth extends Component
         $this->session->remove('fb_'.$fbAppId.'_code');
         $this->session->remove('fb_'.$fbAppId.'_access_token');
         $this->session->remove('fb_'.$fbAppId.'_user_id');
+        $this->session->remove('googleToken');
     }
 
     /**
