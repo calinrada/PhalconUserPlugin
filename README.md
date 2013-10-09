@@ -19,6 +19,7 @@ a production environment.
 - Login / Register with Facebook account
 - Login / Register with LinkedIn account
 - Login / Register with Twitter account
+- Login / Register with Google account
 - Protect different areas from your website, where a user must be loged in, in order to have access
 - Protect different actions, based on the ACL list for each user
 
@@ -199,6 +200,13 @@ Configuration example with connectors:
                  'consumer_key' => 'TWITTER_CONSUMER_KEY',
                  'consumer_secret' => 'TWITTER_CONSUMER_SECRET',
                  'user_agent' => 'YOUR_APPLICATION_NAME', // Leave empty if you don't want to set it
+             ),    
+             'google' => array(
+                 'application_name' => 'YOUR_APPLICATION_NAME',
+                 'client_id' => 'YOUR_CLIENT_ID',
+                 'client_secret' => 'YOUR_CLIENT_SECRET',
+                 'developer_key' => 'YOUR_DEVELOPER_KEY',
+                 'redirect_uri' => 'YOUR_REDIRECT_URI'
              ),             
          )
     )
@@ -269,6 +277,19 @@ class UserController extends Controller
         } catch(AuthException $e) {
             $this->flash->error('There was an error connectiong to Twitter.');
         }
+    } 
+    
+    /**
+     * Login with Google account
+     */
+    public function loginWithGoogleAction()
+    {
+        try {
+            $this->view->disable();
+            $this->auth->loginWithGoogle();
+        } catch(AuthException $e) {
+            $this->flash->error('There was an error connectiong to Google.');
+        }
     }    
 
     /**
@@ -287,6 +308,5 @@ class UserController extends Controller
 - Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
 
 ### <a id="todo"></a>TODO
-- Implement Google+ connector
 - Implement CRUD templates for ACl, UserManagement, etc
 
