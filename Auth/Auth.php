@@ -680,6 +680,8 @@ class Auth extends Component
         $this->session->remove('fb_'.$fbAppId.'_access_token');
         $this->session->remove('fb_'.$fbAppId.'_user_id');
         $this->session->remove('googleToken');
+        $this->session->remove('linkedIn_token');
+        $this->session->remove('linkedIn_token_expires_on');
     }
 
     /**
