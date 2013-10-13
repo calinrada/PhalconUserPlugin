@@ -71,11 +71,11 @@ Register Auth, Mail and Acl services
         return new \Phalcon\UserPlugin\Auth\Auth();
     };
 
-    $di['mail'] = function() {
+    $di['acl'] = function() {
         return new \Phalcon\UserPlugin\Acl\Acl();
     };
 
-    $di['acl'] = function() {
+    $di['mail'] = function() {
         return new \Phalcon\UserPlugin\Mail\Mail();
     };
 ```
