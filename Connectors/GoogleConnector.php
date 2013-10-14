@@ -35,7 +35,7 @@ class GoogleConnector
         if ($request->get('code')) {
             $client->authenticate();
             $session->set('googleToken', $client->getAccessToken());
-            $redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+            $redirect = $this->config['redirect_uri'];
             return array('status' => 0, 'redirect' => filter_var($redirect, FILTER_SANITIZE_URL));
         }
 
