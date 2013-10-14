@@ -20,6 +20,8 @@ a production environment.
 - Login / Register with LinkedIn account
 - Login / Register with Twitter account
 - Login / Register with Google account
+- Change password
+- Password recovery by email
 - Protect different areas from your website, where a user must be loged in, in order to have access
 - Protect different actions, based on the ACL list for each user
 
@@ -214,6 +216,8 @@ Configuration example with connectors:
 ```
 
 ### <a id="example-controller"></a>Example controller
+
+* For a complete controller example read the Wiki page: https://github.com/calinrada/PhalconUserPlugin/wiki/Controller
 
 ```php
 class UserController extends Controller
