@@ -616,7 +616,31 @@ class User extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("aiodi");
+        $this->belongsTo('profilesId', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
+            'alias' => 'group',
+            'reusable' => true
+        ));
+
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserSuccessLogins', 'user_id', array(
+            'alias' => 'successLogins',
+            'foreignKey' => array(
+                'message' => 'User cannot be deleted because he/she has activity in the system'
+            )
+        ));
+
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPasswordChanges', 'user_id', array(
+            'alias' => 'passwordChanges',
+            'foreignKey' => array(
+                'message' => 'User cannot be deleted because he/she has activity in the system'
+            )
+        ));
+
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserResetPasswords', 'user_id', array(
+            'alias' => 'resetPasswords',
+            'foreignKey' => array(
+                'message' => 'User cannot be deleted because he/she has activity in the system'
+            )
+        ));
     }
 
     public function getSource()
@@ -668,4 +692,41 @@ class User extends \Phalcon\Mvc\Model
                 'active' => 'active'
         );
     }
+
+    /**
+     * Before create the user assign a password
+     */
+    public function beforeValidationOnCreate()
+    {
+        if (empty($this->password)) {
+            $tempPassword = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(12)));
+            $this->mustChangePassword = 'Y';
+            $this->password = $this->getDI()->getSecurity()->hash($tempPassword);
+        } else {
+            $this->mustChangePassword = 0;
+        }
+
+        $this->active = 0;
+        $this->suspended = 0;
+        $this->banned = 0;
+    }
+
+    /**
+     * Send a confirmation e-mail to the user if the account is not active
+     */
+    public function afterSave()
+    {
+        if ($this->active == 0) {
+
+            $emailConfirmation = new UserEmailConfirmations();
+            $emailConfirmation->setUserId($this->id);
+
+            if ($emailConfirmation->save()) {
+                $this->getDI()->getFlashSession()->notice(
+                    'A confirmation mail has been sent to ' . $this->email
+                );
+            }
+        }
+    }
+
 }

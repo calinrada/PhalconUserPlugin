@@ -208,4 +208,46 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
             'confirmed' => 'confirmed'
         );
     }
+
+    /**
+     * Before create the user assign a password
+     */
+    public function beforeValidationOnCreate()
+    {
+        $this->created_at = date("Y-m-d H:i:s");
+        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
+        $this->confirmed = 0;
+    }
+
+    /**
+     * Sets the timestamp before update the confirmation
+     */
+    public function beforeValidationOnUpdate()
+    {
+        $this->modified_at = date("Y-m-d H:i:s");
+    }
+
+    /**
+     * Send a confirmation e-mail to the user after create the account
+     */
+    public function afterCreate()
+    {
+        $this->getDI()->getMail()->send(
+            array(
+                $this->user->getEmail() => $this->user->getName()
+            ),
+            "Please confirm your email",
+            'confirmation',
+            array(
+                'confirmUrl' => '/user/confirmEmail/' . $this->getCode(). '/' . $this->user->getEmail()
+            )
+        );
+    }
+
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user'
+        ));
+    }
 }
