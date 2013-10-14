@@ -341,8 +341,8 @@ class Auth extends Component
                             if(true == $user->create())
                             {
                                 $this->session->set('auth-identity', array(
-                                        'id' => $user->getId(),
-                                        'email' => $user->getEmail()
+                                    'id' => $user->getId(),
+                                    'email' => $user->getEmail()
                                 ));
 
                                 $this->saveSuccessLogin($user);
@@ -713,6 +713,7 @@ class Auth extends Component
     public function getUser()
     {
         $identity = $this->session->get('auth-identity');
+
         if (isset($identity['id']))
         {
             $user = User::findFirstById($identity['id']);

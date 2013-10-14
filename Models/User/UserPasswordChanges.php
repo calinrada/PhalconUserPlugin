@@ -179,4 +179,19 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
             'created_at' => 'created_at'
         );
     }
+
+    /**
+     * Before create the user assign a password
+     */
+    public function beforeValidationOnCreate()
+    {
+        $this->created_at = date('Y-m-d H:i:s');
+    }
+
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user'
+        ));
+    }
 }

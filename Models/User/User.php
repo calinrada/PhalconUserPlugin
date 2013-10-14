@@ -18,6 +18,12 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $name;
+
+    /**
+     *
+     * @var string
+     */
     protected $email;
 
     /**
@@ -137,6 +143,18 @@ class User extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -379,6 +397,16 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Returns the value of field email
      *
      * @return string
@@ -618,6 +646,7 @@ class User extends \Phalcon\Mvc\Model
     public function columnMap() {
         return array(
                 'id' => 'id',
+                'name' => 'name',
                 'email' => 'email',
                 'password' => 'password',
                 'facebook_id' => 'facebook_id',

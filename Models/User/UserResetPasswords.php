@@ -208,4 +208,52 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
             'reset' => 'reset'
         );
     }
+
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user'
+        ));
+    }
+
+    /**
+     * Before create the user assign a password
+     */
+    public function beforeValidationOnCreate()
+    {
+        //Timestamp the confirmaton
+        $this->created_at = date("Y-m-d H:i:s");
+
+        //Generate a random confirmation code
+        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
+
+        //Set status to non-confirmed
+        $this->reset = 0;
+    }
+
+    /**
+     * Send an e-mail to users allowing him/her to reset his/her password
+     */
+    public function afterCreate()
+    {
+        $this->getDI()->getMail()->send(
+            array(
+                $this->user->getEmail() => $this->user->getName() ? $this->user->getName() : 'Customer'
+            ),
+            "Reset your password",
+            'reset',
+            array(
+                'resetUrl' => '/user/resetPassword/' . $this->getCode() . '/' . $this->user->getEmail()
+            )
+        );
+    }
+
+    /**
+     * Sets the timestamp before update the confirmation
+     */
+    public function beforeValidationOnUpdate()
+    {
+        //Timestamp the confirmaton
+        $this->modified_at = date("Y-m-d H:i:s");
+    }
 }
