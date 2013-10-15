@@ -58,7 +58,7 @@ class Security extends Plugin
             if (!is_array($identity))
             {
                 $this->flash->notice('Private area. Please login.');
-                return $this->response->redirect($config->pup->resources->redirect->failure);
+                return $this->response->redirect($config->pup->redirect->failure)->sendHeaders();
             }
         }
 
@@ -111,7 +111,7 @@ class Security extends Plugin
                 }
                 else
                 {
-                    if(in_array($actionName, $actions))
+                    if(in_array($actionName, $actions) || $actions[0] == '*')
                     {
                         return true;
                     }

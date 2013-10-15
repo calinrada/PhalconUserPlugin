@@ -606,11 +606,13 @@ class Auth extends Component
     public function isUserSignedIn()
     {
         $identity = $this->getIdentity();
-        if(!is_array($identity) || isset($identity['id']))
-        {
-            return false;
+
+        if(is_array($identity)) {
+            if(isset($identity['id'])) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     /**
