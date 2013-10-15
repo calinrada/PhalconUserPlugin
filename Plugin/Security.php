@@ -22,13 +22,13 @@ class Security extends Plugin
     );
 
     /**
-     * beforeExecuteRoute
+     * beforeDispatchLoop
      *
      * @param Event $event
      * @param Dispatcher $dispatcher
      * @return \Phalcon\Http\ResponseInterface
      */
-    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
+    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
         if ($this->auth->hasRememberMe())
         {
