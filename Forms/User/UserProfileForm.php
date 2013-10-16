@@ -8,13 +8,15 @@ use Phalcon\Forms\Form,
     Phalcon\Forms\Element\Submit,
     Phalcon\Forms\Element\Select,
     Phalcon\Forms\Element\Check,
+    Phalcon\Forms\Element\Date,
+    Phalcon\Validation\Validator\Identical,
     Phalcon\Validation\Validator\PresenceOf,
     Phalcon\Validation\Validator\Email;
 
 /**
- * Phalcon\UserPlugin\Forms\User
+ * Phalcon\UserPlugin\Forms\User\UserProfileForm
  */
-class ProfilesForm extends Form
+class UserProfileForm extends Form
 {
     public function initialize($entity=null, $options=null)
     {
@@ -25,11 +27,22 @@ class ProfilesForm extends Form
         }
 
         $this->add($id);
-        $this->add(new Text('name'));
-        $this->add(new Text('email'));
-        $this->add(new Select('active', array(
-            'Y' => 'Yes',
-            'N' => 'No'
+        $this->add(new Hidden('birth_date'));
+
+        //CSRF
+        $csrf = new Hidden('csrf');
+
+        $csrf->addValidator(
+            new Identical(array(
+                'value' => $this->security->getSessionToken(),
+                'message' => 'CSRF validation failed'
+            ))
+        );
+
+        $this->add($csrf);
+
+        $this->add(new Submit('Save', array(
+            'class' => 'btn btn-success'
         )));
     }
 }
