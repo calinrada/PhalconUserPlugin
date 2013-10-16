@@ -19,6 +19,12 @@ class UserProfile extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $picture;
+
+    /**
+     *
      * @var string
      */
     protected $birth_date;
@@ -27,13 +33,13 @@ class UserProfile extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $home_location;
+    protected $home_location_id;
 
     /**
      *
      * @var integer
      */
-    protected $current_location;
+    protected $current_location_id;
 
     /**
      * Method to set the value of field id
@@ -60,6 +66,18 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field picture
+     *
+     * @param integer $picture
+     * @return $this
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+        return $this;
+    }
+
+    /**
      * Method to set the value of field birth_date
      *
      * @param string $birth_date
@@ -72,26 +90,26 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field home_location
+     * Method to set the value of field home_location_id
      *
-     * @param integer $home_location
+     * @param integer $home_location_id
      * @return $this
      */
-    public function setHomeLocation($home_location)
+    public function setHomeLocationId($home_location_id)
     {
-        $this->home_location = $home_location;
+        $this->home_location_id = $home_location_id;
         return $this;
     }
 
     /**
-     * Method to set the value of field current_location
+     * Method to set the value of field current_locationid
      *
-     * @param integer $current_location
+     * @param integer $current_location_id
      * @return $this
      */
-    public function setCurrentLocation($current_location)
+    public function setCurrentLocationId($current_location_id)
     {
-        $this->current_location = $current_location;
+        $this->current_location_id = $current_location_id;
         return $this;
     }
 
@@ -116,6 +134,16 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field picture
+     *
+     * @return integer
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
      * Returns the value of field birth_date
      *
      * @return string
@@ -126,23 +154,23 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field home_location
+     * Returns the value of field home_location_id
      *
      * @return integer
      */
-    public function getHomeLocation()
+    public function getHomeLocationId()
     {
-        return $this->home_location;
+        return $this->home_location_id;
     }
 
     /**
-     * Returns the value of field current_location
+     * Returns the value of field current_location_id
      *
      * @return integer
      */
-    public function getCurrentLocation()
+    public function getCurrentLocationId()
     {
-        return $this->current_location;
+        return $this->current_location_id;
     }
 
     /**
@@ -152,6 +180,16 @@ class UserProfile extends \Phalcon\Mvc\Model
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
             'alias' => 'user',
+            'reusable' => true
+        ));
+
+        $this->belongsTo('home_location_id', 'Phalcon\UserPlugin\Models\Location\Locations', 'id', array(
+            'alias' => 'homeLocation',
+            'reusable' => true
+        ));
+
+        $this->belongsTo('current_location_id', 'Phalcon\UserPlugin\Models\Location\Locations', 'id', array(
+            'alias' => 'currentLocation',
             'reusable' => true
         ));
     }
@@ -184,16 +222,13 @@ class UserProfile extends \Phalcon\Mvc\Model
         return array(
             'id' => 'id',
             'user_id' => 'user_id',
+            'picture' => 'picture',
             'birth_date' => 'birth_date',
-            'home_location' => 'home_location',
-            'current_location' => 'current_location'
+            'home_location_id' => 'home_location_id',
+            'current_location_id' => 'current_location_id',
+            'created_at' => 'created_at',
+            'updated_at' => 'updated_at'
         );
-    }
-
-    public function beforeValidationOnCreate()
-    {
-        //$this->home_location = "GeomFromText('Point(52.5177, -0.0968)')";
-        //$this->current_location = "GeomFromText('Point(52.5177, -0.0968)')";
     }
 
     public static function findByRawSql($what, $conditions, $params=null)

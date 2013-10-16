@@ -1,5 +1,5 @@
 <?php
-namespace Phalcon\UserPlugin\Models\Locations;
+namespace Phalcon\UserPlugin\Models\Location;
 
 class Locations extends \Phalcon\Mvc\Model
 {
@@ -44,6 +44,12 @@ class Locations extends \Phalcon\Mvc\Model
      * @var double
      */
     protected $longitude;
+
+    /**
+     *
+     * @var double
+     */
+    protected $geo_point;
 
     /**
      *
@@ -142,6 +148,18 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field geo_point
+     *
+     * @param double $geo_point
+     * @return $this
+     */
+    public function setGeoPoint($geo_point)
+    {
+        $this->geo_point = $geo_point;
+        return $this;
+    }
+
+    /**
      * Method to set the value of field created_at
      *
      * @param string $created_at
@@ -234,6 +252,15 @@ class Locations extends \Phalcon\Mvc\Model
     {
         return $this->longitude;
     }
+    /**
+     * Returns the value of field geo_point
+     *
+     * @return double
+     */
+    public function getGeoPoint()
+    {
+        return $this->geo_point;
+    }
 
     /**
      * Returns the value of field created_at
@@ -283,6 +310,17 @@ class Locations extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function beforeCreate()
+    {
+        $this->created_at = date('Y-m-d H:i:s');
+    }
+
+
+    public function beforeUpdate()
+    {
+        $this->updated_at = date('Y-m-d H:i:s');
+    }
+
     /**
      * Independent Column Mapping.
      */
@@ -295,8 +333,18 @@ class Locations extends \Phalcon\Mvc\Model
             'country' => 'country',
             'latitude' => 'latitude',
             'longitude' => 'longitude',
+            'geo_point' => 'geo_point',
             'created_at' => 'created_at',
             'updated_at' => 'updated_at'
         );
+    }
+
+    /**
+     * Return a custom formatted address
+     * @return string
+     */
+    public function getCustomFormattedAddress()
+    {
+        return $this->city.', '.$this->country;
     }
 }
