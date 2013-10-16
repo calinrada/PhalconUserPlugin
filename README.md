@@ -24,6 +24,8 @@ a production environment.
 - Password recovery by email
 - Protect different areas from your website, where a user must be loged in, in order to have access
 - Protect different actions, based on the ACL list for each user
+- User profile: birth date, birth location, current location, profile picture
+- Locations - save locations using google API - see Wiki for examples
 
 ### <a id="installation"></a>Installation
 
