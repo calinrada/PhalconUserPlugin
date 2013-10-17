@@ -48,10 +48,27 @@ class Auth extends Component
             $this->createRememberEnviroment($user);
         }
 
-        $this->session->set('auth-identity', array(
-            'id' => $user->getId(),
-            'email' => $user->getEmail()
-        ));
+        $this->setIdentity($user);
+    }
+
+    /**
+     * Set identity in session
+     *
+     * @param object $user
+     */
+    private function setIdentity($user)
+    {
+        $st_identity = array(
+            'id'    => $user->getId(),
+            'email' => $user->getEmail(),
+            'name'  => $user->getName(),
+        );
+
+        if($user->profile) {
+            $st_identity['profile_picture'] = $user->profile->getPicture();
+        }
+
+        $this->session->set('auth-identity', $st_identity);
     }
 
     /**
@@ -120,10 +137,7 @@ class Auth extends Component
             if ($user)
             {
                 $this->checkUserFlags($user);
-                $this->session->set('auth-identity', array(
-                    'id' => $user->getId(),
-                    'email' => $user->getEmail()
-                ));
+                $this->setIdentity($user);
                 if(!$user->getFacebookId())
                 {
                     $user->setFacebookId($facebookUserProfile['id']);
@@ -154,11 +168,7 @@ class Auth extends Component
 
                 if(true == $user->create())
                 {
-                    $this->session->set('auth-identity', array(
-                            'id' => $user->getId(),
-                            'email' => $user->getEmail()
-                    ));
-
+                    $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
@@ -202,11 +212,7 @@ class Auth extends Component
             if ($user)
             {
                 $this->checkUserFlags($user);
-                $this->session->set('auth-identity', array(
-                        'id' => $user->getId(),
-                        'email' => $user->getEmail()
-                ));
-
+                $this->setIdentity($user);
                 $this->saveSuccessLogin($user);
 
                 if(!$user->getLinkedinId())
@@ -236,11 +242,7 @@ class Auth extends Component
 
                 if(true == $user->create())
                 {
-                    $this->session->set('auth-identity', array(
-                            'id' => $user->getId(),
-                            'email' => $user->getEmail()
-                    ));
-
+                    $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
@@ -313,11 +315,7 @@ class Auth extends Component
                         if ($user)
                         {
                             $this->checkUserFlags($user);
-                            $this->session->set('auth-identity', array(
-                                    'id' => $user->getId(),
-                                    'email' => $user->getEmail()
-                            ));
-
+                            $this->setIdentity($user);
                             $this->saveSuccessLogin($user);
 
                             return $this->response->redirect($pupRedirect->success);
@@ -340,11 +338,7 @@ class Auth extends Component
 
                             if(true == $user->create())
                             {
-                                $this->session->set('auth-identity', array(
-                                    'id' => $user->getId(),
-                                    'email' => $user->getEmail()
-                                ));
-
+                                $this->setIdentity($user);
                                 $this->saveSuccessLogin($user);
                                 $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
 
@@ -395,10 +389,7 @@ class Auth extends Component
             if ($user)
             {
                 $this->checkUserFlags($user);
-                $this->session->set('auth-identity', array(
-                    'id' => $user->getId(),
-                    'email' => $user->getEmail()
-                ));
+                $this->setIdentity($user);
 
                 if(!$user->getGplusId())
                 {
@@ -430,11 +421,7 @@ class Auth extends Component
 
                 if(true == $user->create())
                 {
-                    $this->session->set('auth-identity', array(
-                            'id' => $user->getId(),
-                            'email' => $user->getEmail()
-                    ));
-
+                    $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
@@ -575,10 +562,7 @@ class Auth extends Component
                     if ((time() - (86400 * 30)) < $remember->getCreatedAt())
                     {
                         $this->checkUserFlags($user);
-                        $this->session->set('auth-identity', array(
-                            'id' => $user->getId(),
-                            'email' => $user->getEmail()
-                        ));
+                        $this->setIdentity($user);
                         $this->saveSuccessLogin($user);
 
                         if(true === $redirect)
@@ -700,11 +684,7 @@ class Auth extends Component
         }
 
         $this->checkUserFlags($user);
-
-        $this->session->set('auth-identity', array(
-            'id' => $user->getId(),
-            'email' => $user->getEmail()
-        ));
+        $this->setIdentity($user);
     }
 
     /**

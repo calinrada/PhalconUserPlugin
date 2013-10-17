@@ -114,6 +114,12 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $profile_id;
+
+    /**
+     *
+     * @var integer
+     */
     protected $group_id;
 
     /**
@@ -339,6 +345,18 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field profile_id
+     *
+     * @param integer $profile_id
+     * @return $this
+     */
+    public function setProfileId($profile_id)
+    {
+        $this->profile_id = $profile_id;
+        return $this;
+    }
+
+    /**
      * Method to set the value of field group_id
      *
      * @param integer $group_id
@@ -557,6 +575,16 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field profile_id
+     *
+     * @return integer
+     */
+    public function getProfileId()
+    {
+        return $this->profile_id;
+    }
+
+    /**
      * Returns the value of field group_id
      *
      * @return integer
@@ -616,8 +644,8 @@ class User extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->belongsTo('profilesId', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
-            'alias' => 'group',
+        $this->belongsTo('profile_id', 'Phalcon\UserPlugin\Models\User\UserProfile', 'id', array(
+            'alias' => 'profile',
             'reusable' => true
         ));
 
@@ -686,6 +714,7 @@ class User extends \Phalcon\Mvc\Model
                 'twitter_name' => 'twitter_name',
                 'twitter_data' => 'twitter_data',
                 'must_change_password' => 'must_change_password',
+                'profile_id' => 'profile_id',
                 'group_id' => 'group_id',
                 'banned' => 'banned',
                 'suspended' => 'suspended',
