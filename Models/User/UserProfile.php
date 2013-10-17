@@ -31,6 +31,12 @@ class UserProfile extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var string
+     */
+    protected $gender;
+
+    /**
+     *
      * @var integer
      */
     protected $home_location_id;
@@ -40,6 +46,18 @@ class UserProfile extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $current_location_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    protected $updated_at;
 
     /**
      * Method to set the value of field id
@@ -90,6 +108,18 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field gender
+     *
+     * @param string $gender
+     * @return $this
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+        return $this;
+    }
+
+    /**
      * Method to set the value of field home_location_id
      *
      * @param integer $home_location_id
@@ -110,6 +140,31 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setCurrentLocationId($current_location_id)
     {
         $this->current_location_id = $current_location_id;
+        return $this;
+    }
+
+
+    /**
+     * Method to set the value of field created_at
+     *
+     * @param string $created_at
+     * @return $this
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field updated_at
+     *
+     * @param string $updated_at
+     * @return $this
+     */
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
         return $this;
     }
 
@@ -154,6 +209,16 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
      * Returns the value of field home_location_id
      *
      * @return integer
@@ -171,6 +236,27 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function getCurrentLocationId()
     {
         return $this->current_location_id;
+    }
+
+
+    /**
+     * Returns the value of field created_at
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Returns the value of field updated_at
+     *
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
     }
 
     /**
@@ -224,11 +310,22 @@ class UserProfile extends \Phalcon\Mvc\Model
             'user_id' => 'user_id',
             'picture' => 'picture',
             'birth_date' => 'birth_date',
+            'gender' => 'gender',
             'home_location_id' => 'home_location_id',
             'current_location_id' => 'current_location_id',
             'created_at' => 'created_at',
             'updated_at' => 'updated_at'
         );
+    }
+
+    public function beforeUpdate()
+    {
+        $this->updated_at = new \Phalcon\Db\RawValue('now()');
+    }
+
+    public function beforeCreate()
+    {
+        $this->created_at = new \Phalcon\Db\RawValue('now()');
     }
 
     public static function findByRawSql($what, $conditions, $params=null)
