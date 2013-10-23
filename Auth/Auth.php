@@ -633,14 +633,24 @@ class Auth extends Component
     }
 
     /**
-     * Returns the current identity
+     * Returns the name of the user
      *
      * @return string
      */
-    public function getName()
+    public function getUserName()
     {
         $identity = $this->session->get('auth-identity');
-        return $identity['name'];
+        return isset($identity['name']) ? $identity['name'] : false;
+    }
+    /**
+     * Returns the id of the user
+     *
+     * @return string
+     */
+    public function getUserId()
+    {
+        $identity = $this->session->get('auth-identity');
+        return isset($identity['id']) ? $identity['id'] : false;
     }
 
     /**
