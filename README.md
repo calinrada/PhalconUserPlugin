@@ -7,6 +7,7 @@
 * [Configuration](#configuration)
 * [Example controller](#example-controller)
 * [Known issues](#known-issues)
+* [Examples](#examples)
 * [TODO](#todo)
 
 ### <a id="about"></a>About
@@ -26,6 +27,7 @@ a production environment.
 - Protect different actions, based on the ACL list for each user
 - User profile: birth date, birth location, current location, profile picture
 - Locations - save locations using google API - see Wiki for examples
+- Simple notifications system
 
 ### <a id="installation"></a>Installation
 
@@ -312,6 +314,10 @@ class UserController extends Controller
 
 ### <a id="known-issues"></a>Known issues
 - Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
+
+### <a id="examples"></a>Examples
+
+* [Notifications](https://github.com/calinrada/PhalconUserPlugin/wiki/Notifications)
 
 ### <a id="todo"></a>TODO
 - Implement CRUD templates for ACl, UserManagement, etc
