@@ -1,5 +1,5 @@
 -- Host: localhost
--- Generation Time: Oct 24, 2013 at 04:31 PM
+-- Generation Time: Oct 25, 2013 at 09:53 AM
 -- Server version: 5.5.32
 -- PHP Version: 5.5.5-1+debphp.org~precise+1
 
@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS `user_notifications` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL,
   `object_id` bigint(20) NOT NULL,
+  `object_source` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'Object source can be a table. For example, articles. Then object_id is the id from article table',
   `content` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `is_seen` tinyint(1) DEFAULT '0',
   `created_at` datetime NOT NULL,
@@ -232,5 +233,5 @@ CREATE TABLE IF NOT EXISTS `user_success_logins` (
   `user_agent` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   KEY `usersId` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=236 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=238 ;
 

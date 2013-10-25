@@ -28,6 +28,12 @@ class UserNotifications extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $object_source;
+
+    /**
+     *
+     * @var string
+     */
     protected $content;
 
     /**
@@ -75,6 +81,18 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setObjectId($object_id)
     {
         $this->object_id = $object_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field object_source
+     *
+     * @param integer $object_source
+     * @return $this
+     */
+    public function setObjectSource($object_source)
+    {
+        $this->object_source = $object_source;
         return $this;
     }
 
@@ -142,6 +160,16 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function getObjectId()
     {
         return $this->object_id;
+    }
+
+    /**
+     * Returns the value of field object_source
+     *
+     * @return integer
+     */
+    public function getObjectSource()
+    {
+        return $this->object_source;
     }
 
     /**
@@ -213,6 +241,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
             'id' => 'id',
             'user_id' => 'user_id',
             'object_id' => 'object_id',
+            'object_source' => 'object_source',
             'content' => 'content',
             'is_seen' => 'is_seen',
             'created_at' => 'created_at'
