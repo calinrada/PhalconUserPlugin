@@ -28,13 +28,13 @@ class UserNotifications extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $object_source;
+    protected $object_type;
 
     /**
      *
      * @var string
      */
-    protected $content;
+    protected $notification_type;
 
     /**
      *
@@ -85,26 +85,26 @@ class UserNotifications extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field object_source
+     * Method to set the value of field object_type
      *
-     * @param integer $object_source
+     * @param integer $object_type
      * @return $this
      */
-    public function setObjectSource($object_source)
+    public function setObjectType($object_type)
     {
-        $this->object_source = $object_source;
+        $this->object_type = $object_type;
         return $this;
     }
 
     /**
-     * Method to set the value of field content
+     * Method to set the value of field notification_type
      *
-     * @param string $content
+     * @param integer $notification_type
      * @return $this
      */
-    public function setContent($content)
+    public function setNotificationType($notification_type)
     {
-        $this->content = $content;
+        $this->notification_type = $notification_type;
         return $this;
     }
 
@@ -163,23 +163,23 @@ class UserNotifications extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field object_source
+     * Returns the value of field object_type
      *
      * @return integer
      */
-    public function getObjectSource()
+    public function getObjectType()
     {
-        return $this->object_source;
+        return $this->object_type;
     }
 
     /**
-     * Returns the value of field content
+     * Returns the value of field notification_type
      *
      * @return string
      */
-    public function getContent()
+    public function getNotificationType()
     {
-        return $this->content;
+        return $this->notification_type;
     }
 
     /**
@@ -208,7 +208,8 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
-            'alias' => 'user'
+            'alias' => 'user',
+            'reusable' => true
         ));
     }
 
@@ -241,8 +242,8 @@ class UserNotifications extends \Phalcon\Mvc\Model
             'id' => 'id',
             'user_id' => 'user_id',
             'object_id' => 'object_id',
-            'object_source' => 'object_source',
-            'content' => 'content',
+            'object_type' => 'object_type',
+            'notification_type' => 'notification_type',
             'is_seen' => 'is_seen',
             'created_at' => 'created_at'
         );
