@@ -15,6 +15,17 @@ class ChangePasswordForm extends Form
 {
     public function initialize()
     {
+        //Current Password
+        $currentPassword = new Password('currentPassword');
+
+        $currentPassword->addValidators(array(
+            new PresenceOf(array(
+                'message' => 'Current password is required'
+            ))
+        ));
+
+        $this->add($currentPassword);
+
         $password = new Password('password');
 
         $password->addValidators(array(
