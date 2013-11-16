@@ -695,6 +695,8 @@ class Auth extends Component
 
         $this->checkUserFlags($user);
         $this->setIdentity($user);
+
+        return true;
     }
 
     /**
