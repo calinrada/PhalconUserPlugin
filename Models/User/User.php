@@ -735,7 +735,9 @@ class User extends \Phalcon\Mvc\Model
             $this->mustChangePassword = 0;
         }
 
-        $this->active = 0;
+        if($this->active != 1) {
+            $this->active = 0;
+        }
         $this->suspended = 0;
         $this->banned = 0;
     }

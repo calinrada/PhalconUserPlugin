@@ -26,9 +26,8 @@ class Mail extends Component
      */
     public function getTemplate($name, $params)
     {
-        $language = $this->getDI()->get('cookies')->get('preferredLanguage');
         $parameters = array_merge(array(
-            'publicUrl' => $this->config->application->publicUrl.($language ? '/'.$language : ''),
+            'publicUrl' => $this->config->application->publicUrl,
         ), $params);
 
         return $this->view->getRender('emailTemplates', $name, $parameters, function($view){

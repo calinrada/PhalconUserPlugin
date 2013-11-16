@@ -86,7 +86,7 @@ class Auth extends Component
         } else {
             if ($form->isValid($this->request->getPost()) == false) {
                 foreach ($form->getMessages() as $message) {
-                    $this->flash->error($message);
+                    $this->flashSession->error($message->getMessage());
                 }
             } else {
                 $this->check(array(

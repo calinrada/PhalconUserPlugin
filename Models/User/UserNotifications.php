@@ -16,7 +16,13 @@ class UserNotifications extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $user_id;
+    protected $from_user_id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $for_user_id;
 
     /**
      *
@@ -61,14 +67,26 @@ class UserNotifications extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_id
+     * Method to set the value of field from_user_id
      *
-     * @param integer $user_id
+     * @param integer $from_user_id
      * @return $this
      */
-    public function setUserId($user_id)
+    public function setFromUserId($from_user_id)
     {
-        $this->user_id = $user_id;
+        $this->from_user_id= $from_user_id;
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field for_user_id
+     *
+     * @param integer $for_user_id
+     * @return $this
+     */
+    public function setForUserId($for_user_id)
+    {
+        $this->for_user_id= $for_user_id;
         return $this;
     }
 
@@ -143,13 +161,23 @@ class UserNotifications extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_id
+     * Returns the value of field from_user_id
      *
      * @return integer
      */
-    public function getUserId()
+    public function getFromUserId()
     {
-        return $this->user_id;
+        return $this->from_user_id;
+    }
+
+    /**
+     * Returns the value of field for_user_id
+     *
+     * @return integer
+     */
+    public function getForUserId()
+    {
+        return $this->for_user_id;
     }
 
     /**
@@ -207,8 +235,13 @@ class UserNotifications extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
-            'alias' => 'user',
+        $this->belongsTo('from_user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'from_user',
+            'reusable' => true
+        ));
+
+        $this->belongsTo('for_user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'for_user',
             'reusable' => true
         ));
     }
@@ -240,7 +273,8 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function columnMap() {
         return array(
             'id' => 'id',
-            'user_id' => 'user_id',
+            'from_user_id' => 'from_user_id',
+            'for_user_id' => 'for_user_id',
             'object_id' => 'object_id',
             'object_type' => 'object_type',
             'notification_type' => 'notification_type',
