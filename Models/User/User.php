@@ -105,7 +105,7 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $must_change_password;
+    protected $must_change_password = 0;
 
     /**
      *
@@ -123,19 +123,19 @@ class User extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $banned;
+    protected $banned = 0;
 
     /**
      *
      * @var integer
      */
-    protected $suspended;
+    protected $suspended = 0;
 
     /**
      *
      * @var integer
      */
-    protected $active;
+    protected $active = 0;
 
     /**
      * Method to set the value of field id
@@ -650,7 +650,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function isBanned()
     {
-        return $this->getBanned() <> 0;
+        return (bool) $this->banned;
     }
 
     /**
@@ -660,7 +660,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function isActive()
     {
-        return $this->getActive() <> 0;
+        return (bool) $this->active;
     }
 
     /**
@@ -670,7 +670,17 @@ class User extends \Phalcon\Mvc\Model
      */
     public function isSuspended()
     {
-        return $this->getSuspended() <> 0;
+        return (bool) $this->suspended;
+    }
+
+    /**
+     * Checks if the password has to be changed
+     *
+     * @return boolean
+     */
+    public function shouldPasswordBeChanged()
+    {
+        return (bool) $this->must_change_password;
     }
 
     /**
@@ -779,17 +789,13 @@ class User extends \Phalcon\Mvc\Model
     {
         if (empty($this->password)) {
             $tempPassword = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(12)));
-            $this->mustChangePassword = 'Y';
+            $this->must_change_password = 1;
             $this->password = $this->getDI()->getSecurity()->hash($tempPassword);
-        } else {
-            $this->mustChangePassword = 0;
         }
 
-        if ($this->active != 1) {
+        if (1 !== $this->active) {
             $this->active = 0;
         }
-        $this->suspended = 0;
-        $this->banned = 0;
     }
 
     /**
