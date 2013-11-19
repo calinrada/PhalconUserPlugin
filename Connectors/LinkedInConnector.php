@@ -28,25 +28,25 @@ class LinkedInConnector
     const SCOPE_WRITE_MESSAGES = 'w_messages'; // Send messages and invitations to connect as you
 
     /**
-     * @param array $config (api_key, api_secret, callback_url)
+     * @param  array                     $config (api_key, api_secret, callback_url)
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function __construct($config){
-
-        if (!isset($config['api_key']) || empty($config['api_key'])){
+    public function __construct($config)
+    {
+        if (!isset($config['api_key']) || empty($config['api_key'])) {
             throw new \InvalidArgumentException('Invalid api key - make sure api_key is defined in the config array');
         }
 
-        if (!isset($config['api_secret']) || empty($config['api_secret'])){
+        if (!isset($config['api_secret']) || empty($config['api_secret'])) {
             throw new \InvalidArgumentException('Invalid api secret - make sure api_secret is defined in the config array');
         }
 
-        if (!isset($config['callback_url']) || empty($config['callback_url'])){
+        if (!isset($config['callback_url']) || empty($config['callback_url'])) {
             throw new \InvalidArgumentException('Invalid callback url - make sure callback_url is defined in the config array');
         }
 
-        if (!extension_loaded('curl')){
+        if (!extension_loaded('curl')) {
             throw new \RuntimeException('PHP CURL extension does not seem to be loaded');
         }
 
@@ -57,17 +57,17 @@ class LinkedInConnector
     /**
      * Get the login url, pass scope to request specific permissions
      *
-     * @param array $scope - an array of requested permissions (can use scope constants defined in this class)
-     * @param string $state - a unique identifier for this user, if none is passed, one is generated via uniqid
+     * @param  array  $scope - an array of requested permissions (can use scope constants defined in this class)
+     * @param  string $state - a unique identifier for this user, if none is passed, one is generated via uniqid
      * @return string $url
      */
-    public function getLoginUrl(array $scope = array(), $state = null){
-
-        if (!empty($scope)){
+    public function getLoginUrl(array $scope = array(), $state = null)
+    {
+        if (!empty($scope)) {
             $scope = implode('%20', $scope);
         }
 
-        if (empty($state)){
+        if (empty($state)) {
             $state = uniqid('', true);
         }
         $this->setState($state);
@@ -81,18 +81,18 @@ class LinkedInConnector
     /**
      * Exchange the authorization code for an access token
      *
-     * @param string $authorization_code
+     * @param  string                    $authorization_code
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
-     * @return string $access_token
+     * @return string                    $access_token
      */
-    public function getAccessToken($authorization_code = null){
-
-        if (!empty($this->_access_token)){
+    public function getAccessToken($authorization_code = null)
+    {
+        if (!empty($this->_access_token)) {
             return $this->_access_token;
         }
 
-        if (empty($authorization_code)){
+        if (empty($authorization_code)) {
             throw new \InvalidArgumentException('Invalid authorization code. Pass in the "code" parameter from your callback url');
         }
 
@@ -105,7 +105,7 @@ class LinkedInConnector
         );
 
         $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken', $params, 'POST', array('x-li-format: json'));
-        if (isset($data['error']) && !empty($data['error'])){
+        if (isset($data['error']) && !empty($data['error'])) {
             throw new \RuntimeException('Access Token Request Error: ' . $data['error'] . ' -- ' . $data['error_description']);
         }
 
@@ -121,8 +121,8 @@ class LinkedInConnector
      *
      * @return int access token expiration time -
      */
-    public function getAccessTokenExpiration(){
-
+    public function getAccessTokenExpiration()
+    {
         return $this->_access_token_expires;
 
     }
@@ -130,14 +130,14 @@ class LinkedInConnector
     /**
      * Set the access token manually
      *
-     * @param string $token
+     * @param  string                    $token
      * @throws \InvalidArgumentException
      * @return \LinkedIn\LinkedIn
      */
-    public function setAccessToken($token){
-
+    public function setAccessToken($token)
+    {
         $token = trim($token);
-        if (empty($token)){
+        if (empty($token)) {
             throw new \InvalidArgumentException('Invalid access token');
         }
 
@@ -150,14 +150,14 @@ class LinkedInConnector
     /**
      * Set the state manually. State is a unique identifier for the user
      *
-     * @param string $state
+     * @param  string                    $state
      * @throws \InvalidArgumentException
      * @return \LinkedIn\LinkedIn
      */
-    public function setState($state){
-
+    public function setState($state)
+    {
         $state = trim($state);
-        if (empty($state)){
+        if (empty($state)) {
             throw new \InvalidArgumentException('Invalid state. State should be a unique identifier for this user');
         }
 
@@ -172,8 +172,8 @@ class LinkedInConnector
      *
      * @return string
      */
-    public function getState(){
-
+    public function getState()
+    {
         return $this->_state;
 
     }
@@ -181,12 +181,12 @@ class LinkedInConnector
     /**
      * POST to an authenciated API endpoint w/ payload
      *
-     * @param string $endpoint
-     * @param array $payload
+     * @param  string $endpoint
+     * @param  array  $payload
      * @return array
      */
-    public function post($endpoint, array $payload = array()){
-
+    public function post($endpoint, array $payload = array())
+    {
         return $this->fetch($endpoint, $payload, 'POST');
 
     }
@@ -194,12 +194,12 @@ class LinkedInConnector
     /**
      * GET an authenticated API endpoind w/ payload
      *
-     * @param unknown_type $endpoint
-     * @param array $payload
+     * @param  unknown_type $endpoint
+     * @param  array        $payload
      * @return array
      */
-    public function get($endpoint, array $payload = array()){
-
+    public function get($endpoint, array $payload = array())
+    {
         return $this->fetch($endpoint, $payload);
 
     }
@@ -207,12 +207,12 @@ class LinkedInConnector
     /**
      * PUT to an authenciated API endpoint w/ payload
      *
-     * @param unknown_type $endpoint
-     * @param array $payload
+     * @param  unknown_type $endpoint
+     * @param  array        $payload
      * @return array
      */
-    public function put($endpoint, array $payload = array()){
-
+    public function put($endpoint, array $payload = array())
+    {
         return $this->fetch($endpoint, $payload, 'PUT');
 
     }
@@ -222,15 +222,15 @@ class LinkedInConnector
      * Headers are for additional headers to be sent along with the request.
      * Curl options are additional curl options that may need to be set
      *
-     * @param string $endpoint
-     * @param array $payload
-     * @param string $method
-     * @param array $headers
-     * @param array $curl_options
+     * @param  string $endpoint
+     * @param  array  $payload
+     * @param  string $method
+     * @param  array  $headers
+     * @param  array  $curl_options
      * @return array
      */
-    public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array()){
-
+    public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
+    {
         $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . (!empty($this->_access_token)? '?oauth2_access_token=' . $this->getAccessToken() : '');
         $headers[] = 'x-li-format: json';
 
@@ -243,8 +243,8 @@ class LinkedInConnector
      *
      * @return array
      */
-    public function getDebugInfo(){
-
+    public function getDebugInfo()
+    {
         return $this->_debug_info;
 
     }
@@ -252,16 +252,16 @@ class LinkedInConnector
     /**
      * Make a CURL request
      *
-     * @param string $url
-     * @param array $payload
-     * @param string $method
-     * @param array $headers
-     * @param array $curl_options
+     * @param  string            $url
+     * @param  array             $payload
+     * @param  string            $method
+     * @param  array             $headers
+     * @param  array             $curl_options
      * @throws \RuntimeException
      * @return array
      */
-    protected function _makeRequest($url, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array()){
-
+    protected function _makeRequest($url, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
+    {
         $ch = $this->_getCurlHandle();
 
         $options = array(
@@ -273,14 +273,14 @@ class LinkedInConnector
                 CURLOPT_FOLLOWLOCATION => true
         );
 
-        if (!empty($payload)){
+        if (!empty($payload)) {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = http_build_query($payload);
             $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
             $options[CURLOPT_HTTPHEADER] = $headers;
         }
 
-        if (!empty($curl_options)){
+        if (!empty($curl_options)) {
             $options = array_merge($options, $curl_options);
         }
 
@@ -288,21 +288,21 @@ class LinkedInConnector
         $response = curl_exec($ch);
         $this->_debug_info = curl_getinfo($ch);
 
-        if ($response === false){
+        if ($response === false) {
             throw new \RuntimeException('Request Error: ' . curl_error($ch));
         }
 
         $response = json_decode($response, true);
-        if (isset($response['status']) && ($response['status'] < 200 || $response['status'] > 300)){
+        if (isset($response['status']) && ($response['status'] < 200 || $response['status'] > 300)) {
             throw new \RuntimeException('Request Error: ' . $response['message'] . '. Raw Response: ' . print_r($response, true));
         }
 
         return $response;
     }
 
-    protected function _getCurlHandle(){
-
-        if (!$this->_curl_handle){
+    protected function _getCurlHandle()
+    {
+        if (!$this->_curl_handle) {
             $this->_curl_handle = curl_init();
         }
 
@@ -310,12 +310,11 @@ class LinkedInConnector
 
     }
 
-    public function __destruct(){
-
-        if ($this->_curl_handle){
+    public function __destruct()
+    {
+        if ($this->_curl_handle) {
             curl_close($this->_curl_handle);
         }
 
     }
 }
-?>

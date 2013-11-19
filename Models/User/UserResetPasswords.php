@@ -51,6 +51,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -63,6 +64,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
         return $this;
     }
 
@@ -75,6 +77,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -87,6 +90,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -99,6 +103,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setModifiedAt($modified_at)
     {
         $this->modified_at = $modified_at;
+
         return $this;
     }
 
@@ -111,6 +116,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function setReset($reset)
     {
         $this->reset = $reset;
+
         return $this;
     }
 
@@ -198,7 +204,8 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'user_id' => 'user_id',
@@ -222,7 +229,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function beforeValidationOnCreate()
     {
         //Timestamp the confirmaton
-        $this->created_at = date("Y-m-d H:i:s");
+        $this->created_at = date('Y-m-d H:i:s');
 
         //Generate a random confirmation code
         $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
@@ -240,7 +247,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
             array(
                 $this->user->getEmail() => $this->user->getName() ? $this->user->getName() : 'Customer'
             ),
-            "Reset your password",
+            'Reset your password',
             'reset',
             array(
                 'resetUrl' => '/user/resetPassword/' . $this->getCode() . '/' . $this->user->getEmail()
@@ -254,6 +261,6 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function beforeValidationOnUpdate()
     {
         //Timestamp the confirmaton
-        $this->modified_at = date("Y-m-d H:i:s");
+        $this->modified_at = date('Y-m-d H:i:s');
     }
 }

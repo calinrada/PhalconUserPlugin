@@ -45,6 +45,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
         return $this;
     }
 
@@ -69,6 +71,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setIpAddress($ip_address)
     {
         $this->ip_address = $ip_address;
+
         return $this;
     }
 
@@ -81,6 +84,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setUserAgent($user_agent)
     {
         $this->user_agent = $user_agent;
+
         return $this;
     }
 
@@ -93,6 +97,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -170,7 +175,8 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'user_id' => 'user_id',

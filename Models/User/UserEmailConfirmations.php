@@ -1,9 +1,6 @@
 <?php
 namespace Phalcon\UserPlugin\Models\User;
 
-/**
- * Phalcon\UserPlugin\Models\User\UserEmailConfirmations
- */
 class UserEmailConfirmations extends \Phalcon\Mvc\Model
 {
     /**
@@ -51,6 +48,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -63,6 +61,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
         return $this;
     }
 
@@ -75,6 +74,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -87,6 +87,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -99,6 +100,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setModifiedAt($modified_at)
     {
         $this->modified_at = $modified_at;
+
         return $this;
     }
 
@@ -111,6 +113,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function setConfirmed($confirmed)
     {
         $this->confirmed = $confirmed;
+
         return $this;
     }
 
@@ -198,7 +201,8 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'user_id' => 'user_id',
@@ -214,7 +218,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
      */
     public function beforeValidationOnCreate()
     {
-        $this->created_at = date("Y-m-d H:i:s");
+        $this->created_at = date('Y-m-d H:i:s');
         $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
         $this->confirmed = 0;
     }
@@ -224,7 +228,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
      */
     public function beforeValidationOnUpdate()
     {
-        $this->modified_at = date("Y-m-d H:i:s");
+        $this->modified_at = date('Y-m-d H:i:s');
     }
 
     /**
@@ -236,7 +240,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
             array(
                 $this->user->getEmail() => $this->user->getName()
             ),
-            "Please confirm your email",
+            'Please confirm your email',
             'confirmation',
             array(
                 'confirmUrl' => '/user/confirmEmail/' . $this->getCode(). '/' . $this->user->getEmail()
