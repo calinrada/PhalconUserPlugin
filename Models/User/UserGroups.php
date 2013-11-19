@@ -1,9 +1,8 @@
 <?php
 namespace Phalcon\UserPlugin\Models\User;
 
-/**
- * Phalcon\UserPlugin\Models\User\UserGroups
- */
+use Phalcon\Mvc\Model\Validator\Uniqueness;
+
 class UserGroups extends \Phalcon\Mvc\Model
 {
     /**
@@ -120,5 +119,20 @@ class UserGroups extends \Phalcon\Mvc\Model
             'name' => 'name',
             'active' => 'active'
         );
+    }
+
+    /**
+     * Validations and business logic
+     */
+    public function validation()
+    {
+        $this->validate(new Uniqueness(
+            array(
+                'field' => 'name',
+                'message' => 'Group name already registered'
+            )
+        ));
+
+        return true !== $this->validationHasFailed();
     }
 }
