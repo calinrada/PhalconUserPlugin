@@ -72,6 +72,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -84,6 +85,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setLanguage($language)
     {
         $this->language = $language;
+
         return $this;
     }
 
@@ -96,6 +98,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setFormattedAddress($formatted_address)
     {
         $this->formatted_address = $formatted_address;
+
         return $this;
     }
 
@@ -108,6 +111,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setCity($city)
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -120,6 +124,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -132,6 +137,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setLatitude($latitude)
     {
         $this->latitude = $latitude;
+
         return $this;
     }
 
@@ -144,6 +150,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setLongitude($longitude)
     {
         $this->longitude = $longitude;
+
         return $this;
     }
 
@@ -156,6 +163,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setGeoPoint($geo_point)
     {
         $this->geo_point = $geo_point;
+
         return $this;
     }
 
@@ -168,6 +176,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -180,6 +189,7 @@ class Locations extends \Phalcon\Mvc\Model
     public function setUpdatedAt($updated_at)
     {
         $this->updated_at = $updated_at;
+
         return $this;
     }
 
@@ -315,7 +325,6 @@ class Locations extends \Phalcon\Mvc\Model
         $this->created_at = date('Y-m-d H:i:s');
     }
 
-
     public function beforeUpdate()
     {
         $this->updated_at = date('Y-m-d H:i:s');
@@ -324,7 +333,8 @@ class Locations extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'language' => 'language',

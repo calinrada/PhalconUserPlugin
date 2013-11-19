@@ -1,9 +1,6 @@
 <?php
 namespace Phalcon\UserPlugin\Models\User;
 
-/**
- * Phalcon\UserPlugin\Models\User\UserFailedLogins
- */
 class UserFailedLogins extends \Phalcon\Mvc\Model
 {
     /**
@@ -39,6 +36,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -51,6 +49,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
         return $this;
     }
 
@@ -63,6 +62,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     public function setIpAddress($ip_address)
     {
         $this->ip_address = $ip_address;
+
         return $this;
     }
 
@@ -75,6 +75,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     public function setAttempted($attempted)
     {
         $this->attempted = $attempted;
+
         return $this;
     }
 
@@ -142,7 +143,8 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'user_id' => 'user_id',

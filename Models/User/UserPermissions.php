@@ -39,6 +39,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -51,6 +52,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     public function setGroupId($group_id)
     {
         $this->group_id = $group_id;
+
         return $this;
     }
 
@@ -63,6 +65,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     public function setResource($resource)
     {
         $this->resource = $resource;
+
         return $this;
     }
 
@@ -75,6 +78,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -142,7 +146,8 @@ class UserPermissions extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'group_id' => 'group_id',

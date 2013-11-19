@@ -32,8 +32,7 @@ class FacebookConnector extends \BaseFacebook
 
         parent::__construct($config);
 
-        if (!empty($config['sharedSession']))
-        {
+        if (!empty($config['sharedSession'])) {
             $this->initSharedSession();
         }
     }
@@ -43,13 +42,13 @@ class FacebookConnector extends \BaseFacebook
         $o_cookies = $this->di->get('cookies');
         $cookie_name = $this->getSharedSessionCookieName();
 
-        if ($o_cookies->has($cookie_name))
-        {
+        if ($o_cookies->has($cookie_name)) {
             $data = $this->parseSignedRequest($o_cookies->get($cookie_name)->getValue());
             if ($data && !empty($data['domain']) &&
                     self::isAllowedDomain($this->getHttpHost(), $data['domain'])) {
                 // good case
                 $this->sharedSessionID = $data['id'];
+
                 return;
             }
             // ignoring potentially unreachable data
@@ -88,9 +87,9 @@ class FacebookConnector extends \BaseFacebook
      */
     protected function setPersistentData($key, $value)
     {
-        if (!in_array($key, self::$kSupportedKeys))
-        {
+        if (!in_array($key, self::$kSupportedKeys)) {
             self::errorLog('Unsupported key passed to setPersistentData.');
+
             return;
         }
 
@@ -102,19 +101,21 @@ class FacebookConnector extends \BaseFacebook
     {
         if (!in_array($key, self::$kSupportedKeys)) {
             self::errorLog('Unsupported key passed to getPersistentData.');
+
             return $default;
         }
 
         $session_var_name = $this->constructSessionVariableName($key);
+
         return $this->di->get('session')->has($session_var_name) ?
         $this->di->get('session')->get($session_var_name) : $default;
     }
 
     protected function clearPersistentData($key)
     {
-        if (!in_array($key, self::$kSupportedKeys))
-        {
+        if (!in_array($key, self::$kSupportedKeys)) {
             self::errorLog('Unsupported key passed to clearPersistentData.');
+
             return;
         }
 
@@ -124,12 +125,10 @@ class FacebookConnector extends \BaseFacebook
 
     protected function clearAllPersistentData()
     {
-        foreach (self::$kSupportedKeys as $key)
-        {
+        foreach (self::$kSupportedKeys as $key) {
             $this->clearPersistentData($key);
         }
-        if ($this->sharedSessionID)
-        {
+        if ($this->sharedSessionID) {
             $this->deleteSharedSessionCookie();
         }
     }
@@ -156,4 +155,3 @@ class FacebookConnector extends \BaseFacebook
         return implode('_', $parts);
     }
 }
-?>

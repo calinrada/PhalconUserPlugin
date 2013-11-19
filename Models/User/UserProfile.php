@@ -68,6 +68,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -80,6 +81,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
         return $this;
     }
 
@@ -92,6 +94,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setPicture($picture)
     {
         $this->picture = $picture;
+
         return $this;
     }
 
@@ -104,6 +107,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setBirthDate($birth_date)
     {
         $this->birth_date = $birth_date;
+
         return $this;
     }
 
@@ -116,6 +120,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setGender($gender)
     {
         $this->gender = $gender;
+
         return $this;
     }
 
@@ -128,6 +133,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setHomeLocationId($home_location_id)
     {
         $this->home_location_id = $home_location_id;
+
         return $this;
     }
 
@@ -140,9 +146,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setCurrentLocationId($current_location_id)
     {
         $this->current_location_id = $current_location_id;
+
         return $this;
     }
-
 
     /**
      * Method to set the value of field created_at
@@ -153,6 +159,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -165,6 +172,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function setUpdatedAt($updated_at)
     {
         $this->updated_at = $updated_at;
+
         return $this;
     }
 
@@ -238,7 +246,6 @@ class UserProfile extends \Phalcon\Mvc\Model
         return $this->current_location_id;
     }
 
-
     /**
      * Returns the value of field created_at
      *
@@ -304,7 +311,8 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'user_id' => 'user_id',

@@ -22,7 +22,7 @@ class Mail extends Component
      * Applies a template to be used in the e-mail
      *
      * @param string $name
-     * @param array $params
+     * @param array  $params
      */
     public function getTemplate($name, $params)
     {
@@ -30,7 +30,7 @@ class Mail extends Component
             'publicUrl' => $this->config->application->publicUrl,
         ), $params);
 
-        return $this->view->getRender('emailTemplates', $name, $parameters, function($view){
+        return $this->view->getRender('emailTemplates', $name, $parameters, function ($view) {
             $view->setRenderLevel(View::LEVEL_LAYOUT);
         });
 
@@ -40,10 +40,10 @@ class Mail extends Component
     /**
      * Sends e-mails based on predefined templates
      *
-     * @param array $to
+     * @param array  $to
      * @param string $subject
      * @param string $name
-     * @param array $params
+     * @param array  $params
      */
     public function send($to, $subject, $name, $params)
     {
@@ -60,7 +60,6 @@ class Mail extends Component
                   $mailSettings->fromEmail => $mailSettings->fromName
               ))
               ->setBody($template, 'text/html');
-
 
           if (!$this->_transport) {
                 $this->_transport = Smtp::newInstance(

@@ -35,7 +35,7 @@ class Acl extends Component
     /**
      * Checks if a controller is private or not
      *
-     * @param string $controllerName
+     * @param  string  $controllerName
      * @return boolean
      */
     public function isPrivate($controllerName)
@@ -46,9 +46,9 @@ class Acl extends Component
     /**
      * Checks if the current group is allowed to access a resource
      *
-     * @param string $group
-     * @param string $controller
-     * @param string $action
+     * @param  string  $group
+     * @param  string  $controller
+     * @param  string  $action
      * @return boolean
      */
     public function isAllowed($group, $controller, $action)
@@ -73,6 +73,7 @@ class Acl extends Component
             $acl = apc_fetch($this->di->config->cradaUserPlugin->appId);
             if (is_object($acl)) {
                 $this->_acl = $acl;
+
                 return $acl;
             }
         }
@@ -80,6 +81,7 @@ class Acl extends Component
         //Check if the ACL is already generated
         if (!file_exists(__DIR__ . $this->_filePath)) {
             $this->_acl = $this->rebuild();
+
             return $this->_acl;
         }
 
@@ -98,7 +100,7 @@ class Acl extends Component
     /**
      * Returns the permissions assigned to a roup
      *
-     * @param Profiles $profile
+     * @param  Profiles $profile
      * @return array
      */
     public function getPermissions(Group $group)
@@ -107,6 +109,7 @@ class Acl extends Component
         foreach ($group->getPermissions() as $permission) {
             $permissions[$permission->resource . '.' . $permission->action] = true;
         }
+
         return $permissions;
     }
 

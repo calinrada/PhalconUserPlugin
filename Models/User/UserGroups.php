@@ -1,9 +1,8 @@
 <?php
 namespace Phalcon\UserPlugin\Models\User;
 
-/**
- * Phalcon\UserPlugin\Models\User\UserGroups
- */
+use Phalcon\Mvc\Model\Validator\Uniqueness;
+
 class UserGroups extends \Phalcon\Mvc\Model
 {
     /**
@@ -33,6 +32,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -45,6 +45,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setActive($active)
     {
         $this->active = $active;
+
         return $this;
     }
 
@@ -114,11 +116,27 @@ class UserGroups extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'name' => 'name',
             'active' => 'active'
         );
+    }
+
+    /**
+     * Validations and business logic
+     */
+    public function validation()
+    {
+        $this->validate(new Uniqueness(
+            array(
+                'field' => 'name',
+                'message' => 'Group name already registered'
+            )
+        ));
+
+        return true !== $this->validationHasFailed();
     }
 }

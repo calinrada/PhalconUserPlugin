@@ -22,20 +22,18 @@ class Auth extends Component
     /**
      * Checks the user credentials
      *
-     * @param array $credentials
+     * @param  array  $credentials
      * @return boolan
      */
     public function check($credentials)
     {
         $user = User::findFirstByEmail($credentials['email']);
-        if ($user == false)
-        {
+        if ($user == false) {
             $this->registerUserThrottling(0);
             throw new Exception('Wrong email/password combination');
         }
 
-        if (!$this->security->checkHash($credentials['password'], $user->getPassword()))
-        {
+        if (!$this->security->checkHash($credentials['password'], $user->getPassword())) {
             $this->registerUserThrottling($user->getId());
             throw new Exception('Wrong email/password combination');
         }
@@ -43,8 +41,7 @@ class Auth extends Component
         $this->checkUserFlags($user);
         $this->saveSuccessLogin($user);
 
-        if (isset($credentials['remember']))
-        {
+        if (isset($credentials['remember'])) {
             $this->createRememberEnviroment($user);
         }
 
@@ -64,7 +61,7 @@ class Auth extends Component
             'name'  => $user->getName(),
         );
 
-        if($user->profile) {
+        if ($user->profile) {
             $st_identity['profile_picture'] = $user->profile->getPicture();
         }
 
@@ -74,7 +71,7 @@ class Auth extends Component
     /**
      * Login user - normal way
      *
-     * @param \Phalcon\UserPlugin\Forms\User\LoginForm $form
+     * @param  \Phalcon\UserPlugin\Forms\User\LoginForm $form
      * @return \Phalcon\Http\ResponseInterface
      */
     public function login($form)
@@ -111,8 +108,7 @@ class Auth extends Component
         $facebook = new FacebookConnector($di);
         $facebookUser = $facebook->getUser();
 
-        if ($facebookUser)
-        {
+        if ($facebookUser) {
             try {
                 $facebookUserProfile = $facebook->api('/me');
             } catch (\FacebookApiException $e) {
@@ -121,25 +117,21 @@ class Auth extends Component
                 $di->logger->commit();
                 $facebookUser = null;
             }
-        }
-        else
-        {
+        } else {
             $scope = array('scope' => 'email,user_birthday,user_location');
+
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
 
-        if($facebookUser)
-        {
+        if ($facebookUser) {
             $pupRedirect = $di->get('config')->pup->redirect;
             $email = isset($facebookUserProfile['email']) ? $facebookUserProfile['email'] : 'a@a.com';
             $user = User::findFirst(" email='$email' OR facebook_id='".$facebookUserProfile['id']."' ");
 
-            if ($user)
-            {
+            if ($user) {
                 $this->checkUserFlags($user);
                 $this->setIdentity($user);
-                if(!$user->getFacebookId())
-                {
+                if (!$user->getFacebookId()) {
                     $user->setFacebookId($facebookUserProfile['id']);
                     $user->setFacebookName($facebookUserProfile['name']);
                     $user->setFacebookData(serialize($facebookUserProfile));
@@ -149,9 +141,7 @@ class Auth extends Component
                 $this->saveSuccessLogin($user);
 
                 return $this->response->redirect($pupRedirect->success);
-            }
-            else
-            {
+            } else {
                 $password = $this->generatePassword();
 
                 $user = new User();
@@ -166,16 +156,14 @@ class Auth extends Component
                 $user->setSuspended(0);
                 $user->setActive(1);
 
-                if(true == $user->create())
-                {
+                if (true == $user->create()) {
                     $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
-                }
-                else
-                {
+                } else {
                     $this->flash->error('Error on facebook');
+
                     return $this->response->redirect($pupRedirect->failure, true);
                 }
             }
@@ -197,8 +185,7 @@ class Auth extends Component
         $token = $this->session->get('linkedIn_token');
         $token_expires = $this->session->get('linkedIn_token_expires_on', 0);
 
-        if($token && $token_expires > time())
-        {
+        if ($token && $token_expires > time()) {
             $pupRedirect = $di->get('config')->pup->redirect;
             $li->setAccessToken($this->session->get('linkedIn_token'));
             $email = $li->get('/people/~/email-address');
@@ -209,23 +196,19 @@ class Auth extends Component
 
             $user = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
 
-            if ($user)
-            {
+            if ($user) {
                 $this->checkUserFlags($user);
                 $this->setIdentity($user);
                 $this->saveSuccessLogin($user);
 
-                if(!$user->getLinkedinId())
-                {
+                if (!$user->getLinkedinId()) {
                     $user->setLinkedinId($linkedInId);
                     $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
                     $user->update();
                 }
 
                 return $this->response->redirect($pupRedirect->success);
-            }
-            else
-            {
+            } else {
                 $password = $this->generatePassword();
 
                 $user = new User();
@@ -240,28 +223,22 @@ class Auth extends Component
                 $user->setSuspended(0);
                 $user->setActive(1);
 
-                if(true == $user->create())
-                {
+                if (true == $user->create()) {
                     $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
-                }
-                else
-                {
-                    foreach($user->getMessages() as $message)
-                    {
+                } else {
+                    foreach ($user->getMessages() as $message) {
                         $this->flashSession->error($message->getMessage());
                     }
+
                     return $this->response->redirect($pupRedirect->failure);
                 }
             }
 
-        }
-        else // If token is not set
-        {
-            if($this->request->get('code'))
-            {
+        } else { // If token is not set
+            if ($this->request->get('code')) {
                 $token = $li->getAccessToken($this->request->get('code'));
                 $token_expires = $li->getAccessTokenExpiration();
                 $this->session->set('linkedIn_token', $token);
@@ -287,8 +264,7 @@ class Auth extends Component
         $config      = array_merge($config, array('token' => $oauth['token'], 'secret' => $oauth['secret']));
 
         $twitter = new TwitterConnector($config, $di);
-        if($this->request->get('oauth_token'))
-        {
+        if ($this->request->get('oauth_token')) {
             $twitter->access_token();
 
             $code = $twitter->user_request(array(
@@ -298,8 +274,7 @@ class Auth extends Component
             if ($code == 200) {
                 $data = json_decode($twitter->response['response'], true);
 
-                if($data['screen_name'])
-                {
+                if ($data['screen_name']) {
                     $code = $twitter->user_request(array(
                             'url' => $twitter->url('1.1/users/show'),
                             'params' => array(
@@ -312,16 +287,13 @@ class Auth extends Component
                         $twitterId = $response['id'];
                         $user = User::findFirst("twitter_id='$twitterId'");
 
-                        if ($user)
-                        {
+                        if ($user) {
                             $this->checkUserFlags($user);
                             $this->setIdentity($user);
                             $this->saveSuccessLogin($user);
 
                             return $this->response->redirect($pupRedirect->success);
-                        }
-                        else
-                        {
+                        } else {
                             $password = $this->generatePassword();
                             $email = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
                             $user = new User();
@@ -336,20 +308,17 @@ class Auth extends Component
                             $user->setSuspended(0);
                             $user->setActive(1);
 
-                            if(true == $user->create())
-                            {
+                            if (true == $user->create()) {
                                 $this->setIdentity($user);
                                 $this->saveSuccessLogin($user);
                                 $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
 
                                 return $this->response->redirect($pupRedirect->success);
-                            }
-                            else
-                            {
-                                foreach($user->getMessages() as $message)
-                                {
+                            } else {
+                                foreach ($user->getMessages() as $message) {
                                     $this->flashSession->error($message->getMessage());
                                 }
+
                                 return $this->response->redirect($pupRedirect->failure);
                             }
                         }
@@ -378,7 +347,7 @@ class Auth extends Component
 
         $response = $google->connect($di);
 
-        if($response['status'] == 0) {
+        if ($response['status'] == 0) {
             return $this->response->redirect($response['redirect'], true);
         } else {
             $gplusId = $response['userinfo']['id'];
@@ -386,13 +355,11 @@ class Auth extends Component
             $name    = $response['userinfo']['name'];
             $user    = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
 
-            if ($user)
-            {
+            if ($user) {
                 $this->checkUserFlags($user);
                 $this->setIdentity($user);
 
-                if(!$user->getGplusId())
-                {
+                if (!$user->getGplusId()) {
                     $user->setGplusId($gplusId);
                     $user->setGplusName($name);
                     $user->setGplusData(serialize($response['userinfo']));
@@ -402,9 +369,7 @@ class Auth extends Component
                 $this->saveSuccessLogin($user);
 
                 return $this->response->redirect($pupRedirect->success);
-            }
-            else
-            {
+            } else {
                 $password = $this->generatePassword();
 
                 $user = new User();
@@ -419,19 +384,16 @@ class Auth extends Component
                 $user->setSuspended(0);
                 $user->setActive(1);
 
-                if(true == $user->create())
-                {
+                if (true == $user->create()) {
                     $this->setIdentity($user);
                     $this->saveSuccessLogin($user);
 
                     return $this->response->redirect($pupRedirect->success);
-                }
-                else
-                {
-                    foreach($user->getMessages() as $message)
-                    {
+                } else {
+                    foreach ($user->getMessages() as $message) {
                         $this->flashSession->error($message->getMessage());
                     }
+
                     return $this->response->redirect($pupRedirect->failure);
                 }
             }
@@ -451,8 +413,7 @@ class Auth extends Component
         $successLogin->setIpAddress($this->request->getClientAddress());
         $successLogin->setUserAgent($this->request->getUserAgent());
 
-        if (!$successLogin->save())
-        {
+        if (!$successLogin->save()) {
             $messages = $successLogin->getMessages();
             throw new Exception($messages[0]);
         }
@@ -512,8 +473,7 @@ class Auth extends Component
         $remember->setUserAgent($user_agent);
         $remember->setCreatedAt(time());
 
-        if ($remember->save() != false)
-        {
+        if ($remember->save() != false) {
             $expire = time() + 86400 * 30;
             $this->cookies->set('RMU', $user->getId(), $expire);
             $this->cookies->set('RMT', $token, $expire);
@@ -544,29 +504,24 @@ class Auth extends Component
 
         $pupRedirect = $this->getDI()->get('config')->pup->redirect;
 
-        if ($user)
-        {
+        if ($user) {
             $userAgent = $this->request->getUserAgent();
             $token = md5($user->getEmail() . $user->getPassword() . $userAgent);
 
-            if ($cookieToken == $token)
-            {
+            if ($cookieToken == $token) {
 
                 $remember = UserRememberTokens::findFirst(array(
                     'user_id = ?0 AND token = ?1',
                     'bind' => array($user->getId(), $token)
                 ));
 
-                if ($remember)
-                {
-                    if ((time() - (86400 * 30)) < $remember->getCreatedAt())
-                    {
+                if ($remember) {
+                    if ((time() - (86400 * 30)) < $remember->getCreatedAt()) {
                         $this->checkUserFlags($user);
                         $this->setIdentity($user);
                         $this->saveSuccessLogin($user);
 
-                        if(true === $redirect)
-                        {
+                        if (true === $redirect) {
                             return $this->response->redirect($pupRedirect->success);
                         }
 
@@ -591,11 +546,12 @@ class Auth extends Component
     {
         $identity = $this->getIdentity();
 
-        if(is_array($identity)) {
-            if(isset($identity['id'])) {
+        if (is_array($identity)) {
+            if (isset($identity['id'])) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -606,18 +562,15 @@ class Auth extends Component
      */
     public function checkUserFlags(User $user)
     {
-        if ($user->getActive() <> 1)
-        {
+        if (false === $user->isActive()) {
             throw new Exception('The user is inactive');
         }
 
-        if ($user->getBanned() <> 0)
-        {
+        if (true === $user->isBanned()) {
             throw new Exception('The user is banned');
         }
 
-        if ($user->getSuspended() <> 0)
-        {
+        if (true === $user->isSuspended()) {
             throw new Exception('The user is suspended');
         }
     }
@@ -640,6 +593,7 @@ class Auth extends Component
     public function getUserName()
     {
         $identity = $this->session->get('auth-identity');
+
         return isset($identity['name']) ? $identity['name'] : false;
     }
     /**
@@ -650,6 +604,7 @@ class Auth extends Component
     public function getUserId()
     {
         $identity = $this->session->get('auth-identity');
+
         return isset($identity['id']) ? $identity['id'] : false;
     }
 
@@ -661,13 +616,11 @@ class Auth extends Component
         $pupConfig = $this->getDI()->get('config')->pup;
         $fbAppId = $pupConfig->connectors->facebook->appId;
 
-        if ($this->cookies->has('RMU'))
-        {
+        if ($this->cookies->has('RMU')) {
             $this->cookies->get('RMU')->delete();
         }
 
-        if ($this->cookies->has('RMT'))
-        {
+        if ($this->cookies->has('RMT')) {
             $this->cookies->get('RMT')->delete();
         }
 
@@ -688,8 +641,7 @@ class Auth extends Component
     public function authUserById($id)
     {
         $user = User::findFirstById($id);
-        if ($user == false)
-        {
+        if ($user == false) {
             throw new Exception('The user does not exist');
         }
 
@@ -708,11 +660,9 @@ class Auth extends Component
     {
         $identity = $this->session->get('auth-identity');
 
-        if (isset($identity['id']))
-        {
+        if (isset($identity['id'])) {
             $user = User::findFirstById($identity['id']);
-            if ($user == false)
-            {
+            if ($user == false) {
                 throw new Exception('The user does not exist');
             }
 
@@ -725,12 +675,13 @@ class Auth extends Component
     /**
      * Generate a random password
      *
-     * @param integer $length
+     * @param  integer $length
      * @return string
      */
     public function generatePassword($length = 8)
     {
         $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789#@%_.";
+
         return substr(str_shuffle($chars),0,$length);
     }
 }

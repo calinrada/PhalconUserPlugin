@@ -63,6 +63,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -75,6 +76,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setFromUserId($from_user_id)
     {
         $this->from_user_id= $from_user_id;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setForUserId($for_user_id)
     {
         $this->for_user_id= $for_user_id;
+
         return $this;
     }
 
@@ -99,6 +102,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setObjectId($object_id)
     {
         $this->object_id = $object_id;
+
         return $this;
     }
 
@@ -111,6 +115,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setObjectType($object_type)
     {
         $this->object_type = $object_type;
+
         return $this;
     }
 
@@ -123,6 +128,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setNotificationType($notification_type)
     {
         $this->notification_type = $notification_type;
+
         return $this;
     }
 
@@ -135,6 +141,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setIsSeen($is_seen)
     {
         $this->is_seen = $is_seen;
+
         return $this;
     }
 
@@ -147,6 +154,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -270,7 +278,8 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'from_user_id' => 'from_user_id',
@@ -285,8 +294,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
 
     public function beforeValidationOnCreate()
     {
-        $this->created_at = date("Y-m-d H:i:s");
+        $this->created_at = date('Y-m-d H:i:s');
         $this->is_seen = 0;
     }
-
 }

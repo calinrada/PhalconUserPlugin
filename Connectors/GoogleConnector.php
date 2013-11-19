@@ -36,6 +36,7 @@ class GoogleConnector
             $client->authenticate();
             $session->set('googleToken', $client->getAccessToken());
             $redirect = $this->config['redirect_uri'];
+
             return array('status' => 0, 'redirect' => filter_var($redirect, FILTER_SANITIZE_URL));
         }
 
@@ -46,9 +47,11 @@ class GoogleConnector
         if ($client->getAccessToken()) {
             $userinfo = $oauth2->userinfo->get();
             $session->set('googleToken', $client->getAccessToken());
+
             return array('status' => 1, 'userinfo' => $userinfo);
         } else {
             $authUrl = $client->createAuthUrl();
+
             return array('status' => 0, 'redirect' => $authUrl);
         }
     }
