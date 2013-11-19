@@ -562,15 +562,15 @@ class Auth extends Component
      */
     public function checkUserFlags(User $user)
     {
-        if ($user->getActive() <> 1) {
+        if (false === $user->isActive()) {
             throw new Exception('The user is inactive');
         }
 
-        if ($user->getBanned() <> 0) {
+        if (true === $user->isBanned()) {
             throw new Exception('The user is banned');
         }
 
-        if ($user->getSuspended() <> 0) {
+        if (true === $user->isSuspended()) {
             throw new Exception('The user is suspended');
         }
     }

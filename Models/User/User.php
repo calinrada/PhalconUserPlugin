@@ -644,6 +644,36 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Checks if the user is banned
+     *
+     * @return boolean
+     */
+    public function isBanned()
+    {
+        return $this->getBanned() <> 0;
+    }
+
+    /**
+     * Checks if the user is active
+     *
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->getActive() <> 0;
+    }
+
+    /**
+     * Checks if the user is suspended
+     *
+     * @return boolean
+     */
+    public function isSuspended()
+    {
+        return $this->getSuspended() <> 0;
+    }
+
+    /**
      * Validations and business logic
      */
     public function validation()
@@ -767,17 +797,16 @@ class User extends \Phalcon\Mvc\Model
      */
     public function afterSave()
     {
-        if ($this->active == 0) {
+        if (true === $this->isActive()) {
+            return;
+        }
+        $emailConfirmation = new UserEmailConfirmations();
+        $emailConfirmation->setUserId($this->id);
 
-            $emailConfirmation = new UserEmailConfirmations();
-            $emailConfirmation->setUserId($this->id);
-
-            if ($emailConfirmation->save()) {
-                $this->getDI()->getFlashSession()->notice(
-                    'A confirmation mail has been sent to ' . $this->email
-                );
-            }
+        if ($emailConfirmation->save()) {
+            $this->getDI()->getFlashSession()->notice(
+                'A confirmation mail has been sent to ' . $this->email
+            );
         }
     }
-
 }
