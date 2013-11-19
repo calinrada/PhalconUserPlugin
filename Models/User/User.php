@@ -3,9 +3,6 @@ namespace Phalcon\UserPlugin\Models\User;
 
 use Phalcon\Mvc\Model\Validator\Uniqueness;
 
-/**
- * Phalcon\UserPlugin\Models\User\User
- */
 class User extends \Phalcon\Mvc\Model
 {
     /**
@@ -149,6 +146,7 @@ class User extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -161,6 +159,7 @@ class User extends \Phalcon\Mvc\Model
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -173,6 +172,7 @@ class User extends \Phalcon\Mvc\Model
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -185,6 +185,7 @@ class User extends \Phalcon\Mvc\Model
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -197,6 +198,7 @@ class User extends \Phalcon\Mvc\Model
     public function setFacebookId($facebook_id)
     {
         $this->facebook_id = $facebook_id;
+
         return $this;
     }
 
@@ -209,6 +211,7 @@ class User extends \Phalcon\Mvc\Model
     public function setFacebookName($facebook_name)
     {
         $this->facebook_name = $facebook_name;
+
         return $this;
     }
 
@@ -221,6 +224,7 @@ class User extends \Phalcon\Mvc\Model
     public function setFacebookData($facebook_data)
     {
         $this->facebook_data = $facebook_data;
+
         return $this;
     }
 
@@ -233,6 +237,7 @@ class User extends \Phalcon\Mvc\Model
     public function setLinkedinId($linkedin_id)
     {
         $this->linkedin_id = $linkedin_id;
+
         return $this;
     }
 
@@ -245,6 +250,7 @@ class User extends \Phalcon\Mvc\Model
     public function setLinkedinName($linkedin_name)
     {
         $this->linkedin_name = $linkedin_name;
+
         return $this;
     }
 
@@ -257,6 +263,7 @@ class User extends \Phalcon\Mvc\Model
     public function setLinkedinData($linkedin_data)
     {
         $this->linkedin_data = $linkedin_data;
+
         return $this;
     }
 
@@ -269,6 +276,7 @@ class User extends \Phalcon\Mvc\Model
     public function setGplusId($gplus_id)
     {
         $this->gplus_id = $gplus_id;
+
         return $this;
     }
 
@@ -281,6 +289,7 @@ class User extends \Phalcon\Mvc\Model
     public function setGplusName($gplus_name)
     {
         $this->gplus_name = $gplus_name;
+
         return $this;
     }
 
@@ -293,6 +302,7 @@ class User extends \Phalcon\Mvc\Model
     public function setGplusData($gplus_data)
     {
         $this->gplus_data = $gplus_data;
+
         return $this;
     }
 
@@ -305,6 +315,7 @@ class User extends \Phalcon\Mvc\Model
     public function setTwitterId($twitter_id)
     {
         $this->twitter_id = $twitter_id;
+
         return $this;
     }
 
@@ -317,6 +328,7 @@ class User extends \Phalcon\Mvc\Model
     public function setTwitterName($twitter_name)
     {
         $this->twitter_name = $twitter_name;
+
         return $this;
     }
 
@@ -329,6 +341,7 @@ class User extends \Phalcon\Mvc\Model
     public function setTwitterData($twitter_data)
     {
         $this->twitter_data = $twitter_data;
+
         return $this;
     }
 
@@ -341,6 +354,7 @@ class User extends \Phalcon\Mvc\Model
     public function setMustChangePassword($must_change_password)
     {
         $this->must_change_password = $must_change_password;
+
         return $this;
     }
 
@@ -353,6 +367,7 @@ class User extends \Phalcon\Mvc\Model
     public function setProfileId($profile_id)
     {
         $this->profile_id = $profile_id;
+
         return $this;
     }
 
@@ -365,6 +380,7 @@ class User extends \Phalcon\Mvc\Model
     public function setGroupId($group_id)
     {
         $this->group_id = $group_id;
+
         return $this;
     }
 
@@ -377,6 +393,7 @@ class User extends \Phalcon\Mvc\Model
     public function setBanned($banned)
     {
         $this->banned = $banned;
+
         return $this;
     }
 
@@ -389,6 +406,7 @@ class User extends \Phalcon\Mvc\Model
     public function setSuspended($suspended)
     {
         $this->suspended = $suspended;
+
         return $this;
     }
 
@@ -401,6 +419,7 @@ class User extends \Phalcon\Mvc\Model
     public function setActive($active)
     {
         $this->active = $active;
+
         return $this;
     }
 
@@ -631,12 +650,12 @@ class User extends \Phalcon\Mvc\Model
     {
         $this->validate(new Uniqueness(
             array(
-                "field"   => "email",
-                "message" => "The email is already registered"
+                'field' => 'email',
+                'message' => 'The email is already registered'
             )
         ));
 
-        return $this->validationHasFailed() != true;
+        return true !== $this->validationHasFailed();
     }
 
     /**
@@ -695,30 +714,31 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
-                'id' => 'id',
-                'name' => 'name',
-                'email' => 'email',
-                'password' => 'password',
-                'facebook_id' => 'facebook_id',
-                'facebook_name' => 'facebook_name',
-                'facebook_data' => 'facebook_data',
-                'linkedin_id' => 'linkedin_id',
-                'linkedin_name' => 'linkedin_name',
-                'linkedin_data' => 'linkedin_data',
-                'gplus_id' => 'gplus_id',
-                'gplus_name' => 'gplus_name',
-                'gplus_data' => 'gplus_data',
-                'twitter_id' => 'twitter_id',
-                'twitter_name' => 'twitter_name',
-                'twitter_data' => 'twitter_data',
-                'must_change_password' => 'must_change_password',
-                'profile_id' => 'profile_id',
-                'group_id' => 'group_id',
-                'banned' => 'banned',
-                'suspended' => 'suspended',
-                'active' => 'active'
+            'id' => 'id',
+            'name' => 'name',
+            'email' => 'email',
+            'password' => 'password',
+            'facebook_id' => 'facebook_id',
+            'facebook_name' => 'facebook_name',
+            'facebook_data' => 'facebook_data',
+            'linkedin_id' => 'linkedin_id',
+            'linkedin_name' => 'linkedin_name',
+            'linkedin_data' => 'linkedin_data',
+            'gplus_id' => 'gplus_id',
+            'gplus_name' => 'gplus_name',
+            'gplus_data' => 'gplus_data',
+            'twitter_id' => 'twitter_id',
+            'twitter_name' => 'twitter_name',
+            'twitter_data' => 'twitter_data',
+            'must_change_password' => 'must_change_password',
+            'profile_id' => 'profile_id',
+            'group_id' => 'group_id',
+            'banned' => 'banned',
+            'suspended' => 'suspended',
+            'active' => 'active'
         );
     }
 
@@ -735,7 +755,7 @@ class User extends \Phalcon\Mvc\Model
             $this->mustChangePassword = 0;
         }
 
-        if($this->active != 1) {
+        if ($this->active != 1) {
             $this->active = 0;
         }
         $this->suspended = 0;

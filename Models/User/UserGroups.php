@@ -32,6 +32,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -44,6 +45,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -56,6 +58,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function setActive($active)
     {
         $this->active = $active;
+
         return $this;
     }
 
@@ -113,7 +116,8 @@ class UserGroups extends \Phalcon\Mvc\Model
     /**
      * Independent Column Mapping.
      */
-    public function columnMap() {
+    public function columnMap()
+    {
         return array(
             'id' => 'id',
             'name' => 'name',
