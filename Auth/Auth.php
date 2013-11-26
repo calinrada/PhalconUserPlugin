@@ -179,7 +179,7 @@ class Auth extends Component
     {
         $di = $this->getDI();
         $config = $di->get('config')->pup->connectors->linkedIn->toArray();
-        $config['callback_url'] = $config['callback_url'].$di->get('cookies')->get('preferredLanguage').'/user/loginWithLinkedIn';
+        $config['callback_url'] = $config['callback_url'].'user/loginWithLinkedIn';
         $li = new LinkedInConnector($config);
 
         $token = $this->session->get('linkedIn_token');
@@ -338,10 +338,9 @@ class Auth extends Component
     {
         $di       = $this->getDI();
         $config   = $di->get('config')->pup->connectors->google->toArray();
-        $language = $di->get('cookies')->get('preferredLanguage');
 
         $pupRedirect            = $di->get('config')->pup->redirect;
-        $config['redirect_uri'] = $config['redirect_uri'].$language.'/user/loginWithGoogle';
+        $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
 
         $google = new GoogleConnector($config);
 
