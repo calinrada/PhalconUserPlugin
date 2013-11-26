@@ -27,7 +27,7 @@ class Auth extends Component
      */
     public function check($credentials)
     {
-        $user = User::findFirstByEmail($credentials['email']);
+        $user = User::findFirstByEmail(strtolower($credentials['email']));
         if ($user == false) {
             $this->registerUserThrottling(0);
             throw new Exception('Wrong email/password combination');
