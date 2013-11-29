@@ -97,6 +97,8 @@ class Auth extends Component
                 return $this->response->redirect($pupRedirect->success);
             }
         }
+
+        return false;
     }
 
     /**
