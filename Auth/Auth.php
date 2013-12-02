@@ -29,7 +29,7 @@ class Auth extends Component
     {
         $user = User::findFirstByEmail(strtolower($credentials['email']));
         if ($user == false) {
-            $this->registerUserThrottling(0);
+            $this->registerUserThrottling(null);
             throw new Exception('Wrong email/password combination');
         }
 
@@ -424,12 +424,12 @@ class Auth extends Component
      * Implements login throttling
      * Reduces the efectiveness of brute force attacks
      *
-     * @param int $userId
+     * @param int $user_id
      */
-    public function registerUserThrottling($userId)
+    public function registerUserThrottling($user_id)
     {
         $failedLogin = new UserFailedLogins();
-        $failedLogin->setUserId($userId);
+        $failedLogin->setUserId($user_id == null ? new \Phalcon\Db\RawValue('NULL') : $user_id);
         $failedLogin->setIpAddress($this->request->getClientAddress());
         $failedLogin->setAttempted(time());
         $failedLogin->save();
