@@ -201,21 +201,6 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'code' => 'code',
-            'created_at' => 'created_at',
-            'modified_at' => 'modified_at',
-            'reset' => 'reset'
-        );
-    }
-
     public function initialize()
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(

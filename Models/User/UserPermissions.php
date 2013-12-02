@@ -142,17 +142,4 @@ class UserPermissions extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'group_id' => 'group_id',
-            'resource' => 'resource',
-            'action' => 'action'
-        );
-    }
 }

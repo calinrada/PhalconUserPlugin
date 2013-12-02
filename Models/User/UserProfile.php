@@ -308,24 +308,6 @@ class UserProfile extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'picture' => 'picture',
-            'birth_date' => 'birth_date',
-            'gender' => 'gender',
-            'home_location_id' => 'home_location_id',
-            'current_location_id' => 'current_location_id',
-            'created_at' => 'created_at',
-            'updated_at' => 'updated_at'
-        );
-    }
-
     public function beforeUpdate()
     {
         $this->updated_at = new \Phalcon\Db\RawValue('now()');

@@ -173,20 +173,6 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'ip_address' => 'ip_address',
-            'user_agent' => 'user_agent',
-            'created_at' => 'created_at'
-        );
-    }
-
-    /**
      * Before create the user assign a password
      */
     public function beforeValidationOnCreate()

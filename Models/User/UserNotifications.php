@@ -275,23 +275,6 @@ class UserNotifications extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'from_user_id' => 'from_user_id',
-            'for_user_id' => 'for_user_id',
-            'object_id' => 'object_id',
-            'object_type' => 'object_type',
-            'notification_type' => 'notification_type',
-            'is_seen' => 'is_seen',
-            'created_at' => 'created_at'
-        );
-    }
-
     public function beforeValidationOnCreate()
     {
         $this->created_at = date('Y-m-d H:i:s');

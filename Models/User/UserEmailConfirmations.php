@@ -199,21 +199,6 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'code' => 'code',
-            'created_at' => 'created_at',
-            'modified_at' => 'modified_at',
-            'confirmed' => 'confirmed'
-        );
-    }
-
-    /**
      * Before create the user assign a password
      */
     public function beforeValidationOnCreate()

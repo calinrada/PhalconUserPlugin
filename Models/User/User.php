@@ -752,37 +752,6 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'name' => 'name',
-            'email' => 'email',
-            'password' => 'password',
-            'facebook_id' => 'facebook_id',
-            'facebook_name' => 'facebook_name',
-            'facebook_data' => 'facebook_data',
-            'linkedin_id' => 'linkedin_id',
-            'linkedin_name' => 'linkedin_name',
-            'linkedin_data' => 'linkedin_data',
-            'gplus_id' => 'gplus_id',
-            'gplus_name' => 'gplus_name',
-            'gplus_data' => 'gplus_data',
-            'twitter_id' => 'twitter_id',
-            'twitter_name' => 'twitter_name',
-            'twitter_data' => 'twitter_data',
-            'must_change_password' => 'must_change_password',
-            'profile_id' => 'profile_id',
-            'group_id' => 'group_id',
-            'banned' => 'banned',
-            'suspended' => 'suspended',
-            'active' => 'active'
-        );
-    }
-
-    /**
      * Before create the user assign a password
      */
     public function beforeValidationOnCreate()

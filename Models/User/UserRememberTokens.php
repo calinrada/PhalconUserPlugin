@@ -171,18 +171,4 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'token' => 'token',
-            'user_agent' => 'user_agent',
-            'created_at' => 'created_at'
-        );
-    }
 }

@@ -114,18 +114,6 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'name' => 'name',
-            'active' => 'active'
-        );
-    }
-
-    /**
      * Validations and business logic
      */
     public function validation()

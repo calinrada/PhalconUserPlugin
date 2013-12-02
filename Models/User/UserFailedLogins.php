@@ -139,17 +139,4 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
-    /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'user_id' => 'user_id',
-            'ip_address' => 'ip_address',
-            'attempted' => 'attempted'
-        );
-    }
 }

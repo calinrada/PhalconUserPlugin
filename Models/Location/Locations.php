@@ -331,25 +331,6 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Independent Column Mapping.
-     */
-    public function columnMap()
-    {
-        return array(
-            'id' => 'id',
-            'language' => 'language',
-            'formatted_address' => 'formatted_address',
-            'city' => 'city',
-            'country' => 'country',
-            'latitude' => 'latitude',
-            'longitude' => 'longitude',
-            'geo_point' => 'geo_point',
-            'created_at' => 'created_at',
-            'updated_at' => 'updated_at'
-        );
-    }
-
-    /**
      * Return a custom formatted address
      * @return string
      */
