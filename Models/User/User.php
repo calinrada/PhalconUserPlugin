@@ -145,7 +145,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -353,7 +353,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setMustChangePassword($must_change_password)
     {
-        $this->must_change_password = $must_change_password;
+        $this->must_change_password = (bool) $must_change_password;
 
         return $this;
     }
@@ -366,7 +366,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setProfileId($profile_id)
     {
-        $this->profile_id = $profile_id;
+        $this->profile_id = (int) $profile_id;
 
         return $this;
     }
@@ -379,7 +379,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setGroupId($group_id)
     {
-        $this->group_id = $group_id;
+        $this->group_id = (int) $group_id;
 
         return $this;
     }
@@ -392,7 +392,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setBanned($banned)
     {
-        $this->banned = $banned;
+        $this->banned = (bool) $banned;
 
         return $this;
     }
@@ -405,7 +405,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setSuspended($suspended)
     {
-        $this->suspended = $suspended;
+        $this->suspended = (bool) $suspended;
 
         return $this;
     }
@@ -418,7 +418,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = (bool) $active;
 
         return $this;
     }

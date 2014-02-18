@@ -97,11 +97,11 @@ class LinkedInConnector
         }
 
         $params = array(
-                'grant_type' => 'authorization_code',
-                'code' => $authorization_code,
-                'client_id' => $this->_config['api_key'],
-                'client_secret' => $this->_config['api_secret'],
-                'redirect_uri' => $this->_config['callback_url']
+            'grant_type' => 'authorization_code',
+            'code' => $authorization_code,
+            'client_id' => $this->_config['api_key'],
+            'client_secret' => $this->_config['api_secret'],
+            'redirect_uri' => $this->_config['callback_url']
         );
 
         $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken', $params, 'POST', array('x-li-format: json'));
@@ -265,12 +265,12 @@ class LinkedInConnector
         $ch = $this->_getCurlHandle();
 
         $options = array(
-                CURLOPT_CUSTOMREQUEST => strtoupper($method),
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL => $url,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_FOLLOWLOCATION => true
+            CURLOPT_CUSTOMREQUEST => strtoupper($method),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $url,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_FOLLOWLOCATION => true
         );
 
         if (!empty($payload)) {

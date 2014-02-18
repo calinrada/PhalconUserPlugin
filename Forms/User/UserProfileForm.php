@@ -2,16 +2,16 @@
 namespace Phalcon\UserPlugin\Forms\User;
 
 use Phalcon\Forms\Form,
-    Phalcon\Forms\Element\Text,
-    Phalcon\Forms\Element\Hidden,
-    Phalcon\Forms\Element\Password,
-    Phalcon\Forms\Element\Submit,
-    Phalcon\Forms\Element\Select,
-    Phalcon\Forms\Element\Check,
-    Phalcon\Forms\Element\Date,
-    Phalcon\Validation\Validator\Identical,
-    Phalcon\Validation\Validator\PresenceOf,
-    Phalcon\Validation\Validator\Email;
+Phalcon\Forms\Element\Text,
+Phalcon\Forms\Element\Hidden,
+Phalcon\Forms\Element\Password,
+Phalcon\Forms\Element\Submit,
+Phalcon\Forms\Element\Select,
+Phalcon\Forms\Element\Check,
+Phalcon\Forms\Element\Date,
+Phalcon\Validation\Validator\Identical,
+Phalcon\Validation\Validator\PresenceOf,
+Phalcon\Validation\Validator\Email;
 
 /**
  * Phalcon\UserPlugin\Forms\User\UserProfileForm

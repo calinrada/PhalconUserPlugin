@@ -2,15 +2,15 @@
 namespace Phalcon\UserPlugin\Auth;
 
 use Phalcon\Mvc\User\Component,
-    Phalcon\UserPlugin\Repository\User\UserRepository as User,
-    Phalcon\UserPlugin\Models\User\UserRememberTokens,
-    Phalcon\UserPlugin\Models\User\UserSuccessLogins,
-    Phalcon\UserPlugin\Models\User\UserFailedLogins;
+Phalcon\UserPlugin\Repository\User\UserRepository as User,
+Phalcon\UserPlugin\Models\User\UserRememberTokens,
+Phalcon\UserPlugin\Models\User\UserSuccessLogins,
+Phalcon\UserPlugin\Models\User\UserFailedLogins;
 
 use Phalcon\UserPlugin\Connectors\LinkedInConnector,
-    Phalcon\UserPlugin\Connectors\FacebookConnector,
-    Phalcon\UserPlugin\Connectors\GoogleConnector,
-    Phalcon\UserPlugin\Connectors\TwitterConnector;
+Phalcon\UserPlugin\Connectors\FacebookConnector,
+Phalcon\UserPlugin\Connectors\GoogleConnector,
+Phalcon\UserPlugin\Connectors\TwitterConnector;
 
 /**
  * Phalcon\UserPlugin\Auth\Auth
@@ -87,9 +87,9 @@ class Auth extends Component
                 }
             } else {
                 $this->check(array(
-                        'email'    => $this->request->getPost('email'),
-                        'password' => $this->request->getPost('password'),
-                        'remember' => $this->request->getPost('remember')
+                    'email'    => $this->request->getPost('email'),
+                    'password' => $this->request->getPost('password'),
+                    'remember' => $this->request->getPost('remember')
                 ));
 
                 $pupRedirect = $this->getDI()->get('config')->pup->redirect;
@@ -278,10 +278,10 @@ class Auth extends Component
 
                 if ($data['screen_name']) {
                     $code = $twitter->user_request(array(
-                            'url' => $twitter->url('1.1/users/show'),
-                            'params' => array(
-                                'screen_name' => $data['screen_name']
-                            )
+                        'url' => $twitter->url('1.1/users/show'),
+                        'params' => array(
+                            'screen_name' => $data['screen_name']
+                        )
                     ));
 
                     if ($code == 200) {

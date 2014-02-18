@@ -45,7 +45,7 @@ class FacebookConnector extends \BaseFacebook
         if ($o_cookies->has($cookie_name)) {
             $data = $this->parseSignedRequest($o_cookies->get($cookie_name)->getValue());
             if ($data && !empty($data['domain']) &&
-                    self::isAllowedDomain($this->getHttpHost(), $data['domain'])) {
+                self::isAllowedDomain($this->getHttpHost(), $data['domain'])) {
                 // good case
                 $this->sharedSessionID = $data['id'];
 
@@ -57,10 +57,10 @@ class FacebookConnector extends \BaseFacebook
         $base_domain = $this->getBaseDomain();
         $this->sharedSessionID = md5(uniqid(mt_rand(), true));
         $cookie_value = $this->makeSignedRequest(
-                array(
-                        'domain' => $base_domain,
-                        'id' => $this->sharedSessionID,
-                )
+            array(
+                'domain' => $base_domain,
+                'id' => $this->sharedSessionID,
+            )
         );
         $o_cookies->set($cookie_name, $cookie_value);
 
@@ -71,9 +71,9 @@ class FacebookConnector extends \BaseFacebook
         } else {
             // @codeCoverageIgnoreStart
             self::errorLog(
-                    'Shared session ID cookie could not be set! You must ensure you '.
-                    'create the Facebook instance before headers have been sent. This '.
-                    'will cause authentication issues after the first request.'
+                'Shared session ID cookie could not be set! You must ensure you '.
+                'create the Facebook instance before headers have been sent. This '.
+                'will cause authentication issues after the first request.'
             );
             // @codeCoverageIgnoreEnd
         }

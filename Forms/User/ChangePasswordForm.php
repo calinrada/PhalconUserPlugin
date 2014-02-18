@@ -2,11 +2,11 @@
 namespace Phalcon\UserPlugin\Forms\User;
 
 use Phalcon\Forms\Form,
-    Phalcon\Forms\Element\Password,
-    Phalcon\Forms\Element\Submit,
-    Phalcon\Validation\Validator\PresenceOf,
-    Phalcon\Validation\Validator\StringLength,
-    Phalcon\Validation\Validator\Confirmation;
+Phalcon\Forms\Element\Password,
+Phalcon\Forms\Element\Submit,
+Phalcon\Validation\Validator\PresenceOf,
+Phalcon\Validation\Validator\StringLength,
+Phalcon\Validation\Validator\Confirmation;
 
 /**
  * Phalcon\UserPlugin\Forms\User\ChangePasswordForm

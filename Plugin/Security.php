@@ -2,8 +2,8 @@
 namespace Phalcon\UserPlugin\Plugin;
 
 use Phalcon\Events\Event,
-    Phalcon\Mvc\Dispatcher,
-    Phalcon\Mvc\User\Plugin;
+Phalcon\Mvc\Dispatcher,
+Phalcon\Mvc\User\Plugin;
 
 use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
@@ -27,7 +27,7 @@ class Security extends Plugin
      * @param  Event                           $event
      * @param  Dispatcher                      $dispatcher
      * @return \Phalcon\Http\ResponseInterface
-     */
+    */
     public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
         if ($this->auth->hasRememberMe()) {

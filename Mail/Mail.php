@@ -2,10 +2,10 @@
 namespace Phalcon\UserPlugin\Mail;
 
 use Phalcon\Mvc\User\Component,
-    Phalcon\Mvc\View,
-    Swift_Message as Message,
-    Swift_SmtpTransport as Smtp,
-    Crada\UserPlugin\Models\User\User;
+Phalcon\Mvc\View,
+Swift_Message as Message,
+Swift_SmtpTransport as Smtp,
+Crada\UserPlugin\Models\User\User;
 
 /**
  * Phalcon\UserPlugin\Mail\Mail
@@ -34,7 +34,7 @@ class Mail extends Component
             $view->setRenderLevel(View::LEVEL_LAYOUT);
         });
 
-        return $view->getContent();
+            return $view->getContent();
     }
 
     /**
@@ -54,24 +54,24 @@ class Mail extends Component
 
         // Create the message
         $message = Message::newInstance()
-              ->setSubject($subject)
-              ->setTo($to)
-              ->setFrom(array(
-                  $mailSettings->fromEmail => $mailSettings->fromName
-              ))
-              ->setBody($template, 'text/html');
+        ->setSubject($subject)
+        ->setTo($to)
+        ->setFrom(array(
+            $mailSettings->fromEmail => $mailSettings->fromName
+        ))
+        ->setBody($template, 'text/html');
 
-          if (!$this->_transport) {
-                $this->_transport = Smtp::newInstance(
+        if (!$this->_transport) {
+            $this->_transport = Smtp::newInstance(
                 $mailSettings->smtp->server,
                 $mailSettings->smtp->port,
                 $mailSettings->smtp->security
             )
-                  ->setUsername($mailSettings->smtp->username)
-                  ->setPassword($mailSettings->smtp->password);
-          }
+            ->setUsername($mailSettings->smtp->username)
+            ->setPassword($mailSettings->smtp->password);
+        }
 
-          // Create the Mailer using your created Transport
+        // Create the Mailer using your created Transport
         $mailer = \Swift_Mailer::newInstance($this->_transport);
 
         return $mailer->send($message);
