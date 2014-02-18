@@ -430,7 +430,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**
@@ -600,7 +600,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getProfileId()
     {
-        return $this->profile_id;
+        return (int) $this->profile_id;
     }
 
     /**
@@ -610,7 +610,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getGroupId()
     {
-        return $this->group_id;
+        return (int) $this->group_id;
     }
 
     /**
@@ -620,7 +620,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getBanned()
     {
-        return $this->banned;
+        return (bool) $this->banned;
     }
 
     /**
@@ -630,7 +630,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getSuspended()
     {
-        return $this->suspended;
+        return (bool) $this->suspended;
     }
 
     /**
@@ -640,7 +640,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function getActive()
     {
-        return $this->active;
+        return (bool) $this->active;
     }
 
     /**
