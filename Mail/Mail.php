@@ -38,19 +38,21 @@ class Mail extends Component
     }
 
     /**
-     * Sends e-mails based on predefined templates
+     * Sends e-mails based on predefined templates. If the $body param
+     * has value, the template will be ignored
      *
      * @param array  $to
      * @param string $subject
-     * @param string $name
+     * @param string $name Template name
      * @param array  $params
+     * @param array  $body
      */
-    public function send($to, $subject, $name, $params)
+    public function send($to, $subject, $name = null, $params = null, $body = null)
     {
         //Settings
         $mailSettings = $this->config->mail;
 
-        $template = $this->getTemplate($name, $params);
+        $template = $body ? $body : $this->getTemplate($name, $params);
 
         // Create the message
         $message = Message::newInstance()
