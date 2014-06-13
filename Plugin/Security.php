@@ -54,9 +54,8 @@ class Security extends Plugin
             if (!is_array($identity)) {
                 $this->flash->notice('Private area. Please login.');
 
-                $this->response->sendHeaders();
                 $this->view->disable();
-                return $this->response->redirect($config->pup->redirect->failure);
+                return $this->response->redirect($config->pup->redirect->failure)->send();
             }
         }
 
