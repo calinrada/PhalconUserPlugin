@@ -31,6 +31,12 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     protected $user_agent;
 
     /**
+     *
+     * @var string
+     */
+    protected $created_at;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -83,6 +89,19 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field created_at
+     *
+     * @param string $created_at
+     * @return $this
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -122,6 +141,16 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
         return $this->user_agent;
     }
 
+    /**
+     * Returns the value of field created_at
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
     public function getSource()
     {
         return 'user_success_logins';
@@ -141,5 +170,10 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = array())
     {
         return parent::findFirst($parameters);
+    }
+
+    public function beforeValidation()
+    {
+        $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
     }
 }

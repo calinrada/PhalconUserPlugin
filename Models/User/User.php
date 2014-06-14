@@ -138,6 +138,18 @@ class User extends \Phalcon\Mvc\Model
     protected $active = 0;
 
     /**
+     *
+     * @var string
+     */
+    protected $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    protected $updated_at;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -424,6 +436,32 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field created_at
+     *
+     * @param string $created_at
+     * @return $this
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field updated_at
+     *
+     * @param string $updated_at
+     * @return $this
+     */
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -674,6 +712,26 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field created_at
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Returns the value of field updated_at
+     *
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+
+    /**
      * Checks if the password has to be changed
      *
      * @return boolean
@@ -765,6 +823,11 @@ class User extends \Phalcon\Mvc\Model
         if (1 !== $this->active) {
             $this->active = 0;
         }
+    }
+
+    public function beforeValidation()
+    {
+        $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
     }
 
     /**
