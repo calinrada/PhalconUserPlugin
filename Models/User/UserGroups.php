@@ -113,6 +113,13 @@ class UserGroups extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function initialize()
+    {
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPermissions', 'group_id', array(
+            'alias' => 'permissions'
+        ));
+    }
+
     /**
      * Validations and business logic
      */
