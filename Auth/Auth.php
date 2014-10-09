@@ -463,7 +463,7 @@ class Auth extends Component
      *
      * @param Phalcon\UserPlugin\Models\User\User $user
      */
-    public function createRememberEnviroment(User $user)
+    public function createRememberEnviroment($user)
     {
         $user_agent = $this->request->getUserAgent();
         $token = md5($user->getEmail() . $user->getPassword() . $user_agent);
@@ -561,7 +561,7 @@ class Auth extends Component
      *
      * @param Phalcon\UserPlugin\Models\User\User $user
      */
-    public function checkUserFlags(User $user)
+    public function checkUserFlags($user)
     {
         if (false === $user->isActive()) {
             throw new Exception('The user is inactive');
