@@ -830,10 +830,15 @@ class User extends \Phalcon\Mvc\Model
         $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
     }
 
+    public function afterSave()
+    {
+        return;
+    }
+
     /**
      * Send a confirmation e-mail to the user if the account is not active
      */
-    public function afterSave()
+    public function afterCreate()
     {
         if (true === $this->isActive()) {
             return;
