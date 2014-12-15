@@ -18,6 +18,22 @@ class Mail extends Component
 
     protected $_directSmtp = true;
 
+    protected $attachments = array();
+
+    /**
+     * Adds a new file to attach
+     *
+     * @param unknown $file
+     */
+    public function addAttachment($name, $content, $type='text/plain')
+    {
+        $this->attachments[] = array(
+            'name' => $name,
+            'content' => $content,
+            'type' => $type
+        );
+    }
+
     /**
      * Applies a template to be used in the e-mail
      *
@@ -43,7 +59,7 @@ class Mail extends Component
      *
      * @param array  $to
      * @param string $subject
-     * @param string $name Template name
+     * @param string $name    Template name
      * @param array  $params
      * @param array  $body
      */
@@ -56,12 +72,21 @@ class Mail extends Component
 
         // Create the message
         $message = Message::newInstance()
-        ->setSubject($subject)
-        ->setTo($to)
-        ->setFrom(array(
-            $mailSettings->fromEmail => $mailSettings->fromName
-        ))
-        ->setBody($template, 'text/html');
+            ->setSubject($subject)
+            ->setTo($to)
+            ->setFrom(array(
+                $mailSettings->fromEmail => $mailSettings->fromName
+            ))
+            ->setBody($template, 'text/html');
+
+        // Check attachments to add
+        foreach ($this->attachments as $file) {
+            $message->attach(\Swift_Attachment::newInstance()
+                ->setBody($file['content'])
+                ->setFilename($file['name'])
+                ->setContentType($file['type'])
+            );
+        }
 
         if (!$this->_transport) {
             $this->_transport = Smtp::newInstance(
@@ -77,6 +102,5 @@ class Mail extends Component
         $mailer = \Swift_Mailer::newInstance($this->_transport);
 
         return $mailer->send($message);
-
     }
 }
