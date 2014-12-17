@@ -100,7 +100,10 @@ class Mail extends Component
 
         // Create the Mailer using your created Transport
         $mailer = \Swift_Mailer::newInstance($this->_transport);
+        $result = $mailer->send($message);
 
-        return $mailer->send($message);
+        $this->attachments = array();
+
+        return $result;
     }
 }
