@@ -773,6 +773,11 @@ class User extends \Phalcon\Mvc\Model
             )
         ));
 
+        $this->belongsTo('group_id', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
+            'alias' => 'group',
+            'reusable' => true
+        ));
+
         $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPasswordChanges', 'user_id', array(
             'alias' => 'passwordChanges',
             'foreignKey' => array(
