@@ -28,7 +28,7 @@ class Security extends Plugin
      * @param  Dispatcher                      $dispatcher
      * @return \Phalcon\Http\ResponseInterface
     */
-    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
+    public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
         if ($this->auth->hasRememberMe()) {
             $this->auth->loginWithRememberMe(false);
@@ -52,10 +52,12 @@ class Security extends Plugin
 
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
-                $this->flash->notice('Private area. Please login.');
+                $this->flashSession->notice('Private area. Please login.');
 
                 $this->view->disable();
-                return $this->response->redirect($config->pup->redirect->failure)->send();
+                $this->response->redirect($config->pup->redirect->failure, true);
+
+                return false;
             }
         }
 
