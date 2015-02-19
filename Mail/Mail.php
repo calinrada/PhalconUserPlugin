@@ -88,6 +88,9 @@ class Mail extends Component
         // Create the message
         $message = Message::newInstance();
 
+        //Settings
+        $mailSettings = $this->config->mail;
+
         //Images
         if (isset($params['images'])) {
             $this->images = $params['images'];
