@@ -20,6 +20,8 @@ class Mail extends Component
 
     protected $attachments = array();
 
+    protected $images = array();
+
     /**
      * Adds a new file to attach
      *
@@ -46,11 +48,29 @@ class Mail extends Component
             'publicUrl' => $this->config->application->publicUrl,
         ), $params);
 
+        foreach ($this->images as $name => $image_path) {
+            $parameters[$name] = $message->embed(\Swift_Image::fromPath($image_path));
+        }
+
         return $this->view->getRender('emailTemplates', $name, $parameters, function ($view) {
             $view->setRenderLevel(View::LEVEL_LAYOUT);
         });
+    }
 
-            return $view->getContent();
+    /**
+     * Inserts images without using getTemplate
+     * @param  string $message
+     * @param  string $content
+     * @return mixed
+     */
+    public function insertImages($message, $content)
+    {
+        foreach ($this->images as $name => $image_path) {
+            $image_embed = $message->embed(\Swift_Image::fromPath($image_path));
+            $content = str_replace(rawurlencode("{{ ".$name." }}"), $image_embed, $content);
+        }
+
+        return $content;
     }
 
     /**
@@ -65,14 +85,22 @@ class Mail extends Component
      */
     public function send($to, $subject, $name = null, $params = null, $body = null)
     {
-        //Settings
-        $mailSettings = $this->config->mail;
-
-        $template = $body ? $body : $this->getTemplate($name, $params);
-
         // Create the message
-        $message = Message::newInstance()
-            ->setSubject($subject)
+        $message = Message::newInstance();
+
+        //Images
+        if (isset($params['images'])) {
+            $this->images = $params['images'];
+        }
+
+        if (null === $body) {
+            $template = $this->getTemplate($message, $name, $params);
+        } else {
+            $template = $this->insertImages($message, $body);
+        }
+
+         // Setting message params
+        $message->setSubject($subject)
             ->setTo($to)
             ->setFrom(array(
                 $mailSettings->fromEmail => $mailSettings->fromName
