@@ -42,7 +42,7 @@ class Mail extends Component
      * @param string $name
      * @param array  $params
      */
-    public function getTemplate($name, $params)
+    public function getTemplate($message, $name, $params)
     {
         $parameters = array_merge(array(
             'publicUrl' => $this->config->application->publicUrl,
