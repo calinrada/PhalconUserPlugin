@@ -243,42 +243,6 @@ class Auth extends Component
     }
 
     /**
-     * New user
-     * @return \Phalcon\UserPlugin\Models\User\User
-     */
-    protected function newUser()
-    {
-        $user = new User();
-        $user->setMustChangePassword(0);
-        $user->setGroupId(2);
-        $user->setBanned(0);
-        $user->setSuspended(0);
-        $user->setActive(1);
-
-        return $user;
-    }
-
-    /**
-     * Create (save) new user to DB
-     * @param unknown $user
-     */
-    protected function createUser($user)
-    {
-        if (true === $user->create()) {
-            $this->setIdentity($user);
-            $this->saveSuccessLogin($user);
-
-            return $this->response->redirect($pupRedirect->success);
-        } else {
-            foreach ($user->getMessages() as $message) {
-                $this->flashSession->error($message->getMessage());
-            }
-
-            return $this->response->redirect($pupRedirect->failure);
-        }
-    }
-
-    /**
      * Login with Twitter account
      */
     public function loginWithTwitter()
@@ -320,34 +284,21 @@ class Auth extends Component
 
                             return $this->response->redirect($pupRedirect->success);
                         } else {
+
                             $password = $this->generatePassword();
-                            $email = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
-                            $user = new User();
-                            $user->setName($response['name']);
-                            $user->setEmail($email);
-                            $user->setPassword($di->get('security')->hash($password));
-                            $user->setTwitterId($response['id']);
-                            $user->setTwitterName($response['name']);
-                            $user->setTwitterData(json_encode($response));
-                            $user->setMustChangePassword(0);
-                            $user->setGroupId(2);
-                            $user->setBanned(0);
-                            $user->setSuspended(0);
-                            $user->setActive(1);
+                            $email    = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
 
-                            if (true == $user->create()) {
-                                $this->setIdentity($user);
-                                $this->saveSuccessLogin($user);
-                                $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
+                            $user = $this->newUser()
+                                ->setName($response['name'])
+                                ->setEmail($email)
+                                ->setPassword($di->get('security')->hash($password))
+                                ->setTwitterId($response['id'])
+                                ->setTwitterName($response['name'])
+                                ->setTwitterData(json_encode($response));
 
-                                return $this->response->redirect($pupRedirect->success);
-                            } else {
-                                foreach ($user->getMessages() as $message) {
-                                    $this->flashSession->error($message->getMessage());
-                                }
+                            $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
 
-                                return $this->response->redirect($pupRedirect->failure);
-                            }
+                            return $this->createUser($user);
                         }
                     }
                 }
@@ -398,33 +349,53 @@ class Auth extends Component
             } else {
                 $password = $this->generatePassword();
 
-                $user = new User();
-                $user->setEmail($email);
-                $user->setPassword($di->get('security')->hash($password));
-                $user->setGplusId($gplusId);
-                $user->setGplusName($name);
-                $user->setGplusData(serialize($response['userinfo']));
-                $user->setMustChangePassword(0);
-                $user->setGroupId(2);
-                $user->setBanned(0);
-                $user->setSuspended(0);
-                $user->setActive(1);
+                $user = $this->newUser()
+                    ->setName($name)
+                    ->setEmail($email)
+                    ->setPassword($di->get('security')->hash($password))
+                    ->setGplusId($gplusId)
+                    ->setGplusName($name)
+                    ->setGplusData(serialize($response['userinfo']));
 
-                if (true == $user->create()) {
-                    $this->setIdentity($user);
-                    $this->saveSuccessLogin($user);
-
-                    return $this->response->redirect($pupRedirect->success);
-                } else {
-                    foreach ($user->getMessages() as $message) {
-                        $this->flashSession->error($message->getMessage());
-                    }
-
-                    return $this->response->redirect($pupRedirect->failure);
-                }
+                return $this->createUser($user);
             }
         }
+    }
 
+    /**
+     * New user
+     * @return \Phalcon\UserPlugin\Models\User\User
+     */
+    protected function newUser()
+    {
+        $user = new User();
+        $user->setMustChangePassword(0);
+        $user->setGroupId(2);
+        $user->setBanned(0);
+        $user->setSuspended(0);
+        $user->setActive(1);
+
+        return $user;
+    }
+
+    /**
+     * Create (save) new user to DB
+     * @param unknown $user
+     */
+    protected function createUser($user)
+    {
+        if (true === $user->create()) {
+            $this->setIdentity($user);
+            $this->saveSuccessLogin($user);
+
+            return $this->response->redirect($pupRedirect->success);
+        } else {
+            foreach ($user->getMessages() as $message) {
+                $this->flashSession->error($message->getMessage());
+            }
+
+            return $this->response->redirect($pupRedirect->failure);
+        }
     }
 
     /**
