@@ -231,7 +231,7 @@ class LinkedInConnector
      */
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
-        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . (!empty($this->_access_token)? '?oauth2_access_token=' . $this->getAccessToken() : '');
+        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . (!empty($this->_access_token) ? '?oauth2_access_token=' . $this->getAccessToken() : '');
         $headers[] = 'x-li-format: json';
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);

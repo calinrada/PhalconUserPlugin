@@ -33,7 +33,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -46,7 +46,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field group_id
      *
-     * @param integer $group_id
+     * @param  integer $group_id
      * @return $this
      */
     public function setGroupId($group_id)
@@ -59,7 +59,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field resource
      *
-     * @param string $resource
+     * @param  string $resource
      * @return $this
      */
     public function setResource($resource)
@@ -72,7 +72,7 @@ class UserPermissions extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field action
      *
-     * @param string $action
+     * @param  string $action
      * @return $this
      */
     public function setAction($action)

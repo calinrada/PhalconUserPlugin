@@ -18,19 +18,17 @@ class LoginForm extends Form
 {
     public function initialize()
     {
-        $translate = $this->getDi()->get('translate');
-
         //Email
         $email = new Text('email', array(
-            'placeholder' => $translate['Email']
+            'placeholder' => 'Email'
         ));
 
         $email->addValidators(array(
             new PresenceOf(array(
-                'message' => $translate['The e-mail is required']
+                'message' => 'The e-mail is required'
             )),
             new Email(array(
-                'message' => $translate['The e-mail is not valid']
+                'message' => 'The e-mail is not valid'
             ))
         ));
 
@@ -38,12 +36,12 @@ class LoginForm extends Form
 
         //Password
         $password = new Password('password', array(
-            'placeholder' => $translate['Password']
+            'placeholder' => 'Password'
         ));
 
         $password->addValidator(
             new PresenceOf(array(
-                'message' => $translate['The password is required']
+                'message' => 'The password is required'
             ))
         );
 
@@ -54,7 +52,7 @@ class LoginForm extends Form
             'value' => 'yes'
         ));
 
-        $remember->setLabel($translate['Remember me']);
+        $remember->setLabel('Remember me');
 
         $this->add($remember);
 

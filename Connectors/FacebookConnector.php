@@ -3,7 +3,6 @@ namespace Phalcon\UserPlugin\Connectors;
 
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
-use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookRedirectLoginHelper;
 
@@ -37,14 +36,18 @@ class FacebookConnector
         return $this->helper->getLoginUrl($scope);
     }
 
+    /**
+     * Get facebook user details
+     * @return unknown|boolean
+     */
     public function getUser()
     {
         try {
             $this->helper     = new FacebookRedirectLoginHelper($this->url);
             $this->fb_session = $this->helper->getSessionFromRedirect();
-        } catch(FacebookRequestException $ex) {
+        } catch (FacebookRequestException $ex) {
             $this->di->flashSession->error($ex->getMessage());
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $this->di->flashSession->error($ex->getMessage());
         }
 

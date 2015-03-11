@@ -20,8 +20,6 @@ class UserProfileForm extends Form
 {
     public function initialize($entity=null, $options=null)
     {
-        $translate = $this->getDI()->get('translate');
-
         if (isset($options['edit']) && $options['edit']) {
             $id = new Hidden('id');
         } else {
@@ -32,8 +30,8 @@ class UserProfileForm extends Form
         $this->add(new Hidden('birth_date'));
 
         $this->add(new Select('gender', array(
-            0 => $translate['Male'],
-            1 => $translate['Female']
+            0 => 'Male',
+            1 => 'Female'
         )));
 
         //CSRF

@@ -2,3 +2,8 @@
 composer.lock
 .idea
 .codeintel
+.buildpath
+.project
+.settings/
+composer.phar
+

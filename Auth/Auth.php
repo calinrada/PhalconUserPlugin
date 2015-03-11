@@ -2,15 +2,15 @@
 namespace Phalcon\UserPlugin\Auth;
 
 use Phalcon\Mvc\User\Component,
-Phalcon\UserPlugin\Repository\User\UserRepository as User,
+Phalcon\UserPlugin\Models\User\User,
 Phalcon\UserPlugin\Models\User\UserRememberTokens,
 Phalcon\UserPlugin\Models\User\UserSuccessLogins,
 Phalcon\UserPlugin\Models\User\UserFailedLogins;
 
 use Phalcon\UserPlugin\Connectors\LinkedInConnector,
-Phalcon\UserPlugin\Connectors\FacebookConnector,
-Phalcon\UserPlugin\Connectors\GoogleConnector,
-Phalcon\UserPlugin\Connectors\TwitterConnector;
+    Phalcon\UserPlugin\Connectors\FacebookConnector,
+    Phalcon\UserPlugin\Connectors\GoogleConnector,
+    Phalcon\UserPlugin\Connectors\TwitterConnector;
 
 /**
  * Phalcon\UserPlugin\Auth\Auth
@@ -106,13 +106,13 @@ class Auth extends Component
      */
     public function loginWithFacebook()
     {
-        $di = $this->getDI();
-        $facebook = new FacebookConnector($di);
+        $di           = $this->getDI();
+        $facebook     = new FacebookConnector($di);
         $facebookUser = $facebook->getUser();
 
         if ($facebookUser) {
             try {
-                $facebookUserProfile = $facebook->api('/me');
+                return $this->authenticateOrCreateFacebookUser($facebookUser);
             } catch (\FacebookApiException $e) {
                 $di->logger->begin();
                 $di->logger->error($e->getMessage());
@@ -120,55 +120,49 @@ class Auth extends Component
                 $facebookUser = null;
             }
         } else {
-            $scope = array('scope' => 'email,user_birthday,user_location');
+            $scope = [
+                'scope' => 'email,user_birthday,user_location'
+            ];
 
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
+    }
 
-        if ($facebookUser) {
-            $pupRedirect = $di->get('config')->pup->redirect;
-            $email = isset($facebookUserProfile['email']) ? $facebookUserProfile['email'] : 'a@a.com';
-            $user = User::findFirst(" email='$email' OR facebook_id='".$facebookUserProfile['id']."' ");
+    /**
+     * Authenitcate or create a user with a Facebook account
+     * @param array $facebookUser
+     */
+    protected function authenticateOrCreateFacebookUser($facebookUser)
+    {
+        $pupRedirect = $this->di->get('config')->pup->redirect;
+        $email       = isset($facebookUser['email']) ? $facebookUser['email'] : 'a@a.com';
+        $user        = User::findFirst(" email='$email' OR facebook_id='".$facebookUser['id']."' ");
 
-            if ($user) {
-                $this->checkUserFlags($user);
-                $this->setIdentity($user);
-                if (!$user->getFacebookId()) {
-                    $user->setFacebookId($facebookUserProfile['id']);
-                    $user->setFacebookName($facebookUserProfile['name']);
-                    $user->setFacebookData(serialize($facebookUserProfile));
-                    $user->update();
-                }
-
-                $this->saveSuccessLogin($user);
-
-                return $this->response->redirect($pupRedirect->success);
-            } else {
-                $password = $this->generatePassword();
-
-                $user = new User();
-                $user->setEmail($email);
-                $user->setPassword($di->get('security')->hash($password));
-                $user->setFacebookId($facebookUserProfile['id']);
-                $user->setFacebookName($facebookUserProfile['name']);
-                $user->setFacebookData(serialize($facebookUserProfile));
-                $user->setMustChangePassword(0);
-                $user->setGroupId(2);
-                $user->setBanned(0);
-                $user->setSuspended(0);
-                $user->setActive(1);
-
-                if (true == $user->create()) {
-                    $this->setIdentity($user);
-                    $this->saveSuccessLogin($user);
-
-                    return $this->response->redirect($pupRedirect->success);
-                } else {
-                    $this->flash->error('Error on facebook');
-
-                    return $this->response->redirect($pupRedirect->failure, true);
-                }
+        if ($user) {
+            $this->checkUserFlags($user);
+            $this->setIdentity($user);
+            if (!$user->getFacebookId()) {
+                $user->setFacebookId($facebookUser['id']);
+                $user->setFacebookName($facebookUser['name']);
+                $user->setFacebookData(serialize($facebookUser));
+                $user->update();
             }
+
+            $this->saveSuccessLogin($user);
+
+            return $this->response->redirect($pupRedirect->success);
+        } else {
+            $password = $this->generatePassword();
+
+            $user = $this->newUser()
+                ->setName($facebookUser['name'])
+                ->setEmail($email)
+                ->setPassword($di->get('security')->hash($password))
+                ->setFacebookId($facebookUser['id'])
+                ->setFacebookName($facebookUser['name'])
+                ->setFacebookData(serialize($facebookUser));
+
+            return $this->createUser($user);
         }
     }
 
@@ -188,57 +182,12 @@ class Auth extends Component
         $token_expires = $this->session->get('linkedIn_token_expires_on', 0);
 
         if ($token && $token_expires > time()) {
-            $pupRedirect = $di->get('config')->pup->redirect;
+
             $li->setAccessToken($this->session->get('linkedIn_token'));
             $email = $li->get('/people/~/email-address');
-            $info = $li->get('/people/~');
+            $info  = $li->get('/people/~');
 
-            preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
-            $linkedInId = str_replace("id=", "", $matches[0]);
-
-            $user = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
-
-            if ($user) {
-                $this->checkUserFlags($user);
-                $this->setIdentity($user);
-                $this->saveSuccessLogin($user);
-
-                if (!$user->getLinkedinId()) {
-                    $user->setLinkedinId($linkedInId);
-                    $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
-                    $user->update();
-                }
-
-                return $this->response->redirect($pupRedirect->success);
-            } else {
-                $password = $this->generatePassword();
-
-                $user = new User();
-                $user->setEmail($email);
-                $user->setPassword($di->get('security')->hash($password));
-                $user->setLinkedinId($linkedInId);
-                $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
-                $user->setLinkedinData(json_encode($info));
-                $user->setMustChangePassword(0);
-                $user->setGroupId(2);
-                $user->setBanned(0);
-                $user->setSuspended(0);
-                $user->setActive(1);
-
-                if (true == $user->create()) {
-                    $this->setIdentity($user);
-                    $this->saveSuccessLogin($user);
-
-                    return $this->response->redirect($pupRedirect->success);
-                } else {
-                    foreach ($user->getMessages() as $message) {
-                        $this->flashSession->error($message->getMessage());
-                    }
-
-                    return $this->response->redirect($pupRedirect->failure);
-                }
-            }
-
+            return $this->authenticateOrCreateLinkedInUser($email, $info);
         } else { // If token is not set
             if ($this->request->get('code')) {
                 $token = $li->getAccessToken($this->request->get('code'));
@@ -249,9 +198,84 @@ class Auth extends Component
         }
 
         $state = uniqid();
-        $url = $li->getLoginUrl(array(LinkedInConnector::SCOPE_BASIC_PROFILE, LinkedInConnector::SCOPE_EMAIL_ADDRESS), $state);
+        $url   = $li->getLoginUrl([
+            LinkedInConnector::SCOPE_BASIC_PROFILE,
+            LinkedInConnector::SCOPE_EMAIL_ADDRESS
+        ], $state);
 
         return $this->response->redirect($url, true);
+    }
+
+    protected function authenticateOrCreateLinkedInUser($email, $info)
+    {
+        $pupRedirect = $di->get('config')->pup->redirect;
+        $user        = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
+
+        preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
+
+        $linkedInId = str_replace("id=", "", $matches[0]);
+
+        if ($user) {
+            $this->checkUserFlags($user);
+            $this->setIdentity($user);
+            $this->saveSuccessLogin($user);
+
+            if (!$user->getLinkedinId()) {
+                $user->setLinkedinId($linkedInId);
+                $user->setLinkedinName($info['firstName'].' '.$info['lastName']);
+                $user->update();
+            }
+
+            return $this->response->redirect($pupRedirect->success);
+        } else {
+            $password = $this->generatePassword();
+
+            $user = $this->newUser()
+                ->setName($info['firstName'].' '.$info['lastName'])
+                ->setEmail($email)
+                ->setPassword($di->get('security')->hash($password))
+                ->setLinkedinId($linkedInId)
+                ->setLinkedinName($info['firstName'].' '.$info['lastName'])
+                ->setLinkedinData(json_encode($info));
+
+            return $this->createUser($user);
+        }
+    }
+
+    /**
+     * New user
+     * @return \Phalcon\UserPlugin\Models\User\User
+     */
+    protected function newUser()
+    {
+        $user = new User();
+        $user->setMustChangePassword(0);
+        $user->setGroupId(2);
+        $user->setBanned(0);
+        $user->setSuspended(0);
+        $user->setActive(1);
+
+        return $user;
+    }
+
+    /**
+     * Create (save) new user to DB
+     * @param unknown $user
+     */
+    protected function createUser($user)
+    {
+        if (true === $user->create()) {
+            $this->setIdentity($user);
+            $this->saveSuccessLogin($user);
+
+            return $this->response->redirect($pupRedirect->success);
+        } else {
+            foreach ($user->getMessages() as $message) {
+                $this->flashSession->error($message->getMessage());
+            }
+
+            return $this->response->redirect($pupRedirect->failure);
+        }
     }
 
     /**
@@ -299,6 +323,7 @@ class Auth extends Component
                             $password = $this->generatePassword();
                             $email = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
                             $user = new User();
+                            $user->setName($response['name']);
                             $user->setEmail($email);
                             $user->setPassword($di->get('security')->hash($password));
                             $user->setTwitterId($response['id']);
@@ -455,7 +480,6 @@ class Auth extends Component
                 sleep(4);
                 break;
         }
-
     }
 
     /**

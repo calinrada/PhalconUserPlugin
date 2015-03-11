@@ -1,7 +1,6 @@
 <?php
 namespace Phalcon\UserPlugin\Connectors;
 
-use GoogleApi\Client;
 use GoogleApi\Contrib\Oauth2Service;
 
 /**

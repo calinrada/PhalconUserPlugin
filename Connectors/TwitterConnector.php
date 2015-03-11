@@ -133,8 +133,8 @@ class TwitterConnector
      * Generates a random OAuth nonce.
      * If 'force_nonce' is false a nonce will be generated, otherwise the value of '$this->config['force_nonce']' will be used.
      *
-     * @param string $length       how many characters the nonce should be before MD5 hashing. default 12
-     * @param string $include_time whether to include time at the beginning of the nonce. default true
+     * @param  string $length       how many characters the nonce should be before MD5 hashing. default 12
+     * @param  string $include_time whether to include time at the beginning of the nonce. default true
      * @return $nonce as a string
      */
     private function nonce($length=12, $include_time=true)
@@ -169,7 +169,7 @@ class TwitterConnector
      * Encodes the string or array passed in a way compatible with OAuth.
      * If an array is passed each array value will will be encoded.
      *
-     * @param mixed $data the scalar or array to encode
+     * @param  mixed $data the scalar or array to encode
      * @return $data encoded in a way compatible with OAuth
      */
     private function safe_encode($data)
@@ -335,7 +335,6 @@ class TwitterConnector
 
         return " $value";
     }
-
 
     /**
      * Prepares all parameters for the base string and request.
