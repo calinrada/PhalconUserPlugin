@@ -28,7 +28,7 @@
     "target-dir": "Phalcon/UserPlugin",
     "extra": {
         "branch-alias": {
-            "dev-master": "1-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }
