@@ -32,6 +32,6 @@
         }
     },
     "scripts": {
-        "post-update-cmd": "Phalcon\\UserPlugin\\Migration\\Db::migrate",
+        "post-update-cmd": "Phalcon\\UserPlugin\\Migration\\Db::migrate"
     }
 }
