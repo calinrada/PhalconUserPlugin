@@ -127,6 +127,16 @@ class UserPermissions extends \Phalcon\Mvc\Model
         return 'user_permissions';
     }
 
+    public function initialize()
+    {
+        $this->belongsTo('group_id', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
+            'alias' => 'group',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
+            ),
+        ));
+    }
+
     /**
      * @return UserPermissions[]
      */

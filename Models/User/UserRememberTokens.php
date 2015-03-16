@@ -156,6 +156,14 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
         return 'user_remember_tokens';
     }
 
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user',
+            'reusable' => true
+        ));
+    }
+
     /**
      * @return UserRememberTokens[]
      */

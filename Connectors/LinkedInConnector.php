@@ -8,24 +8,24 @@ namespace Phalcon\UserPlugin\Connectors;
  */
 class LinkedInConnector
 {
-    private $_config = array();
-    private $_state = null;
-    private $_access_token = null;
+    private $_config               = array();
+    private $_state                = null;
+    private $_access_token         = null;
     private $_access_token_expires = null;
-    private $_debug_info = null;
-    private $_curl_handle = null;
+    private $_debug_info           = null;
+    private $_curl_handle          = null;
 
-    const API_BASE = 'https://api.linkedin.com/v1';
+    const API_BASE   = 'https://api.linkedin.com/v1';
     const OAUTH_BASE = 'https://www.linkedin.com/uas/oauth2';
 
-    const SCOPE_BASIC_PROFILE = 'r_basicprofile'; // Name, photo, headline, and current positions
-    const SCOPE_FULL_PROFILE = 'r_fullprofile'; // Full profile including experience, education, skills, and recommendations
-    const SCOPE_EMAIL_ADDRESS = 'r_emailaddress'; // The primary email address you use for your LinkedIn account
-    const SCOPE_NETWORK = 'r_network'; // Your 1st and 2nd degree connections
-    const SCOPE_CONTACT_INFO = 'r_contactinfo'; // Address, phone number, and bound accounts
-    const SCOPE_READ_WRTIE_UPDATES = 'rw_nus'; // Retrieve and post updates to LinkedIn as you
-    const SCOPE_READ_WRITE_GROUPS = 'rw_groups'; // Retrieve and post group discussions as you
-    const SCOPE_WRITE_MESSAGES = 'w_messages'; // Send messages and invitations to connect as you
+    const SCOPE_BASIC_PROFILE      = 'r_basicprofile'; // Name, photo, headline, and current positions
+    const SCOPE_FULL_PROFILE       = 'r_fullprofile';  // Full profile including experience, education, skills, and recommendations
+    const SCOPE_EMAIL_ADDRESS      = 'r_emailaddress'; // The primary email address you use for your LinkedIn account
+    const SCOPE_NETWORK            = 'r_network';      // Your 1st and 2nd degree connections
+    const SCOPE_CONTACT_INFO       = 'r_contactinfo';  // Address, phone number, and bound accounts
+    const SCOPE_READ_WRTIE_UPDATES = 'rw_nus';         // Retrieve and post updates to LinkedIn as you
+    const SCOPE_READ_WRITE_GROUPS  = 'rw_groups';      // Retrieve and post group discussions as you
+    const SCOPE_WRITE_MESSAGES     = 'w_messages';     // Send messages and invitations to connect as you
 
     /**
      * @param  array                     $config (api_key, api_secret, callback_url)
@@ -51,7 +51,6 @@ class LinkedInConnector
         }
 
         $this->_config = $config;
-
     }
 
     /**
@@ -75,7 +74,6 @@ class LinkedInConnector
         $url = self::OAUTH_BASE . "/authorization?response_type=code&client_id={$this->_config['api_key']}&scope={$scope}&state={$state}&redirect_uri=" . urlencode($this->_config['callback_url']);
 
         return $url;
-
     }
 
     /**
@@ -113,7 +111,6 @@ class LinkedInConnector
         $this->_access_token_expires = $data['expires_in'];
 
         return $this->_access_token;
-
     }
 
     /**
@@ -124,15 +121,14 @@ class LinkedInConnector
     public function getAccessTokenExpiration()
     {
         return $this->_access_token_expires;
-
     }
 
     /**
      * Set the access token manually
      *
-     * @param  string                    $token
+     * @param  string                                           $token
      * @throws \InvalidArgumentException
-     * @return \LinkedIn\LinkedIn
+     * @return \Phalcon\UserPlugin\Connectors\LinkedInConnector
      */
     public function setAccessToken($token)
     {
@@ -144,15 +140,14 @@ class LinkedInConnector
         $this->_access_token = $token;
 
         return $this;
-
     }
 
     /**
      * Set the state manually. State is a unique identifier for the user
      *
-     * @param  string                    $state
+     * @param  string                                           $state
      * @throws \InvalidArgumentException
-     * @return \LinkedIn\LinkedIn
+     * @return \Phalcon\UserPlugin\Connectors\LinkedInConnector
      */
     public function setState($state)
     {
@@ -164,7 +159,6 @@ class LinkedInConnector
         $this->_state = $state;
 
         return $this;
-
     }
 
     /**
@@ -175,7 +169,6 @@ class LinkedInConnector
     public function getState()
     {
         return $this->_state;
-
     }
 
     /**
@@ -188,7 +181,6 @@ class LinkedInConnector
     public function post($endpoint, array $payload = array())
     {
         return $this->fetch($endpoint, $payload, 'POST');
-
     }
 
     /**
@@ -201,7 +193,6 @@ class LinkedInConnector
     public function get($endpoint, array $payload = array())
     {
         return $this->fetch($endpoint, $payload);
-
     }
 
     /**
@@ -214,7 +205,6 @@ class LinkedInConnector
     public function put($endpoint, array $payload = array())
     {
         return $this->fetch($endpoint, $payload, 'PUT');
-
     }
 
     /**
@@ -235,7 +225,6 @@ class LinkedInConnector
         $headers[] = 'x-li-format: json';
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
-
     }
 
     /**
@@ -246,7 +235,6 @@ class LinkedInConnector
     public function getDebugInfo()
     {
         return $this->_debug_info;
-
     }
 
     /**
@@ -307,7 +295,6 @@ class LinkedInConnector
         }
 
         return $this->_curl_handle;
-
     }
 
     public function __destruct()
@@ -315,6 +302,5 @@ class LinkedInConnector
         if ($this->_curl_handle) {
             curl_close($this->_curl_handle);
         }
-
     }
 }

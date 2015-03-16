@@ -124,6 +124,14 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
         return 'user_failed_logins';
     }
 
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user',
+            'reusable' => true
+        ));
+    }
+
     /**
      * @return UserFailedLogins[]
      */

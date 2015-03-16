@@ -156,6 +156,14 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
         return 'user_success_logins';
     }
 
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user',
+            'reusable' => true
+        ));
+    }
+
     /**
      * @return UserSuccessLogins[]
      */
@@ -172,7 +180,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    public function beforeValidation()
+    public function beforeValidationOnCreate()
     {
         $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
     }

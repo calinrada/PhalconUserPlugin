@@ -2,7 +2,7 @@
     "name": "crada/phalcon-user-plugin",
     "type": "library",
     "description": "User plugin for Phalcon PHP framework",
-    "keywords": ["phalcon","user","login","facebook"],
+    "keywords": ["phalcon","user","login","facebook", "twitter", "linkedin", "google+"],
     "homepage": "https://github.com/calinrada/PhalconUserPlugin",
     "license": "MIT",
     "authors": [
@@ -30,5 +30,8 @@
         "branch-alias": {
             "dev-master": "2.0-dev"
         }
+    },
+    "scripts": {
+        "post-update-cmd": "Phalcon\\UserPlugin\\Migration\\Db::migrate",
     }
 }

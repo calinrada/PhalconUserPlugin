@@ -126,7 +126,7 @@ class Acl extends Component
     /**
      * Returns the action description according to its simplified name
      *
-     * @param string $action
+     * @param  string  $action
      * @return $action
      */
     public function getActionDescription($action)

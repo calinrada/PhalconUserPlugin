@@ -11,6 +11,7 @@ use Phalcon\UserPlugin\Connectors\LinkedInConnector,
     Phalcon\UserPlugin\Connectors\FacebookConnector,
     Phalcon\UserPlugin\Connectors\GoogleConnector,
     Phalcon\UserPlugin\Connectors\TwitterConnector;
+use Phalcon\UserPlugin\Models\User\UserProfile;
 
 /**
  * Phalcon\UserPlugin\Auth\Auth
@@ -209,11 +210,11 @@ class Auth extends Component
     protected function authenticateOrCreateLinkedInUser($email, $info)
     {
         $pupRedirect = $di->get('config')->pup->redirect;
-        $user        = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
 
         preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
 
-        $linkedInId = str_replace("id=", "", $matches[0]);
+        $linkedInId  = str_replace("id=", "", $matches[0]);
+        $user        = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
 
         if ($user) {
             $this->checkUserFlags($user);
@@ -371,9 +372,9 @@ class Auth extends Component
         $user = new User();
         $user->setMustChangePassword(0);
         $user->setGroupId(2);
-        $user->setBanned(0);
-        $user->setSuspended(0);
-        $user->setActive(1);
+        $user->setStatus(User::STATUS_ACTIVE);
+
+        $user->profile = new UserProfile();
 
         return $user;
     }
@@ -558,15 +559,15 @@ class Auth extends Component
      */
     public function checkUserFlags($user)
     {
-        if (false === $user->isActive()) {
+        if ($user->getStatus() === User::STATUS_INACTIVE) {
             throw new Exception('The user is inactive');
         }
 
-        if (true === $user->isBanned()) {
+        if ($user->getStatus() === User::STATUS_BANNED) {
             throw new Exception('The user is banned');
         }
 
-        if (true === $user->isSuspended()) {
+        if ($user->getStatus() === User::STATUS_SUSPENDED) {
             throw new Exception('The user is suspended');
         }
     }
