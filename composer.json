@@ -2,7 +2,7 @@
     "name": "crada/phalcon-user-plugin",
     "type": "library",
     "description": "User plugin for Phalcon PHP framework",
-    "keywords": ["phalcon","user","login","facebook", "twitter", "linkedin", "google+"],
+    "keywords": ["phalcon","user","login","facebook", "twitter", "linkedin", "google-plus"],
     "homepage": "https://github.com/calinrada/PhalconUserPlugin",
     "license": "MIT",
     "authors": [
