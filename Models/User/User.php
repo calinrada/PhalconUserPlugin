@@ -882,7 +882,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function afterCreate()
     {
-        if ($this->getStatus() === static::STATUS_INACTIVE) {
+        if ($this->getStatus() === static::STATUS_ACTIVE) {
             return;
         }
 
