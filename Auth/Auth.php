@@ -24,7 +24,7 @@ class Auth extends Component
      * Checks the user credentials
      *
      * @param  array  $credentials
-     * @return boolan
+     * @return boolean
      */
     public function check($credentials)
     {
@@ -111,26 +111,27 @@ class Auth extends Component
         $facebook     = new FacebookConnector($di);
         $facebookUser = $facebook->getUser();
 
-        if ($facebookUser) {
-            try {
-                return $this->authenticateOrCreateFacebookUser($facebookUser);
-            } catch (\FacebookApiException $e) {
-                $di->logger->begin();
-                $di->logger->error($e->getMessage());
-                $di->logger->commit();
-                $facebookUser = null;
-            }
-        } else {
+        if (!$facebookUser) {
             $scope = [
                 'scope' => 'email,user_birthday,user_location'
             ];
 
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
+
+        try {
+            return $this->authenticateOrCreateFacebookUser($facebookUser);
+        } catch (\FacebookApiException $e) {
+            $di->logger->begin();
+            $di->logger->error($e->getMessage());
+            $di->logger->commit();
+            $facebookUser = null;
+        }
     }
 
     /**
      * Authenitcate or create a user with a Facebook account
+     *
      * @param array $facebookUser
      */
     protected function authenticateOrCreateFacebookUser($facebookUser)
@@ -183,7 +184,6 @@ class Auth extends Component
         $token_expires = $this->session->get('linkedIn_token_expires_on', 0);
 
         if ($token && $token_expires > time()) {
-
             $li->setAccessToken($this->session->get('linkedIn_token'));
             $email = $li->get('/people/~/email-address');
             $info  = $li->get('/people/~');
@@ -255,61 +255,61 @@ class Auth extends Component
         $config      = array_merge($config, array('token' => $oauth['token'], 'secret' => $oauth['secret']));
 
         $twitter = new TwitterConnector($config, $di);
-        if ($this->request->get('oauth_token')) {
-            $twitter->access_token();
+        if (!$this->request->get('oauth_token')) {
+            return $this->response->redirect($twitter->request_token(), true);
+        }
 
-            $code = $twitter->user_request(array(
-                'url' => $twitter->url('1.1/account/verify_credentials')
-            ));
+        $twitter->access_token();
 
-            if ($code == 200) {
-                $data = json_decode($twitter->response['response'], true);
+        $code = $twitter->user_request(array(
+            'url' => $twitter->url('1.1/account/verify_credentials')
+        ));
 
-                if ($data['screen_name']) {
-                    $code = $twitter->user_request(array(
-                        'url' => $twitter->url('1.1/users/show'),
-                        'params' => array(
-                            'screen_name' => $data['screen_name']
-                        )
-                    ));
+        if ($code == 200) {
+            $data = json_decode($twitter->response['response'], true);
 
-                    if ($code == 200) {
-                        $response = json_decode($twitter->response['response'], true);
-                        $twitterId = $response['id'];
-                        $user = User::findFirst("twitter_id='$twitterId'");
+            if ($data['screen_name']) {
+                $code = $twitter->user_request(array(
+                    'url' => $twitter->url('1.1/users/show'),
+                    'params' => array(
+                        'screen_name' => $data['screen_name']
+                    )
+                ));
 
-                        if ($user) {
-                            $this->checkUserFlags($user);
-                            $this->setIdentity($user);
-                            $this->saveSuccessLogin($user);
+                if ($code == 200) {
+                    $response = json_decode($twitter->response['response'], true);
+                    $twitterId = $response['id'];
+                    $user = User::findFirst("twitter_id='$twitterId'");
 
-                            return $this->response->redirect($pupRedirect->success);
-                        } else {
+                    if ($user) {
+                        $this->checkUserFlags($user);
+                        $this->setIdentity($user);
+                        $this->saveSuccessLogin($user);
 
-                            $password = $this->generatePassword();
-                            $email    = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
+                        return $this->response->redirect($pupRedirect->success);
+                    } else {
 
-                            $user = $this->newUser()
-                                ->setName($response['name'])
-                                ->setEmail($email)
-                                ->setPassword($di->get('security')->hash($password))
-                                ->setTwitterId($response['id'])
-                                ->setTwitterName($response['name'])
-                                ->setTwitterData(json_encode($response));
+                        $password = $this->generatePassword();
+                        $email    = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
 
-                            $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
+                        $user = $this->newUser()
+                            ->setName($response['name'])
+                            ->setEmail($email)
+                            ->setPassword($di->get('security')->hash($password))
+                            ->setTwitterId($response['id'])
+                            ->setTwitterName($response['name'])
+                            ->setTwitterData(json_encode($response));
 
-                            return $this->createUser($user);
-                        }
+                        $this->flashSession->notice('Because Twitter does not provide an email address, we had randomly generated one: '.$email);
+
+                        return $this->createUser($user);
                     }
                 }
-            } else {
-                $di->get('logger')->begin();
-                $di->get('logger')->error(json_encode($twitter->response));
-                $di->get('logger')->commit();
             }
         } else {
-            return $this->response->redirect($twitter->request_token(), true);
+            $di->get('logger')->begin();
+            $di->get('logger')->error(json_encode($twitter->response));
+            $di->get('logger')->commit();
         }
     }
 
@@ -327,44 +327,45 @@ class Auth extends Component
 
         if ($response['status'] == 0) {
             return $this->response->redirect($response['redirect'], true);
-        } else {
-            $gplusId = $response['userinfo']['id'];
-            $email   = $response['userinfo']['email'];
-            $name    = $response['userinfo']['name'];
-            $user    = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
+        }
 
-            if ($user) {
-                $this->checkUserFlags($user);
-                $this->setIdentity($user);
+        $gplusId = $response['userinfo']['id'];
+        $email   = $response['userinfo']['email'];
+        $name    = $response['userinfo']['name'];
+        $user    = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
 
-                if (!$user->getGplusId()) {
-                    $user->setGplusId($gplusId);
-                    $user->setGplusName($name);
-                    $user->setGplusData(serialize($response['userinfo']));
-                    $user->update();
-                }
+        if ($user) {
+            $this->checkUserFlags($user);
+            $this->setIdentity($user);
 
-                $this->saveSuccessLogin($user);
-
-                return $this->response->redirect($pupRedirect->success);
-            } else {
-                $password = $this->generatePassword();
-
-                $user = $this->newUser()
-                    ->setName($name)
-                    ->setEmail($email)
-                    ->setPassword($di->get('security')->hash($password))
-                    ->setGplusId($gplusId)
-                    ->setGplusName($name)
-                    ->setGplusData(serialize($response['userinfo']));
-
-                return $this->createUser($user);
+            if (!$user->getGplusId()) {
+                $user->setGplusId($gplusId);
+                $user->setGplusName($name);
+                $user->setGplusData(serialize($response['userinfo']));
+                $user->update();
             }
+
+            $this->saveSuccessLogin($user);
+
+            return $this->response->redirect($pupRedirect->success);
+        } else {
+            $password = $this->generatePassword();
+
+            $user = $this->newUser()
+                ->setName($name)
+                ->setEmail($email)
+                ->setPassword($di->get('security')->hash($password))
+                ->setGplusId($gplusId)
+                ->setGplusName($name)
+                ->setGplusData(serialize($response['userinfo']));
+
+            return $this->createUser($user);
         }
     }
 
     /**
      * New user
+     *
      * @return \Phalcon\UserPlugin\Models\User\User
      */
     protected function newUser()
@@ -381,6 +382,7 @@ class Auth extends Component
 
     /**
      * Create (save) new user to DB
+     *
      * @param unknown $user
      */
     protected function createUser($user)
@@ -657,16 +659,16 @@ class Auth extends Component
     {
         $identity = $this->session->get('auth-identity');
 
-        if (isset($identity['id'])) {
-            $user = User::findFirstById($identity['id']);
-            if ($user == false) {
-                throw new Exception('The user does not exist');
-            }
-
-            return $user;
+        if (!isset($identity['id'])) {
+            return false;
         }
 
-        return false;
+        $user = User::findFirstById($identity['id']);
+        if ($user == false) {
+            throw new Exception('The user does not exist');
+        }
+
+        return $user;
     }
 
     /**
