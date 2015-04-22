@@ -42,7 +42,7 @@ class Security extends Plugin
             $controllerName = $dispatcher->getControllerName();
 
             if ($controllerName == 'user' && $actionName == 'login') {
-                return $this->response->redirect($config->pup->redirect->success);
+                return $this->response->redirect($config->pup->redirect->success)->send();
             }
         }
 
