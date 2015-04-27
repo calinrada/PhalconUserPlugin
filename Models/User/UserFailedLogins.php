@@ -30,7 +30,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -43,7 +43,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_id
      *
-     * @param integer $user_id
+     * @param  integer $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -56,7 +56,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field ip_address
      *
-     * @param string $ip_address
+     * @param  string $ip_address
      * @return $this
      */
     public function setIpAddress($ip_address)
@@ -69,7 +69,7 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field attempted
      *
-     * @param integer $attempted
+     * @param  integer $attempted
      * @return $this
      */
     public function setAttempted($attempted)
@@ -122,6 +122,14 @@ class UserFailedLogins extends \Phalcon\Mvc\Model
     public function getSource()
     {
         return 'user_failed_logins';
+    }
+
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user',
+            'reusable' => true
+        ));
     }
 
     /**

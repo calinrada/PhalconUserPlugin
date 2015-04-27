@@ -20,9 +20,6 @@ class UserForm extends Form
 {
     public function initialize($entity=null, $options=null)
     {
-        $translate = $this->getDI()->get('translate');
-
-        //In edition the id is hidden
         if (isset($options['edit']) && $options['edit']) {
             $id = new Hidden('id');
         } else {
@@ -39,16 +36,16 @@ class UserForm extends Form
             'emptyValue' => ''
         )));
         $this->add(new Select('banned', array(
-            1 => $translate['Yes'],
-            0 => $translate['No']
+            1 => 'Yes',
+            0 => 'No'
         )));
         $this->add(new Select('suspended', array(
-            1 => $translate['Yes'],
-            0 => $translate['No']
+            1 => 'Yes',
+            0 => 'No'
         )));
         $this->add(new Select('active', array(
-            1 => $translate['Yes'],
-            0 => $translate['No']
+            1 => 'Yes',
+            0 => 'No'
         )));
     }
 }

@@ -2,7 +2,7 @@
     "name": "crada/phalcon-user-plugin",
     "type": "library",
     "description": "User plugin for Phalcon PHP framework",
-    "keywords": ["phalcon","user","login","facebook"],
+    "keywords": ["phalcon","user","login","facebook", "twitter", "linkedin", "google-plus"],
     "homepage": "https://github.com/calinrada/PhalconUserPlugin",
     "license": "MIT",
     "authors": [
@@ -15,8 +15,8 @@
     "require": {
         "php": ">=5.3.2",
         "swiftmailer/swiftmailer": ">=4.3, <6.0",
-        "facebook/php-sdk": "3.2.*",
-        "nyholm/google-api-php-client": "dev-master",
+        "facebook/php-sdk-v4" : "4.0.*",
+        "google/apiclient": "1.1.2",
         "imagine/imagine": "dev-master"
     },
     "autoload": {
@@ -28,7 +28,10 @@
     "target-dir": "Phalcon/UserPlugin",
     "extra": {
         "branch-alias": {
-            "dev-master": "1-dev"
+            "dev-master": "2.0-dev"
         }
+    },
+    "scripts": {
+        "post-update-cmd": "Phalcon\\UserPlugin\\Migration\\Db::migrate"
     }
 }

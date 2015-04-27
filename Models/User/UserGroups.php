@@ -26,7 +26,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -39,7 +39,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field name
      *
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
@@ -52,7 +52,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field active
      *
-     * @param integer $active
+     * @param  integer $active
      * @return $this
      */
     public function setActive($active)

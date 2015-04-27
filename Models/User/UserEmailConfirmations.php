@@ -31,7 +31,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $modified_at;
+    protected $updated_at;
 
     /**
      *
@@ -42,7 +42,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -55,7 +55,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_id
      *
-     * @param integer $user_id
+     * @param  integer $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -68,7 +68,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field code
      *
-     * @param string $code
+     * @param  string $code
      * @return $this
      */
     public function setCode($code)
@@ -81,7 +81,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -92,14 +92,14 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field modified_at
+     * Method to set the value of field updated_at
      *
-     * @param string $modified_at
+     * @param  string $updated_at
      * @return $this
      */
-    public function setModifiedAt($modified_at)
+    public function setUpdatedAt($updated_at)
     {
-        $this->modified_at = $modified_at;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
@@ -107,7 +107,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field confirmed
      *
-     * @param integer $confirmed
+     * @param  integer $confirmed
      * @return $this
      */
     public function setConfirmed($confirmed)
@@ -158,13 +158,13 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field modified_at
+     * Returns the value of field updated_at
      *
      * @return string
      */
-    public function getModifiedAt()
+    public function getUpdatedAt()
     {
-        return $this->modified_at;
+        return $this->updated_at;
     }
 
     /**
@@ -204,8 +204,8 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function beforeValidationOnCreate()
     {
         $this->created_at = date('Y-m-d H:i:s');
-        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
-        $this->confirmed = 0;
+        $this->code       = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
+        $this->confirmed  = 0;
     }
 
     /**
@@ -213,7 +213,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
      */
     public function beforeValidationOnUpdate()
     {
-        $this->modified_at = date('Y-m-d H:i:s');
+        $this->updated_at = date('Y-m-d H:i:s');
     }
 
     /**

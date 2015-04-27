@@ -39,7 +39,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -52,7 +52,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_id
      *
-     * @param integer $user_id
+     * @param  integer $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -65,7 +65,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field ip_address
      *
-     * @param string $ip_address
+     * @param  string $ip_address
      * @return $this
      */
     public function setIpAddress($ip_address)
@@ -78,7 +78,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_agent
      *
-     * @param string $user_agent
+     * @param  string $user_agent
      * @return $this
      */
     public function setUserAgent($user_agent)
@@ -91,7 +91,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -156,6 +156,14 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
         return 'user_success_logins';
     }
 
+    public function initialize()
+    {
+        $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
+            'alias' => 'user',
+            'reusable' => true
+        ));
+    }
+
     /**
      * @return UserSuccessLogins[]
      */
@@ -172,7 +180,7 @@ class UserSuccessLogins extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    public function beforeValidation()
+    public function beforeValidationOnCreate()
     {
         $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
     }

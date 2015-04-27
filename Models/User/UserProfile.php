@@ -62,7 +62,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -75,7 +75,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_id
      *
-     * @param integer $user_id
+     * @param  integer $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -88,7 +88,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field picture
      *
-     * @param integer $picture
+     * @param  integer $picture
      * @return $this
      */
     public function setPicture($picture)
@@ -101,7 +101,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field birth_date
      *
-     * @param string $birth_date
+     * @param  string $birth_date
      * @return $this
      */
     public function setBirthDate($birth_date)
@@ -114,7 +114,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field gender
      *
-     * @param string $gender
+     * @param  string $gender
      * @return $this
      */
     public function setGender($gender)
@@ -127,7 +127,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field home_location_id
      *
-     * @param integer $home_location_id
+     * @param  integer $home_location_id
      * @return $this
      */
     public function setHomeLocationId($home_location_id)
@@ -140,7 +140,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field current_locationid
      *
-     * @param integer $current_location_id
+     * @param  integer $current_location_id
      * @return $this
      */
     public function setCurrentLocationId($current_location_id)
@@ -153,7 +153,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -166,7 +166,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field updated_at
      *
-     * @param string $updated_at
+     * @param  string $updated_at
      * @return $this
      */
     public function setUpdatedAt($updated_at)

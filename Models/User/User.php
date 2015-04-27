@@ -5,6 +5,14 @@ use Phalcon\Mvc\Model\Validator\Uniqueness;
 
 class User extends \Phalcon\Mvc\Model
 {
+    const STATUS_INACTIVE  = 0;
+
+    const STATUS_ACTIVE    = 1;
+
+    const STATUS_SUSPENDED = 2;
+
+    const STATUS_BANNED    = 3;
+
     /**
      *
      * @var integer
@@ -120,22 +128,28 @@ class User extends \Phalcon\Mvc\Model
     protected $group_id;
 
     /**
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @var integer
      */
     protected $banned = 0;
 
     /**
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @var integer
      */
     protected $suspended = 0;
 
     /**
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @var integer
      */
     protected $active = 0;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $status = 0;
 
     /**
      *
@@ -152,7 +166,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -165,7 +179,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field name
      *
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
@@ -178,7 +192,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field email
      *
-     * @param string $email
+     * @param  string $email
      * @return $this
      */
     public function setEmail($email)
@@ -191,7 +205,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field password
      *
-     * @param string $password
+     * @param  string $password
      * @return $this
      */
     public function setPassword($password)
@@ -204,7 +218,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field facebook_id
      *
-     * @param string $facebook_id
+     * @param  string $facebook_id
      * @return $this
      */
     public function setFacebookId($facebook_id)
@@ -217,7 +231,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field facebook_name
      *
-     * @param string $facebook_name
+     * @param  string $facebook_name
      * @return $this
      */
     public function setFacebookName($facebook_name)
@@ -230,7 +244,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field facebook_data
      *
-     * @param string $facebook_data
+     * @param  string $facebook_data
      * @return $this
      */
     public function setFacebookData($facebook_data)
@@ -243,7 +257,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field linkedin_id
      *
-     * @param integer $linkedin_id
+     * @param  integer $linkedin_id
      * @return $this
      */
     public function setLinkedinId($linkedin_id)
@@ -256,7 +270,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field linkedin_name
      *
-     * @param string $linkedin_name
+     * @param  string $linkedin_name
      * @return $this
      */
     public function setLinkedinName($linkedin_name)
@@ -269,7 +283,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field linkedin_data
      *
-     * @param string $linkedin_data
+     * @param  string $linkedin_data
      * @return $this
      */
     public function setLinkedinData($linkedin_data)
@@ -282,7 +296,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field gplus_id
      *
-     * @param string $gplus_id
+     * @param  string $gplus_id
      * @return $this
      */
     public function setGplusId($gplus_id)
@@ -295,7 +309,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field gplus_name
      *
-     * @param string $gplus_name
+     * @param  string $gplus_name
      * @return $this
      */
     public function setGplusName($gplus_name)
@@ -308,7 +322,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field gplus_data
      *
-     * @param string $gplus_data
+     * @param  string $gplus_data
      * @return $this
      */
     public function setGplusData($gplus_data)
@@ -321,7 +335,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field twitter_id
      *
-     * @param string $twitter_id
+     * @param  string $twitter_id
      * @return $this
      */
     public function setTwitterId($twitter_id)
@@ -334,7 +348,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field twitter_name
      *
-     * @param string $twitter_name
+     * @param  string $twitter_name
      * @return $this
      */
     public function setTwitterName($twitter_name)
@@ -347,7 +361,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field twitter_data
      *
-     * @param string $twitter_data
+     * @param  string $twitter_data
      * @return $this
      */
     public function setTwitterData($twitter_data)
@@ -360,7 +374,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field must_change_password
      *
-     * @param integer $must_change_password
+     * @param  integer $must_change_password
      * @return $this
      */
     public function setMustChangePassword($must_change_password)
@@ -373,7 +387,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field profile_id
      *
-     * @param integer $profile_id
+     * @param  integer $profile_id
      * @return $this
      */
     public function setProfileId($profile_id)
@@ -386,7 +400,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field group_id
      *
-     * @param integer $group_id
+     * @param  integer $group_id
      * @return $this
      */
     public function setGroupId($group_id)
@@ -398,8 +412,8 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Method to set the value of field banned
-     *
-     * @param integer $banned
+     * @deprecated Left behind for backward compatibility. Use $status column instead
+     * @param  integer $banned
      * @return $this
      */
     public function setBanned($banned)
@@ -411,8 +425,8 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Method to set the value of field suspended
-     *
-     * @param integer $suspended
+     * @deprecated Left behind for backward compatibility. Use $status column instead
+     * @param  integer $suspended
      * @return $this
      */
     public function setSuspended($suspended)
@@ -424,8 +438,8 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Method to set the value of field active
-     *
-     * @param integer $active
+     * @deprecated Left behind for backward compatibility. Use $status column instead
+     * @param  integer $active
      * @return $this
      */
     public function setActive($active)
@@ -436,9 +450,22 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field status
+     *
+     * @param  integer $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -451,7 +478,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field updated_at
      *
-     * @param string $updated_at
+     * @param  string $updated_at
      * @return $this
      */
     public function setUpdatedAt($updated_at)
@@ -653,7 +680,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Returns the value of field banned
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return integer
      */
     public function getBanned()
@@ -663,7 +690,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Returns the value of field suspended
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return integer
      */
     public function getSuspended()
@@ -673,7 +700,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Returns the value of field active
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return integer
      */
     public function getActive()
@@ -683,7 +710,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Checks if the user is banned
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return boolean
      */
     public function isBanned()
@@ -693,7 +720,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Checks if the user is active
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return boolean
      */
     public function isActive()
@@ -703,12 +730,22 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Checks if the user is suspended
-     *
+     * @deprecated Left behind for backward compatibility. Use $status column instead
      * @return boolean
      */
     public function isSuspended()
     {
         return (bool) $this->suspended;
+    }
+
+    /**
+     * Get current status
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return (int) $this->status;
     }
 
     /**
@@ -761,16 +798,19 @@ class User extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->belongsTo('profile_id', 'Phalcon\UserPlugin\Models\User\UserProfile', 'id', array(
+        $this->hasOne('id', 'Phalcon\UserPlugin\Models\User\UserProfile', 'user_id', array(
             'alias' => 'profile',
-            'reusable' => true
+            'reusable' => true,
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
+            ),
         ));
 
         $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserSuccessLogins', 'user_id', array(
             'alias' => 'successLogins',
             'foreignKey' => array(
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            )
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
+            ),
         ));
 
         $this->belongsTo('group_id', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
@@ -781,15 +821,15 @@ class User extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPasswordChanges', 'user_id', array(
             'alias' => 'passwordChanges',
             'foreignKey' => array(
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            )
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
+            ),
         ));
 
         $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserResetPasswords', 'user_id', array(
             'alias' => 'resetPasswords',
             'foreignKey' => array(
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            )
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
+            ),
         ));
     }
 
@@ -825,19 +865,16 @@ class User extends \Phalcon\Mvc\Model
             $this->password = $this->getDI()->getSecurity()->hash($tempPassword);
         }
 
-        if (1 !== $this->active) {
-            $this->active = 0;
+        if (empty($this->status)) {
+            $this->status == static::STATUS_INACTIVE;
         }
+
+        $this->created_at = date("Y-m-d H:i:s");
     }
 
-    public function beforeValidation()
+    public function beforeValidationOnUpdate()
     {
-        $this->created_at = date("Y-m-d H:i:s"); // Don't use mysql server time, but use application's timezone
-    }
-
-    public function afterSave()
-    {
-        return;
+        $this->updated_at = date("Y-m-d H:i:s");
     }
 
     /**
@@ -845,9 +882,10 @@ class User extends \Phalcon\Mvc\Model
      */
     public function afterCreate()
     {
-        if (true === $this->isActive()) {
+        if ($this->getStatus() === static::STATUS_ACTIVE) {
             return;
         }
+
         $emailConfirmation = new UserEmailConfirmations();
         $emailConfirmation->setUserId($this->id);
 

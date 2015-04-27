@@ -57,7 +57,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -70,7 +70,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field from_user_id
      *
-     * @param integer $from_user_id
+     * @param  integer $from_user_id
      * @return $this
      */
     public function setFromUserId($from_user_id)
@@ -83,7 +83,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field for_user_id
      *
-     * @param integer $for_user_id
+     * @param  integer $for_user_id
      * @return $this
      */
     public function setForUserId($for_user_id)
@@ -96,7 +96,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field object_id
      *
-     * @param integer $object_id
+     * @param  integer $object_id
      * @return $this
      */
     public function setObjectId($object_id)
@@ -109,7 +109,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field object_type
      *
-     * @param integer $object_type
+     * @param  integer $object_type
      * @return $this
      */
     public function setObjectType($object_type)
@@ -122,7 +122,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field notification_type
      *
-     * @param integer $notification_type
+     * @param  integer $notification_type
      * @return $this
      */
     public function setNotificationType($notification_type)
@@ -135,7 +135,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field is_seen
      *
-     * @param integer $is_seen
+     * @param  integer $is_seen
      * @return $this
      */
     public function setIsSeen($is_seen)
@@ -148,7 +148,7 @@ class UserNotifications extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)

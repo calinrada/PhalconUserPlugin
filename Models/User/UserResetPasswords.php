@@ -45,7 +45,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field id
      *
-     * @param integer $id
+     * @param  integer $id
      * @return $this
      */
     public function setId($id)
@@ -58,7 +58,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field user_id
      *
-     * @param integer $user_id
+     * @param  integer $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -71,7 +71,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field code
      *
-     * @param string $code
+     * @param  string $code
      * @return $this
      */
     public function setCode($code)
@@ -84,7 +84,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field created_at
      *
-     * @param string $created_at
+     * @param  string $created_at
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -97,7 +97,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field modified_at
      *
-     * @param string $modified_at
+     * @param  string $modified_at
      * @return $this
      */
     public function setModifiedAt($modified_at)
@@ -110,7 +110,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field reset
      *
-     * @param integer $reset
+     * @param  integer $reset
      * @return $this
      */
     public function setReset($reset)
