@@ -13,18 +13,21 @@ Phalcon\Validation\Validator\Confirmation;
  */
 class ChangePasswordForm extends Form
 {
-    public function initialize()
+    public function initialize($entity = null, $options = null)
     {
         //Current Password
-        $currentPassword = new Password('currentPassword');
+        if (isset($options['must_change_password']) && $options['must_change_password'] == 1) {
+        } else {
+            $currentPassword = new Password('currentPassword');
 
-        $currentPassword->addValidators(array(
-            new PresenceOf(array(
-                'message' => 'Current password is required'
-            ))
-        ));
+            $currentPassword->addValidators(array(
+                new PresenceOf(array(
+                    'message' => 'Current password is required'
+                ))
+            ));
 
-        $this->add($currentPassword);
+            $this->add($currentPassword);
+        }
 
         $password = new Password('password');
 
