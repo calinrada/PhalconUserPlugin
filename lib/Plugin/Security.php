@@ -1,9 +1,10 @@
 <?php
+
 namespace Phalcon\UserPlugin\Plugin;
 
 use Phalcon\Events\Event,
-Phalcon\Mvc\Dispatcher,
-Phalcon\Mvc\User\Plugin;
+    Phalcon\Mvc\Dispatcher,
+    Phalcon\Mvc\User\Plugin;
 
 use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
