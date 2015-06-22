@@ -3,24 +3,69 @@
 namespace Phalcon\UserPlugin\Plugin;
 
 use Phalcon\Events\Event,
+    Phalcon\Config,
     Phalcon\Mvc\Dispatcher,
-    Phalcon\Mvc\User\Plugin;
-
-use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
+    Phalcon\Mvc\User\Plugin,
+    Phalcon\UserPlugin\Auth\Auth,
+    Phalcon\Mvc\View,
+    Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
 /**
  * Phalcon\UserPlugin\Plugin\Security
  */
 class Security extends Plugin
 {
+
+    /* @var Auth $auth */
+    private $auth;
+
+    /* @var View $view */
+    private $view;
+
     /**
      * Allowed resource types for the configuration file
      * @var array
      */
-    private $st_resourceTypes = array(
+    private $resourceTypes = array(
         'public',
         'private'
     );
+
+    /**
+     * @param Auth $auth
+     * @return $this
+     */
+    public function setAuth(Auth $auth)
+    {
+        $this->auth = $auth;
+        return $this;
+    }
+
+    /**
+     * @return Auth
+     */
+    public function getAuth()
+    {
+        return $this->auth;
+    }
+
+    /**
+     * @param View $view
+     * @return $this
+     */
+    public function setView(View $view)
+    {
+        $this->view = $view;
+        return $this;
+    }
+
+    /**
+     * @return View
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
 
     /**
      * beforeDispatchLoop
@@ -76,13 +121,10 @@ class Security extends Plugin
         $controllerName = $dispatcher->getControllerName();
 
         if ($config['type'] == 'public') { // all except ..
-
             return $this->checkPublicResources($config['resources'], $actionName, $controllerName);
         } else {
             return $this->checkPrivateResources($config['resources'], $actionName, $controllerName);
         }
-
-        return false;
     }
 
     /**
@@ -142,15 +184,16 @@ class Security extends Plugin
     /**
      * Get the configuration structure for the plugin
      *
-     * @param  \Phalcon\Config $config
+     * @param \Phalcon\Config $config
+     * @return \Phalcon\Config
      * @throws Exception
      */
-    private function getConfigStructure(\Phalcon\Config $config)
+    private function getConfigStructure(Config $config)
     {
         if (isset($config->pup)) {
             $config = $config->pup->resources->toArray();
 
-            if (!isset($config['type']) || (isset($config['type']) && !in_array($config['type'], $this->st_resourceTypes))) {
+            if (!isset($config['type']) || (isset($config['type']) && !in_array($config['type'], $this->resourceTypes))) {
                 throw new Exception('Wrong configuration for key "type" or the key does not exists');
             }
 
