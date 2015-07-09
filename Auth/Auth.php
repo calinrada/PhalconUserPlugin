@@ -137,7 +137,7 @@ class Auth extends Component
     protected function authenticateOrCreateFacebookUser($facebookUser)
     {
         $pupRedirect = $this->di->get('config')->pup->redirect;
-        $email       = isset($facebookUser['email']) ? $facebookUser['email'] : 'a@a.com';
+        $email       = isset($facebookUser['email']) ? $facebookUser['email'] : "{$facebookUser['id']}@facebook.com";
         $user        = User::findFirst(" email='$email' OR facebook_id='".$facebookUser['id']."' ");
 
         if ($user) {
