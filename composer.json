@@ -19,13 +19,17 @@
         "google/apiclient": "1.1.2",
         "imagine/imagine": "dev-master"
     },
+    "require-dev": {
+      "phpunit/phpunit": "4.6.*",
+      "phalcon/incubator": "dev-master",
+      "phalcon/devtools": "dev-master"
+    },
     "autoload": {
         "files": ["lib/swift_required.php"]
     },
     "autoload": {
-        "psr-0": { "Phalcon": "" }
+        "psr-4": { "Phalcon\\UserPlugin\\": "lib/" }
     },
-    "target-dir": "Phalcon/UserPlugin",
     "extra": {
         "branch-alias": {
             "dev-master": "2.0-dev"
