@@ -34,7 +34,7 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $modified_at;
+    protected $updated_at;
 
     /**
      *
@@ -95,14 +95,14 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field modified_at
+     * Method to set the value of field updated_at
      *
-     * @param  string $modified_at
+     * @param  string $updated_at
      * @return $this
      */
-    public function setModifiedAt($modified_at)
+    public function setUpdatedAt($updated_at)
     {
-        $this->modified_at = $modified_at;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
@@ -161,13 +161,13 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field modified_at
+     * Returns the value of field updated_at
      *
      * @return string
      */
-    public function getModifiedAt()
+    public function getUpdatedAt()
     {
-        return $this->modified_at;
+        return $this->updated_at;
     }
 
     /**
@@ -246,6 +246,6 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function beforeValidationOnUpdate()
     {
         //Timestamp the confirmaton
-        $this->modified_at = date('Y-m-d H:i:s');
+        $this->created_at = date('Y-m-d H:i:s');
     }
 }
