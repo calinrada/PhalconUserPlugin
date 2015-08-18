@@ -246,6 +246,6 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     public function beforeValidationOnUpdate()
     {
         //Timestamp the confirmaton
-        $this->created_at = date('Y-m-d H:i:s');
+        $this->updated_at = date('Y-m-d H:i:s');
     }
 }
