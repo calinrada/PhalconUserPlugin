@@ -1,7 +1,8 @@
 <?php
+
 namespace Phalcon\UserPlugin\Connectors;
 
-/**
+/*
  * Phalcon\UserPlugin\Connectors\TwitterConnector
  *
  * Original class from https://github.com/themattharris/tmhOAuth
@@ -16,19 +17,17 @@ class TwitterConnector
     public $config;
 
     /**
-     *
      * @var \Phalcon\DiInterface
      */
     private $di;
 
     /**
-     * Creates a new tmhOAuth object
+     * Creates a new tmhOAuth object.
      *
-     * @param  string               $config, the configuration to use for this request
-     * @param  \Phalcon\DiInterface $di
-     * @return void
+     * @param string               $config, the configuration to use for this request
+     * @param \Phalcon\DiInterface $di
      */
-    public function __construct($config=array(), $di)
+    public function __construct($config = array(), $di)
     {
         $this->di = $di;
         $this->buffer = null;
@@ -37,95 +36,95 @@ class TwitterConnector
         $this->set_user_agent();
     }
 
-    public function reconfigure($config=array())
+    public function reconfigure($config = array())
     {
         // default configuration options
         $this->config = array_merge(
             array(
                 // leave 'user_agent' blank for default, otherwise set this to
                 // something that clearly identifies your app
-                'user_agent'                 => '',
-                'host'                       => 'api.twitter.com',
+                'user_agent' => '',
+                'host' => 'api.twitter.com',
 
-                'consumer_key'               => '',
-                'consumer_secret'            => '',
-                'token'                      => '',
-                'secret'                     => '',
+                'consumer_key' => '',
+                'consumer_secret' => '',
+                'token' => '',
+                'secret' => '',
 
                 // OAuth2 bearer token. This should already be URL encoded
-                'bearer'                     => '',
+                'bearer' => '',
 
                 // oauth signing variables that are not dynamic
-                'oauth_version'              => '1.0',
-                'oauth_signature_method'     => 'HMAC-SHA1',
+                'oauth_version' => '1.0',
+                'oauth_signature_method' => 'HMAC-SHA1',
 
                 // you probably don't want to change any of these curl values
-                'curl_http_version'          => CURL_HTTP_VERSION_1_1,
-                'curl_connecttimeout'        => 30,
-                'curl_timeout'               => 10,
+                'curl_http_version' => CURL_HTTP_VERSION_1_1,
+                'curl_connecttimeout' => 30,
+                'curl_timeout' => 10,
 
                 // for security this should always be set to 2.
-        'curl_ssl_verifyhost'        => 2,
+        'curl_ssl_verifyhost' => 2,
         // for security this should always be set to true.
-        'curl_ssl_verifypeer'        => true,
+        'curl_ssl_verifypeer' => true,
         // for security this should always be set to true.
-        'use_ssl'                    => true,
+        'use_ssl' => true,
 
         // you can get the latest cacert.pem from here http://curl.haxx.se/ca/cacert.pem
         // if you're getting HTTP 0 responses, check cacert.pem exists and is readable
         // without it curl won't be able to create an SSL connection
-        'curl_cainfo'                => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
-        'curl_capath'                => __DIR__,
+        'curl_cainfo' => __DIR__.DIRECTORY_SEPARATOR.'cacert.pem',
+        'curl_capath' => __DIR__,
 
-        'curl_followlocation'        => false, // whether to follow redirects or not
+        'curl_followlocation' => false, // whether to follow redirects or not
 
         // support for proxy servers
-        'curl_proxy'                 => false, // really you don't want to use this if you are using streaming
-        'curl_proxyuserpwd'          => false, // format username:password for proxy, if required
-        'curl_encoding'              => '',    // leave blank for all supported formats, else use gzip, deflate, identity etc
+        'curl_proxy' => false, // really you don't want to use this if you are using streaming
+        'curl_proxyuserpwd' => false, // format username:password for proxy, if required
+        'curl_encoding' => '',    // leave blank for all supported formats, else use gzip, deflate, identity etc
 
         // streaming API configuration
-        'is_streaming'               => false,
-        'streaming_eol'              => "\r\n",
+        'is_streaming' => false,
+        'streaming_eol' => "\r\n",
         'streaming_metrics_interval' => 10,
 
         // header or querystring. You should always use header!
         // this is just to help me debug other developers implementations
-        'as_header'                  => true,
-        'force_nonce'                => false, // used for checking signatures. leave as false for auto
-        'force_timestamp'            => false, // used for checking signatures. leave as false for auto
+        'as_header' => true,
+        'force_nonce' => false, // used for checking signatures. leave as false for auto
+        'force_timestamp' => false, // used for checking signatures. leave as false for auto
         ),
         $config
         );
     }
 
-    private function reset_request_settings($options=array())
+    private function reset_request_settings($options = array())
     {
         $this->request_settings = array(
-            'params'    => array(),
-            'headers'   => array(),
+            'params' => array(),
+            'headers' => array(),
             'with_user' => true,
             'multipart' => false,
         );
 
-        if (!empty($options))
+        if (!empty($options)) {
             $this->request_settings = array_merge($this->request_settings, $options);
+        }
     }
 
     /**
      * Sets the useragent for PHP to use
      * If '$this->config['user_agent']' already has a value it is used instead of one
      * being generated.
-     *
-     * @return void value is stored to the config array class variable
      */
     private function set_user_agent()
     {
-        if (!empty($this->config['user_agent']))
+        if (!empty($this->config['user_agent'])) {
             return;
+        }
 
         $ssl = ($this->config['curl_ssl_verifyhost'] && $this->config['curl_ssl_verifypeer'] && $this->config['use_ssl']) ? '+' : '-';
-        $ua = 'tmhOAuth ' . self::VERSION . $ssl . 'SSL - //github.com/themattharris/tmhOAuth';
+        $ua = 'tmhOAuth '.self::VERSION.$ssl.'SSL - //github.com/themattharris/tmhOAuth';
         $this->config['user_agent'] = $ua;
     }
 
@@ -133,16 +132,17 @@ class TwitterConnector
      * Generates a random OAuth nonce.
      * If 'force_nonce' is false a nonce will be generated, otherwise the value of '$this->config['force_nonce']' will be used.
      *
-     * @param  string $length       how many characters the nonce should be before MD5 hashing. default 12
-     * @param  string $include_time whether to include time at the beginning of the nonce. default true
+     * @param string $length       how many characters the nonce should be before MD5 hashing. default 12
+     * @param string $include_time whether to include time at the beginning of the nonce. default true
+     *
      * @return $nonce as a string
      */
-    private function nonce($length=12, $include_time=true)
+    private function nonce($length = 12, $include_time = true)
     {
         if ($this->config['force_nonce'] === false) {
             $prefix = $include_time ? microtime() : '';
 
-            return md5(substr($prefix . uniqid(), 0, $length));
+            return md5(substr($prefix.uniqid(), 0, $length));
         } else {
             return $this->config['force_nonce'];
         }
@@ -169,7 +169,8 @@ class TwitterConnector
      * Encodes the string or array passed in a way compatible with OAuth.
      * If an array is passed each array value will will be encoded.
      *
-     * @param  mixed $data the scalar or array to encode
+     * @param mixed $data the scalar or array to encode
+     *
      * @return $data encoded in a way compatible with OAuth
      */
     private function safe_encode($data)
@@ -191,7 +192,8 @@ class TwitterConnector
      * Decodes the string or array from it's URL encoded form
      * If an array is passed each array value will will be decoded.
      *
-     * @param  mixed  $data the scalar or array to decode
+     * @param mixed $data the scalar or array to decode
+     *
      * @return string $data decoded from the URL encoded form
      */
     private function safe_decode($data)
@@ -207,22 +209,21 @@ class TwitterConnector
 
     /**
      * Prepares OAuth1 signing parameters.
-     *
-     * @return void all required OAuth parameters, safely encoded, are stored to the class variable '$this->request_settings['oauth1_params']'
      */
     private function prepare_oauth1_params()
     {
         $defaults = array(
-            'oauth_nonce'            => $this->nonce(),
-            'oauth_timestamp'        => $this->timestamp(),
-            'oauth_version'          => $this->config['oauth_version'],
-            'oauth_consumer_key'     => $this->config['consumer_key'],
+            'oauth_nonce' => $this->nonce(),
+            'oauth_timestamp' => $this->timestamp(),
+            'oauth_version' => $this->config['oauth_version'],
+            'oauth_consumer_key' => $this->config['consumer_key'],
             'oauth_signature_method' => $this->config['oauth_signature_method'],
         );
 
         // include the user token if it exists
-        if ( $oauth_token = $this->token() )
+        if ($oauth_token = $this->token()) {
             $defaults['oauth_token'] = $oauth_token;
+        }
 
         $this->request_settings['oauth1_params'] = array();
 
@@ -235,8 +236,11 @@ class TwitterConnector
     private function token()
     {
         if ($this->request_settings['with_user']) {
-            if (isset($this->config['token']) && !empty($this->config['token'])) return $this->config['token'];
-            elseif (isset($this->config['user_token'])) return $this->config['user_token'];
+            if (isset($this->config['token']) && !empty($this->config['token'])) {
+                return $this->config['token'];
+            } elseif (isset($this->config['user_token'])) {
+                return $this->config['user_token'];
+            }
         }
 
         return '';
@@ -245,18 +249,22 @@ class TwitterConnector
     private function secret()
     {
         if ($this->request_settings['with_user']) {
-            if (isset($this->config['secret']) && !empty($this->config['secret'])) return $this->config['secret'];
-            elseif (isset($this->config['user_secret'])) return $this->config['user_secret'];
+            if (isset($this->config['secret']) && !empty($this->config['secret'])) {
+                return $this->config['secret'];
+            } elseif (isset($this->config['user_secret'])) {
+                return $this->config['user_secret'];
+            }
         }
 
         return '';
     }
 
     /**
-     * Extracts and decodes OAuth parameters from the passed string
+     * Extracts and decodes OAuth parameters from the passed string.
      *
-     * @param  string $body the response body from an OAuth flow method
-     * @return array  the response body safely decoded to an array of key => values
+     * @param string $body the response body from an OAuth flow method
+     *
+     * @return array the response body safely decoded to an array of key => values
      */
     public function extract_params($body)
     {
@@ -275,8 +283,6 @@ class TwitterConnector
     /**
      * Prepares the HTTP method for use in the base string by converting it to
      * uppercase.
-     *
-     * @return void value is stored to the class variable '$this->request_settings['method']'
      */
     private function prepare_method()
     {
@@ -288,17 +294,15 @@ class TwitterConnector
      * reconstructing it.
      *
      * Ref: 3.4.1.2
-     *
-     * @return void value is stored to the class array variable '$this->request_settings['url']'
      */
     private function prepare_url()
     {
         $parts = parse_url($this->request_settings['url']);
 
-        $port   = isset($parts['port']) ? $parts['port'] : false;
+        $port = isset($parts['port']) ? $parts['port'] : false;
         $scheme = $parts['scheme'];
-        $host   = $parts['host'];
-        $path   = isset($parts['path']) ? $parts['path'] : false;
+        $host = $parts['host'];
+        $path = isset($parts['path']) ? $parts['path'] : false;
 
         $port or $port = ($scheme == 'https') ? '443' : '80';
 
@@ -319,19 +323,22 @@ class TwitterConnector
      * termination.
      *
      * @param the parameter value
+     *
      * @return string the original or modified string, depending on the request and the input parameter
      */
     private function multipart_escape($value)
     {
-        if (! $this->request_settings['multipart'] || strpos($value, '@') !== 0)
+        if (!$this->request_settings['multipart'] || strpos($value, '@') !== 0) {
             return $value;
+        }
 
         // see if the parameter is a file.
         // we split on the semi-colon as it's the delimiter used on media uploads
         // for fields with semi-colons this will return the original string
         list($file) = explode(';', substr($value, 1), 2);
-        if (file_exists($file))
+        if (file_exists($file)) {
             return $value;
+        }
 
         return " $value";
     }
@@ -341,8 +348,7 @@ class TwitterConnector
      * Multipart parameters are ignored as they are not defined in the specification,
      * all other types of parameter are encoded for compatibility with OAuth.
      *
-     * @param  array $params the parameters for the request
-     * @return void  prepared values are stored in the class array variable '$this->request_settings'
+     * @param array $params the parameters for the request
      */
     private function prepare_params()
     {
@@ -353,7 +359,7 @@ class TwitterConnector
         $prepared_pairs_with_oauth = array();
 
         if (isset($this->request_settings['oauth1_params'])) {
-            $oauth1  = &$this->request_settings['oauth1_params'];
+            $oauth1 = &$this->request_settings['oauth1_params'];
             $doing_oauth1 = true;
             $params = array_merge($oauth1, $this->request_settings['params']);
 
@@ -375,16 +381,18 @@ class TwitterConnector
         foreach ($params as $k => $v) {
             $k = $this->request_settings['multipart'] ? $k : $this->safe_encode($k);
 
-            if (is_array($v))
+            if (is_array($v)) {
                 $v = implode(',', $v);
+            }
 
             $v = $this->request_settings['multipart'] ? $this->multipart_escape($v) : $this->safe_encode($v);
 
             // split parameters for the basestring and authorization header, and recreate the oauth1 array
             if ($doing_oauth1) {
                 // if we're doing multipart, only store the oauth_* params, ignore the users request params
-                if ((strpos($k, 'oauth') === 0) || !$this->request_settings['multipart'])
+                if ((strpos($k, 'oauth') === 0) || !$this->request_settings['multipart']) {
                     $prepared_pairs_with_oauth[] = "{$k}={$v}";
+                }
 
                 if (strpos($k, 'oauth') === 0) {
                     $oauth1[$k] = $v;
@@ -415,22 +423,18 @@ class TwitterConnector
     }
 
     /**
-     * Prepares the OAuth signing key
-     *
-     * @return void prepared signing key is stored in the class variable 'signing_key'
+     * Prepares the OAuth signing key.
      */
     private function prepare_signing_key()
     {
         $left = $this->safe_encode($this->config['consumer_secret']);
         $right = $this->safe_encode($this->secret());
-        $this->request_settings['signing_key'] = $left . '&' . $right;
+        $this->request_settings['signing_key'] = $left.'&'.$right;
     }
 
     /**
      * Prepare the base string.
-     * Ref: Spec: 9.1.3 ("Concatenate Request Elements")
-     *
-     * @return void prepared base string is stored in the class variable 'base_string'
+     * Ref: Spec: 9.1.3 ("Concatenate Request Elements").
      */
     private function prepare_base_string()
     {
@@ -450,15 +454,13 @@ class TwitterConnector
         $base = array(
             $this->request_settings['method'],
             $url,
-            $this->request_settings['basestring_params']
+            $this->request_settings['basestring_params'],
         );
         $this->request_settings['basestring'] = implode('&', $this->safe_encode($base));
     }
 
     /**
-     * Signs the OAuth 1 request
-     *
-     * @return void oauth_signature is added to the parameters in the class array variable '$this->request_settings'
+     * Signs the OAuth 1 request.
      */
     private function prepare_oauth_signature()
     {
@@ -470,14 +472,13 @@ class TwitterConnector
     }
 
     /**
-     * Prepares the Authorization header
-     *
-     * @return void prepared authorization header is stored in the class variable headers['Authorization']
+     * Prepares the Authorization header.
      */
     private function prepare_auth_header()
     {
-        if (!$this->config['as_header'])
+        if (!$this->config['as_header']) {
             return;
+        }
 
         // oauth1
         if (isset($this->request_settings['oauth1_params'])) {
@@ -487,13 +488,14 @@ class TwitterConnector
             foreach ($this->request_settings['oauth1_params'] as $k => $v) {
                 $encoded_quoted_pairs[] = "{$k}=\"{$v}\"";
             }
-            $header = 'OAuth ' . implode(', ', $encoded_quoted_pairs);
+            $header = 'OAuth '.implode(', ', $encoded_quoted_pairs);
         } elseif (!empty($this->config['bearer'])) {
-            $header = 'Bearer ' . $this->config['bearer'];
+            $header = 'Bearer '.$this->config['bearer'];
         }
 
-        if (isset($header))
+        if (isset($header)) {
             $this->request_settings['headers']['Authorization'] = $header;
+        }
     }
 
     /**
@@ -505,7 +507,7 @@ class TwitterConnector
     {
         $credentials = implode(':', array(
             $this->safe_encode($this->config['consumer_key']),
-            $this->safe_encode($this->config['consumer_secret'])
+            $this->safe_encode($this->config['consumer_secret']),
         ));
 
         return base64_encode($credentials);
@@ -515,23 +517,24 @@ class TwitterConnector
      * Make an HTTP request using this library. This method doesn't return anything.
      * Instead the response should be inspected directly.
      *
-     * @param  string $method    the HTTP method being used. e.g. POST, GET, HEAD etc
-     * @param  string $url       the request URL without query string parameters
-     * @param  array  $params    the request parameters as an array of key=value pairs. Default empty array
-     * @param  string $useauth   whether to use authentication when making the request. Default true
-     * @param  string $multipart whether this request contains multipart data. Default false
-     * @param  array  $headers   any custom headers to send with the request. Default empty array
-     * @return int    the http response code for the request. 0 is returned if a connection could not be made
+     * @param string $method    the HTTP method being used. e.g. POST, GET, HEAD etc
+     * @param string $url       the request URL without query string parameters
+     * @param array  $params    the request parameters as an array of key=value pairs. Default empty array
+     * @param string $useauth   whether to use authentication when making the request. Default true
+     * @param string $multipart whether this request contains multipart data. Default false
+     * @param array  $headers   any custom headers to send with the request. Default empty array
+     *
+     * @return int the http response code for the request. 0 is returned if a connection could not be made
      */
-    public function request($method, $url, $params=array(), $useauth=true, $multipart=false, $headers=array())
+    public function request($method, $url, $params = array(), $useauth = true, $multipart = false, $headers = array())
     {
         $options = array(
-            'method'    => $method,
-            'url'       => $url,
-            'params'    => $params,
+            'method' => $method,
+            'url' => $url,
+            'params' => $params,
             'with_user' => true,
             'multipart' => $multipart,
-            'headers'   => $headers
+            'headers' => $headers,
         );
         $options = array_merge($this->default_options(), $options);
 
@@ -542,7 +545,7 @@ class TwitterConnector
         }
     }
 
-    public function apponly_request($options=array())
+    public function apponly_request($options = array())
     {
         $options = array_merge($this->default_options(), $options, array(
             'with_user' => false,
@@ -560,7 +563,7 @@ class TwitterConnector
         }
     }
 
-    public function user_request($options=array())
+    public function user_request($options = array())
     {
         $options = array_merge($this->default_options(), $options, array(
             'with_user' => true,
@@ -570,7 +573,7 @@ class TwitterConnector
         return $this->oauth1_request();
     }
 
-    public function unauthenticated_request($options=array())
+    public function unauthenticated_request($options = array())
     {
         $options = array_merge($this->default_options(), $options, array(
             'with_user' => false,
@@ -587,11 +590,10 @@ class TwitterConnector
      * Signs the request and adds the OAuth signature. This runs all the request
      * parameter preparation methods.
      *
-     * @param  string  $method    the HTTP method being used. e.g. POST, GET, HEAD etc
-     * @param  string  $url       the request URL without query string parameters
-     * @param  array   $params    the request parameters as an array of key=value pairs
-     * @param  boolean $with_user whether to include the user credentials when making the request.
-     * @return void
+     * @param string $method    the HTTP method being used. e.g. POST, GET, HEAD etc
+     * @param string $url       the request URL without query string parameters
+     * @param array  $params    the request parameters as an array of key=value pairs
+     * @param bool   $with_user whether to include the user credentials when making the request.
      */
     private function oauth1_request()
     {
@@ -610,43 +612,42 @@ class TwitterConnector
     private function default_options()
     {
         return array(
-            'method'         => 'GET',
-            'params'         => array(),
-            'with_user'      => true,
-            'multipart'      => false,
-            'headers'        => array(),
+            'method' => 'GET',
+            'params' => array(),
+            'with_user' => true,
+            'multipart' => false,
+            'headers' => array(),
             'without_bearer' => false,
         );
     }
 
     /**
      * Make a long poll HTTP request using this library. This method is
-     * different to the other request methods as it isn't supposed to disconnect
+     * different to the other request methods as it isn't supposed to disconnect.
      *
      * Using this method expects a callback which will receive the streaming
      * responses.
      *
-     * @param  string $method   the HTTP method being used. e.g. POST, GET, HEAD etc
-     * @param  string $url      the request URL without query string parameters
-     * @param  array  $params   the request parameters as an array of key=value pairs
-     * @param  string $callback the callback function to stream the buffer to.
-     * @return void
+     * @param string $method   the HTTP method being used. e.g. POST, GET, HEAD etc
+     * @param string $url      the request URL without query string parameters
+     * @param array  $params   the request parameters as an array of key=value pairs
+     * @param string $callback the callback function to stream the buffer to.
      */
-    public function streaming_request($method, $url, $params=array(), $callback='')
+    public function streaming_request($method, $url, $params = array(), $callback = '')
     {
-        if ( ! empty($callback) ) {
-            if ( ! is_callable($callback) ) {
+        if (!empty($callback)) {
+            if (!is_callable($callback)) {
                 return false;
             }
             $this->config['streaming_callback'] = $callback;
         }
-        $this->metrics['start']          = time();
+        $this->metrics['start'] = time();
         $this->metrics['interval_start'] = $this->metrics['start'];
-        $this->metrics['messages']       = 0;
-        $this->metrics['last_messages']  = 0;
-        $this->metrics['bytes']          = 0;
-        $this->metrics['last_bytes']     = 0;
-        $this->config['is_streaming']    = true;
+        $this->metrics['messages'] = 0;
+        $this->metrics['last_messages'] = 0;
+        $this->metrics['bytes'] = 0;
+        $this->metrics['last_bytes'] = 0;
+        $this->config['is_streaming'] = true;
         $this->request($method, $url, $params);
     }
 
@@ -658,11 +659,12 @@ class TwitterConnector
     private function update_metrics()
     {
         $now = time();
-        if (($this->metrics['interval_start'] + $this->config['streaming_metrics_interval']) > $now)
-            return null;
+        if (($this->metrics['interval_start'] + $this->config['streaming_metrics_interval']) > $now) {
+            return;
+        }
 
-        $this->metrics['mps'] = round( ($this->metrics['messages'] - $this->metrics['last_messages']) / $this->config['streaming_metrics_interval'], 2);
-        $this->metrics['bps'] = round( ($this->metrics['bytes'] - $this->metrics['last_bytes']) / $this->config['streaming_metrics_interval'], 2);
+        $this->metrics['mps'] = round(($this->metrics['messages'] - $this->metrics['last_messages']) / $this->config['streaming_metrics_interval'], 2);
+        $this->metrics['bps'] = round(($this->metrics['bytes'] - $this->metrics['last_bytes']) / $this->config['streaming_metrics_interval'], 2);
 
         $this->metrics['last_bytes'] = $this->metrics['bytes'];
         $this->metrics['last_messages'] = $this->metrics['messages'];
@@ -677,11 +679,12 @@ class TwitterConnector
      * Any multi-slashes (except for the protocol) will be replaced with a single slash.
      *
      *
-     * @param  string $request   the API method without extension
-     * @param  string $extension the format of the response. Default json. Set to an empty string to exclude the format
+     * @param string $request   the API method without extension
+     * @param string $extension the format of the response. Default json. Set to an empty string to exclude the format
+     *
      * @return string the concatenation of the host, API version, API method and format, or $request if it begins with http
      */
-    public function url($request, $extension='json')
+    public function url($request, $extension = 'json')
     {
         // remove multi-slashes
         $request = preg_replace('$([^:])//+$', '$1/', $request);
@@ -691,30 +694,32 @@ class TwitterConnector
         }
 
         $extension = strlen($extension) > 0 ? ".$extension" : '';
-        $proto  = $this->config['use_ssl'] ? 'https:/' : 'http:/';
+        $proto = $this->config['use_ssl'] ? 'https:/' : 'http:/';
 
         // trim trailing slash
         $request = ltrim($request, '/');
 
         $pos = strlen($request) - strlen($extension);
-        if (substr($request, $pos) === $extension)
+        if (substr($request, $pos) === $extension) {
             $request = substr_replace($request, '', $pos);
+        }
 
         return implode('/', array(
             $proto,
             $this->config['host'],
-            $request . $extension
+            $request.$extension,
         ));
     }
 
     /**
-     * Public access to the private safe decode/encode methods
+     * Public access to the private safe decode/encode methods.
      *
-     * @param  string $text the text to transform
-     * @param  string $mode the transformation mode. either encode or decode
+     * @param string $text the text to transform
+     * @param string $mode the transformation mode. either encode or decode
+     *
      * @return string $text transformed by the given $mode
      */
-    public function transformText($text, $mode='encode')
+    public function transformText($text, $mode = 'encode')
     {
         return $this->{"safe_$mode"}($text);
     }
@@ -723,8 +728,9 @@ class TwitterConnector
      * Utility function to parse the returned curl headers and store them in the
      * class array variable.
      *
-     * @param  object $ch     curl handle
-     * @param  string $header the response headers
+     * @param object $ch     curl handle
+     * @param string $header the response headers
+     *
      * @return string the length of the header
      */
     private function curlHeader($ch, $header)
@@ -736,7 +742,7 @@ class TwitterConnector
         $key = trim($key);
         $value = trim($value);
 
-        if ( ! isset($this->response['headers'][$key])) {
+        if (!isset($this->response['headers'][$key])) {
             $this->response['headers'][$key] = $value;
         } else {
             if (!is_array($this->response['headers'][$key])) {
@@ -755,9 +761,10 @@ class TwitterConnector
      *
      * This function calls the previously defined streaming callback method.
      *
-     * @param  object $ch   curl handle
-     * @param  string $data the current curl buffer
-     * @return int    the length of the data string processed in this function
+     * @param object $ch   curl handle
+     * @param string $data the current curl buffer
+     *
+     * @return int the length of the data string processed in this function
      */
     private function curlWrite($ch, $data)
     {
@@ -769,13 +776,14 @@ class TwitterConnector
         }
 
         $buffered = explode($this->config['streaming_eol'], $data);
-        $content = $this->buffer . $buffered[0];
+        $content = $this->buffer.$buffered[0];
 
-        $this->metrics['messages']++;
+        ++$this->metrics['messages'];
         $this->metrics['bytes'] += strlen($content);
 
-        if ( ! is_callable($this->config['streaming_callback']))
+        if (!is_callable($this->config['streaming_callback'])) {
             return 0;
+        }
 
         $metrics = $this->update_metrics();
         $stop = call_user_func(
@@ -785,15 +793,16 @@ class TwitterConnector
             $metrics
         );
         $this->buffer = $buffered[1];
-        if ($stop)
+        if ($stop) {
             return 0;
+        }
 
         return $l;
     }
 
     /**
      * Makes a curl request. Takes no parameters as all should have been prepared
-     * by the request method
+     * by the request method.
      *
      * the response data is stored in the class variable 'response'
      *
@@ -802,57 +811,63 @@ class TwitterConnector
     private function curlit()
     {
         $this->response = array(
-            'raw' => ''
+            'raw' => '',
         );
 
         // configure curl
         $c = curl_init();
         switch ($this->request_settings['method']) {
             case 'GET':
-                if (isset($this->request_settings['querystring']))
-                    $this->request_settings['url'] = $this->request_settings['url'] . '?' . $this->request_settings['querystring'];
+                if (isset($this->request_settings['querystring'])) {
+                    $this->request_settings['url'] = $this->request_settings['url'].'?'.$this->request_settings['querystring'];
+                }
                 break;
             case 'POST':
                 curl_setopt($c, CURLOPT_POST, true);
-                if (isset($this->request_settings['postfields']))
+                if (isset($this->request_settings['postfields'])) {
                     $postfields = $this->request_settings['postfields'];
-                else
+                } else {
                     $postfields = array();
+                }
 
                 curl_setopt($c, CURLOPT_POSTFIELDS, $postfields);
                 break;
             default:
-                if (isset($this->request_settings['postfields']))
+                if (isset($this->request_settings['postfields'])) {
                     curl_setopt($c, CURLOPT_CUSTOMREQUEST, $this->request_settings['postfields']);
+                }
         }
 
         curl_setopt_array($c, array(
-        CURLOPT_HTTP_VERSION   => $this->config['curl_http_version'],
-        CURLOPT_USERAGENT      => $this->config['user_agent'],
+        CURLOPT_HTTP_VERSION => $this->config['curl_http_version'],
+        CURLOPT_USERAGENT => $this->config['user_agent'],
         CURLOPT_CONNECTTIMEOUT => $this->config['curl_connecttimeout'],
-        CURLOPT_TIMEOUT        => $this->config['curl_timeout'],
+        CURLOPT_TIMEOUT => $this->config['curl_timeout'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => $this->config['curl_ssl_verifypeer'],
         CURLOPT_SSL_VERIFYHOST => $this->config['curl_ssl_verifyhost'],
 
         CURLOPT_FOLLOWLOCATION => $this->config['curl_followlocation'],
-        CURLOPT_PROXY          => $this->config['curl_proxy'],
-        CURLOPT_ENCODING       => $this->config['curl_encoding'],
-        CURLOPT_URL            => $this->request_settings['url'],
+        CURLOPT_PROXY => $this->config['curl_proxy'],
+        CURLOPT_ENCODING => $this->config['curl_encoding'],
+        CURLOPT_URL => $this->request_settings['url'],
         // process the headers
         CURLOPT_HEADERFUNCTION => array($this, 'curlHeader'),
-        CURLOPT_HEADER         => false,
-        CURLINFO_HEADER_OUT    => true,
+        CURLOPT_HEADER => false,
+        CURLINFO_HEADER_OUT => true,
         ));
 
-        if ($this->config['curl_cainfo'] !== false)
+        if ($this->config['curl_cainfo'] !== false) {
             curl_setopt($c, CURLOPT_CAINFO, $this->config['curl_cainfo']);
+        }
 
-        if ($this->config['curl_capath'] !== false)
+        if ($this->config['curl_capath'] !== false) {
             curl_setopt($c, CURLOPT_CAPATH, $this->config['curl_capath']);
+        }
 
-        if ($this->config['curl_proxyuserpwd'] !== false)
+        if ($this->config['curl_proxyuserpwd'] !== false) {
             curl_setopt($c, CURLOPT_PROXYUSERPWD, $this->config['curl_proxyuserpwd']);
+        }
 
         if ($this->config['is_streaming']) {
             // process the body
@@ -861,15 +876,16 @@ class TwitterConnector
             curl_setopt($c, CURLOPT_WRITEFUNCTION, array($this, 'curlWrite'));
         }
 
-        if ( ! empty($this->request_settings['headers'])) {
+        if (!empty($this->request_settings['headers'])) {
             foreach ($this->request_settings['headers'] as $k => $v) {
-                $headers[] = trim($k . ': ' . $v);
+                $headers[] = trim($k.': '.$v);
             }
             curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
         }
 
-        if (isset($this->config['block']) && (true === $this->config['block']))
+        if (isset($this->config['block']) && (true === $this->config['block'])) {
             return 0;
+        }
 
         // do it!
         $response = curl_exec($c);
@@ -896,7 +912,7 @@ class TwitterConnector
 
     // --------------------- PhalconUserPlugin ---------------------
 
-    private function php_self($dropqs=true)
+    private function php_self($dropqs = true)
     {
         $request = $this->di->get('request');
         $protocol = 'http';
@@ -918,7 +934,7 @@ class TwitterConnector
         $scheme = $parts['scheme'];
         $host = $parts['host'];
         $path = @$parts['path'];
-        $qs   = @$parts['query'];
+        $qs = @$parts['query'];
 
         $port or $port = ($scheme == 'https') ? '443' : '80';
 
@@ -927,10 +943,11 @@ class TwitterConnector
             $host = "$host:$port";
         }
         $url = "$scheme://$host$path";
-        if ( ! $dropqs)
+        if (!$dropqs) {
             return "{$url}?{$qs}";
-        else
+        } else {
             return $url;
+        }
     }
 
     private function uri_params()
@@ -940,7 +957,7 @@ class TwitterConnector
         $params = array();
         foreach (explode('&', $url['query']) as $p) {
             list($k, $v) = explode('=', $p);
-            $params[$k] =$v;
+            $params[$k] = $v;
         }
 
         return $params;
@@ -976,7 +993,7 @@ class TwitterConnector
             $this->di->get('logger')->error('The callback was not confirmed by Twitter so we cannot continue.');
             $this->di->get('logger')->commit();
         } else {
-            $url = $this->url('oauth/authorize', '') . "?oauth_token={$twitterOauth['oauth_token']}";
+            $url = $this->url('oauth/authorize', '')."?oauth_token={$twitterOauth['oauth_token']}";
 
             return $url;
         }
@@ -1009,7 +1026,7 @@ class TwitterConnector
 
         // update with the temporary token and secret
         $this->reconfigure(array_merge($this->config, array(
-            'token'  => $twitterOauth['oauth_token'],
+            'token' => $twitterOauth['oauth_token'],
             'secret' => $twitterOauth['oauth_token_secret'],
         )));
 
@@ -1018,13 +1035,13 @@ class TwitterConnector
             'url' => $this->url('oauth/access_token', ''),
             'params' => array(
                 'oauth_verifier' => trim($request->get('oauth_verifier')),
-            )
+            ),
         ));
 
         if ($code == 200) {
             $oauth_creds = $this->extract_params($this->response['response']);
             $this->reconfigure(array_merge($this->config, array(
-                'token'  => $oauth_creds['oauth_token'],
+                'token' => $oauth_creds['oauth_token'],
                 'secret' => $oauth_creds['oauth_token_secret'],
             )));
             $session->set('twitterOauth', $oauth_creds);
@@ -1034,5 +1051,4 @@ class TwitterConnector
             $this->di->get('logger')->commit();
         }
     }
-
 }

@@ -1,24 +1,20 @@
 <?php
+
 namespace Phalcon\UserPlugin\Forms\User;
 
-use Phalcon\Forms\Form,
-Phalcon\Forms\Element\Text,
-Phalcon\Forms\Element\Hidden,
-Phalcon\Forms\Element\Password,
-Phalcon\Forms\Element\Submit,
-Phalcon\Forms\Element\Select,
-Phalcon\Forms\Element\Check,
-Phalcon\Validation\Validator\PresenceOf,
-Phalcon\Validation\Validator\Email;
-
+use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Select;
+use Phalcon\Validation\Validator\Email;
 use Phalcon\UserPlugin\Models\User\UserGroups;
 
 /**
- * Phalcon\UserPlugin\Forms\User\UserForm
+ * Phalcon\UserPlugin\Forms\User\UserForm.
  */
 class UserForm extends Form
 {
-    public function initialize($entity=null, $options=null)
+    public function initialize($entity = null, $options = null)
     {
         if (isset($options['edit']) && $options['edit']) {
             $id = new Hidden('id');
@@ -33,19 +29,19 @@ class UserForm extends Form
             'using' => array('id', 'name'),
             'useEmpty' => true,
             'emptyText' => '...',
-            'emptyValue' => ''
+            'emptyValue' => '',
         )));
         $this->add(new Select('banned', array(
             1 => 'Yes',
-            0 => 'No'
+            0 => 'No',
         )));
         $this->add(new Select('suspended', array(
             1 => 'Yes',
-            0 => 'No'
+            0 => 'No',
         )));
         $this->add(new Select('active', array(
             1 => 'Yes',
-            0 => 'No'
+            0 => 'No',
         )));
     }
 }

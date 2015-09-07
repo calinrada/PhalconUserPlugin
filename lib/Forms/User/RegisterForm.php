@@ -1,24 +1,25 @@
 <?php
+
 namespace Phalcon\UserPlugin\Forms\User;
 
-use Phalcon\Forms\Form,
-Phalcon\Forms\Element\Text,
-Phalcon\Forms\Element\Hidden,
-Phalcon\Forms\Element\Password,
-Phalcon\Forms\Element\Submit,
-Phalcon\Forms\Element\Check,
-Phalcon\Validation\Validator\PresenceOf,
-Phalcon\Validation\Validator\Email,
-Phalcon\Validation\Validator\Identical,
-Phalcon\Validation\Validator\StringLength,
-Phalcon\Validation\Validator\Confirmation;
+use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Password;
+use Phalcon\Forms\Element\Submit;
+use Phalcon\Forms\Element\Check;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Email;
+use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Validation\Validator\Confirmation;
 
 /**
- * Phalcon\UserPlugin\Forms\User\RegisterForm
+ * Phalcon\UserPlugin\Forms\User\RegisterForm.
  */
 class RegisterForm extends Form
 {
-    public function initialize($entity=null, $options=null)
+    public function initialize($entity = null, $options = null)
     {
         $name = new Text('name');
 
@@ -26,8 +27,8 @@ class RegisterForm extends Form
 
         $name->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The name is required'
-            ))
+                'message' => 'The name is required',
+            )),
         ));
 
         $this->add($name);
@@ -39,11 +40,11 @@ class RegisterForm extends Form
 
         $email->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The e-mail is required'
+                'message' => 'The e-mail is required',
             )),
             new Email(array(
-                'message' => 'The e-mail is not valid'
-            ))
+                'message' => 'The e-mail is not valid',
+            )),
         ));
 
         $this->add($email);
@@ -55,16 +56,16 @@ class RegisterForm extends Form
 
         $password->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The password is required'
+                'message' => 'The password is required',
             )),
             new StringLength(array(
                 'min' => 8,
-                'messageMinimum' => 'Password is too short. Minimum 8 characters'
+                'messageMinimum' => 'Password is too short. Minimum 8 characters',
             )),
             new Confirmation(array(
                 'message' => 'Password does not match confirmation',
-                'with' => 'confirmPassword'
-            ))
+                'with' => 'confirmPassword',
+            )),
         ));
 
         $this->add($password);
@@ -76,15 +77,15 @@ class RegisterForm extends Form
 
         $confirmPassword->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The confirmation password is required'
-            ))
+                'message' => 'The confirmation password is required',
+            )),
         ));
 
         $this->add($confirmPassword);
 
         //Remember
         $terms = new Check('terms', array(
-            'value' => 'yes'
+            'value' => 'yes',
         ));
 
         $terms->setLabel('Accept terms and conditions');
@@ -92,7 +93,7 @@ class RegisterForm extends Form
         $terms->addValidator(
             new Identical(array(
                 'value' => 'yes',
-                'message' => 'Terms and conditions must be accepted'
+                'message' => 'Terms and conditions must be accepted',
             ))
         );
 
@@ -104,7 +105,7 @@ class RegisterForm extends Form
         $csrf->addValidator(
             new Identical(array(
                 'value' => $this->security->getSessionToken(),
-                'message' => 'CSRF validation failed'
+                'message' => 'CSRF validation failed',
             ))
         );
 
@@ -112,13 +113,12 @@ class RegisterForm extends Form
 
         //Sign Up
         $this->add(new Submit('Register', array(
-            'class' => 'btn btn-success'
+            'class' => 'btn btn-success',
         )));
-
     }
 
     /**
-     * Prints messages for a specific element
+     * Prints messages for a specific element.
      */
     public function messages($name)
     {
@@ -128,5 +128,4 @@ class RegisterForm extends Form
             }
         }
     }
-
 }

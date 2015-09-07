@@ -1,18 +1,19 @@
 <?php
+
 namespace Phalcon\UserPlugin\Forms\User;
 
-use Phalcon\Forms\Form,
-Phalcon\Forms\Element\Text,
-Phalcon\Forms\Element\Password,
-Phalcon\Forms\Element\Submit,
-Phalcon\Forms\Element\Check,
-Phalcon\Forms\Element\Hidden,
-Phalcon\Validation\Validator\PresenceOf,
-Phalcon\Validation\Validator\Email,
-Phalcon\Validation\Validator\Identical;
+use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Password;
+use Phalcon\Forms\Element\Submit;
+use Phalcon\Forms\Element\Check;
+use Phalcon\Forms\Element\Hidden;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Email;
+use Phalcon\Validation\Validator\Identical;
 
 /**
- * Phalcon\UserPlugin\Forms\User\LoginForm
+ * Phalcon\UserPlugin\Forms\User\LoginForm.
  */
 class LoginForm extends Form
 {
@@ -20,28 +21,28 @@ class LoginForm extends Form
     {
         //Email
         $email = new Text('email', array(
-            'placeholder' => 'Email'
+            'placeholder' => 'Email',
         ));
 
         $email->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The e-mail is required'
+                'message' => 'The e-mail is required',
             )),
             new Email(array(
-                'message' => 'The e-mail is not valid'
-            ))
+                'message' => 'The e-mail is not valid',
+            )),
         ));
 
         $this->add($email);
 
         //Password
         $password = new Password('password', array(
-            'placeholder' => 'Password'
+            'placeholder' => 'Password',
         ));
 
         $password->addValidator(
             new PresenceOf(array(
-                'message' => 'The password is required'
+                'message' => 'The password is required',
             ))
         );
 
@@ -49,7 +50,7 @@ class LoginForm extends Form
 
         //Remember
         $remember = new Check('remember', array(
-            'value' => 'yes'
+            'value' => 'yes',
         ));
 
         $remember->setLabel('Remember me');
@@ -62,14 +63,14 @@ class LoginForm extends Form
         $csrf->addValidator(
             new Identical(array(
                 'value' => $this->security->getSessionToken(),
-                'message' => 'CSRF validation failed'
+                'message' => 'CSRF validation failed',
             ))
         );
 
         $this->add($csrf);
 
         $this->add(new Submit('go', array(
-            'class' => 'btn btn-success'
+            'class' => 'btn btn-success',
         )));
     }
 }

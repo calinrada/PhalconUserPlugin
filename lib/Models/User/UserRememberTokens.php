@@ -1,45 +1,42 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\User;
 
 /**
- * Phalcon\UserPlugin\Models\User\UserRememberTokens
+ * Phalcon\UserPlugin\Models\User\UserRememberTokens.
  */
 class UserRememberTokens extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $user_id;
 
     /**
-     *
      * @var string
      */
     protected $token;
 
     /**
-     *
      * @var string
      */
     protected $user_agent;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $created_at;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -50,9 +47,10 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_id
+     * Method to set the value of field user_id.
      *
-     * @param  integer $user_id
+     * @param int $user_id
+     *
      * @return $this
      */
     public function setUserId($user_id)
@@ -63,9 +61,10 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field token
+     * Method to set the value of field token.
      *
-     * @param  string $token
+     * @param string $token
+     *
      * @return $this
      */
     public function setToken($token)
@@ -76,9 +75,10 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_agent
+     * Method to set the value of field user_agent.
      *
-     * @param  string $user_agent
+     * @param string $user_agent
+     *
      * @return $this
      */
     public function setUserAgent($user_agent)
@@ -89,9 +89,10 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field created_at
+     * Method to set the value of field created_at.
      *
-     * @param  integer $created_at
+     * @param int $created_at
+     *
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -102,9 +103,9 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -112,9 +113,9 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_id
+     * Returns the value of field user_id.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -122,7 +123,7 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field token
+     * Returns the value of field token.
      *
      * @return string
      */
@@ -132,7 +133,7 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_agent
+     * Returns the value of field user_agent.
      *
      * @return string
      */
@@ -142,9 +143,9 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field created_at
+     * Returns the value of field created_at.
      *
-     * @return integer
+     * @return int
      */
     public function getCreatedAt()
     {
@@ -160,7 +161,7 @@ class UserRememberTokens extends \Phalcon\Mvc\Model
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
             'alias' => 'user',
-            'reusable' => true
+            'reusable' => true,
         ));
     }
 

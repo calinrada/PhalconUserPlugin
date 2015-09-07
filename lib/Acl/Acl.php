@@ -2,15 +2,15 @@
 
 namespace Phalcon\UserPlugin\Acl;
 
-use Phalcon\Mvc\User\Component,
-    Phalcon\Acl\Adapter\Memory as AclAdapter,
-    Phalcon\Acl\Role as AclRole,
-    Phalcon\Acl\Resource as AclResource,
-    Phalcon\UserPlugin\Models\User\User,
-    Phalcon\UserPlugin\Models\User\UserGroups;
+use Phalcon\Mvc\User\Component;
+use Phalcon\Acl\Adapter\Memory as AclAdapter;
+use Phalcon\Acl\Role as AclRole;
+use Phalcon\Acl\Resource as AclResource;
+use Phalcon\UserPlugin\Models\User\User;
+use Phalcon\UserPlugin\Models\User\UserGroups;
 
 /**
- * Phalcon\UserPlugin\Acl\Acl
+ * Phalcon\UserPlugin\Acl\Acl.
  */
 class Acl extends Component
 {
@@ -21,7 +21,7 @@ class Acl extends Component
     private $_privateResources = array(
         'user' => array('index', 'search', 'edit', 'create', 'delete', 'changePassword'),
         'profiles' => array('index', 'search', 'edit', 'create', 'delete'),
-        'permissions' => array('index')
+        'permissions' => array('index'),
     );
 
     private $_actionDescriptions = array(
@@ -30,27 +30,29 @@ class Acl extends Component
         'create' => 'Create',
         'edit' => 'Edit',
         'delete' => 'Delete',
-        'changePassword' => 'Change password'
+        'changePassword' => 'Change password',
     );
 
     /**
-     * Checks if a controller is private or not
+     * Checks if a controller is private or not.
      *
-     * @param  string  $controllerName
-     * @return boolean
-    */
+     * @param string $controllerName
+     *
+     * @return bool
+     */
     public function isPrivate($controllerName)
     {
         return isset($this->_privateResources[$controllerName]);
     }
 
     /**
-     * Checks if the current group is allowed to access a resource
+     * Checks if the current group is allowed to access a resource.
      *
-     * @param  string  $group
-     * @param  string  $controller
-     * @param  string  $action
-     * @return boolean
+     * @param string $group
+     * @param string $controller
+     * @param string $action
+     *
+     * @return bool
      */
     public function isAllowed($group, $controller, $action)
     {
@@ -58,7 +60,7 @@ class Acl extends Component
     }
 
     /**
-     * Returns the ACL list
+     * Returns the ACL list.
      *
      * @return Phalcon\Acl\Adapter\Memory
      */
@@ -80,14 +82,14 @@ class Acl extends Component
         }
 
         //Check if the ACL is already generated
-        if (!file_exists(__DIR__ . $this->_filePath)) {
+        if (!file_exists(__DIR__.$this->_filePath)) {
             $this->_acl = $this->rebuild();
 
             return $this->_acl;
         }
 
         //Get the ACL from the data file
-        $data = file_get_contents(__DIR__ . $this->_filePath);
+        $data = file_get_contents(__DIR__.$this->_filePath);
         $this->_acl = unserialize($data);
 
         //Store the ACL in APC
@@ -99,23 +101,24 @@ class Acl extends Component
     }
 
     /**
-     * Returns the permissions assigned to a roup
+     * Returns the permissions assigned to a roup.
      *
-     * @param  Profiles $profile
+     * @param Profiles $profile
+     *
      * @return array
      */
     public function getPermissions(Group $group)
     {
         $permissions = array();
         foreach ($group->getPermissions() as $permission) {
-            $permissions[$permission->resource . '.' . $permission->action] = true;
+            $permissions[$permission->resource.'.'.$permission->action] = true;
         }
 
         return $permissions;
     }
 
     /**
-     * Returns all the resoruces and their actions available in the application
+     * Returns all the resoruces and their actions available in the application.
      *
      * @return array
      */
@@ -125,9 +128,10 @@ class Acl extends Component
     }
 
     /**
-     * Returns the action description according to its simplified name
+     * Returns the action description according to its simplified name.
      *
-     * @param  string  $action
+     * @param string $action
+     *
      * @return $action
      */
     public function getActionDescription($action)
@@ -140,8 +144,7 @@ class Acl extends Component
     }
 
     /**
-     * Rebuils the access list into a file
-     *
+     * Rebuils the access list into a file.
      */
     public function rebuild()
     {
@@ -170,18 +173,15 @@ class Acl extends Component
 
             //Always grant these permissions
             $acl->allow($profile->name, 'users', 'changePassword');
-
         }
 
-        if (is_writable(__DIR__ . $this->_filePath)) {
-
-            file_put_contents(__DIR__ . $this->_filePath, serialize($acl));
+        if (is_writable(__DIR__.$this->_filePath)) {
+            file_put_contents(__DIR__.$this->_filePath, serialize($acl));
 
             //Store the ACL in APC
             if (function_exists('apc_store')) {
                 apc_store($this->di->config->cradaUserPlugin->appId, $acl);
             }
-
         } else {
             $this->flash->error('The user does not have write permissions');
         }

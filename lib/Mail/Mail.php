@@ -1,14 +1,12 @@
 <?php
+
 namespace Phalcon\UserPlugin\Mail;
 
-use Phalcon\Mvc\User\Component,
-Phalcon\Mvc\View,
-Swift_Message as Message,
-Swift_SmtpTransport as Smtp,
-Crada\UserPlugin\Models\User\User;
+use Phalcon\Mvc\User\Component;
+use Phalcon\Mvc\View;
 
 /**
- * Phalcon\UserPlugin\Mail\Mail
+ * Phalcon\UserPlugin\Mail\Mail.
  *
  * Sends e-mails based on pre-defined templates
  */
@@ -23,21 +21,21 @@ class Mail extends Component
     protected $images = array();
 
     /**
-     * Adds a new file to attach
+     * Adds a new file to attach.
      *
      * @param unknown $file
      */
-    public function addAttachment($name, $content, $type='text/plain')
+    public function addAttachment($name, $content, $type = 'text/plain')
     {
         $this->attachments[] = array(
             'name' => $name,
             'content' => $content,
-            'type' => $type
+            'type' => $type,
         );
     }
 
     /**
-     * Applies a template to be used in the e-mail
+     * Applies a template to be used in the e-mail.
      *
      * @param string $name
      * @param array  $params
@@ -58,16 +56,18 @@ class Mail extends Component
     }
 
     /**
-     * Inserts images without using getTemplate
-     * @param  string $message
-     * @param  string $content
+     * Inserts images without using getTemplate.
+     *
+     * @param string $message
+     * @param string $content
+     *
      * @return mixed
      */
     public function insertImages($message, $content)
     {
         foreach ($this->images as $name => $image_path) {
             $image_embed = $message->embed(\Swift_Image::fromPath($image_path));
-            $content = str_replace(rawurlencode("{{ ".$name." }}"), $image_embed, $content);
+            $content = str_replace(rawurlencode('{{ '.$name.' }}'), $image_embed, $content);
         }
 
         return $content;
@@ -75,7 +75,7 @@ class Mail extends Component
 
     /**
      * Sends e-mails based on predefined templates. If the $body param
-     * has value, the template will be ignored
+     * has value, the template will be ignored.
      *
      * @param array  $to
      * @param string $subject
@@ -86,7 +86,7 @@ class Mail extends Component
     public function send($to, $subject, $name = null, $params = null, $body = null)
     {
         // Create the message
-        $message = Message::newInstance();
+        $message = \Swift_Message::newInstance();
 
         //Settings
         $mailSettings = $this->config->mail;
@@ -106,7 +106,7 @@ class Mail extends Component
         $message->setSubject($subject)
             ->setTo($to)
             ->setFrom(array(
-                $mailSettings->fromEmail => $mailSettings->fromName
+                $mailSettings->fromEmail => $mailSettings->fromName,
             ))
             ->setBody($template, 'text/html');
 
@@ -120,7 +120,7 @@ class Mail extends Component
         }
 
         if (!$this->_transport) {
-            $this->_transport = Smtp::newInstance(
+            $this->_transport = \Swift_SmtpTransport::newInstance(
                 $mailSettings->smtp->server,
                 $mailSettings->smtp->port,
                 $mailSettings->smtp->security

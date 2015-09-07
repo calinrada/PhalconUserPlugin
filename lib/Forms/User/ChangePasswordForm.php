@@ -1,15 +1,15 @@
 <?php
+
 namespace Phalcon\UserPlugin\Forms\User;
 
-use Phalcon\Forms\Form,
-Phalcon\Forms\Element\Password,
-Phalcon\Forms\Element\Submit,
-Phalcon\Validation\Validator\PresenceOf,
-Phalcon\Validation\Validator\StringLength,
-Phalcon\Validation\Validator\Confirmation;
+use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Password;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Validation\Validator\Confirmation;
 
 /**
- * Phalcon\UserPlugin\Forms\User\ChangePasswordForm
+ * Phalcon\UserPlugin\Forms\User\ChangePasswordForm.
  */
 class ChangePasswordForm extends Form
 {
@@ -22,8 +22,8 @@ class ChangePasswordForm extends Form
 
             $currentPassword->addValidators(array(
                 new PresenceOf(array(
-                    'message' => 'Current password is required'
-                ))
+                    'message' => 'Current password is required',
+                )),
             ));
 
             $this->add($currentPassword);
@@ -33,16 +33,16 @@ class ChangePasswordForm extends Form
 
         $password->addValidators(array(
             new PresenceOf(array(
-                'message' => 'Password is required'
+                'message' => 'Password is required',
             )),
             new StringLength(array(
                 'min' => 8,
-                'messageMinimum' => 'Password is too short. Minimum 8 characters'
+                'messageMinimum' => 'Password is too short. Minimum 8 characters',
             )),
             new Confirmation(array(
                 'message' => 'Password doesn\'t match confirmation',
-                'with' => 'confirmPassword'
-            ))
+                'with' => 'confirmPassword',
+            )),
         ));
 
         $this->add($password);
@@ -52,8 +52,8 @@ class ChangePasswordForm extends Form
 
         $confirmPassword->addValidators(array(
             new PresenceOf(array(
-                'message' => 'The confirmation password is required'
-            ))
+                'message' => 'The confirmation password is required',
+            )),
         ));
 
         $this->add($confirmPassword);

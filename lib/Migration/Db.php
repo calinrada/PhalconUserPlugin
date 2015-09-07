@@ -1,4 +1,5 @@
 <?php
+
 namespace Phalcon\UserPlugin\Migration;
 
 class Db extends \Phalcon\Mvc\User\Plugin

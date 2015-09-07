@@ -1,45 +1,42 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\User;
 
 /**
- * Phalcon\UserPlugin\Models\User\UserPasswordChanges
+ * Phalcon\UserPlugin\Models\User\UserPasswordChanges.
  */
 class UserPasswordChanges extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $user_id;
 
     /**
-     *
      * @var string
      */
     protected $ip_address;
 
     /**
-     *
      * @var string
      */
     protected $user_agent;
 
     /**
-     *
      * @var string
      */
     protected $created_at;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -50,9 +47,10 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_id
+     * Method to set the value of field user_id.
      *
-     * @param  integer $user_id
+     * @param int $user_id
+     *
      * @return $this
      */
     public function setUserId($user_id)
@@ -63,9 +61,10 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field ip_address
+     * Method to set the value of field ip_address.
      *
-     * @param  string $ip_address
+     * @param string $ip_address
+     *
      * @return $this
      */
     public function setIpAddress($ip_address)
@@ -76,9 +75,10 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_agent
+     * Method to set the value of field user_agent.
      *
-     * @param  string $user_agent
+     * @param string $user_agent
+     *
      * @return $this
      */
     public function setUserAgent($user_agent)
@@ -89,9 +89,10 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field created_at
+     * Method to set the value of field created_at.
      *
-     * @param  string $created_at
+     * @param string $created_at
+     *
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -102,9 +103,9 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -112,9 +113,9 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_id
+     * Returns the value of field user_id.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -122,7 +123,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field ip_address
+     * Returns the value of field ip_address.
      *
      * @return string
      */
@@ -132,7 +133,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_agent
+     * Returns the value of field user_agent.
      *
      * @return string
      */
@@ -142,7 +143,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field created_at
+     * Returns the value of field created_at.
      *
      * @return string
      */
@@ -173,7 +174,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Before create the user assign a password
+     * Before create the user assign a password.
      */
     public function beforeValidationOnCreate()
     {
@@ -183,7 +184,7 @@ class UserPasswordChanges extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
-            'alias' => 'user'
+            'alias' => 'user',
         ));
     }
 }

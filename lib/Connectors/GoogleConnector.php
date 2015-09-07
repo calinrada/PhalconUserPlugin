@@ -1,11 +1,12 @@
 <?php
+
 namespace Phalcon\UserPlugin\Connectors;
 
 use Google_Client;
 use Google_Auth_OAuth2 as Oauth2Service;
 
 /**
- * Phalcon\UserPlugin\Connectors\GoogleConnector
+ * Phalcon\UserPlugin\Connectors\GoogleConnector.
  *
  * This class is using google-api-php-client from https://github.com/Nyholm/google-api-php-client
  */
@@ -15,7 +16,7 @@ class GoogleConnector
 
     private $scopes = array(
         'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile'
+        'https://www.googleapis.com/auth/userinfo.profile',
     );
 
     final public function __construct(array $config)
@@ -25,9 +26,9 @@ class GoogleConnector
 
     public function connect($di)
     {
-        $session  = $di->get('session');
+        $session = $di->get('session');
         $response = $di->get('response');
-        $request  = $di->get('request');
+        $request = $di->get('request');
 
         $client = $this->getClient();
         $oauth2 = new Oauth2Service($client);
@@ -45,8 +46,7 @@ class GoogleConnector
         }
 
         if ($client->getAccessToken()) {
-
-            $service  = new \Google_Service_Oauth2($client);
+            $service = new \Google_Service_Oauth2($client);
             $userinfo = $service->userinfo->get();
             $session->set('googleToken', $client->getAccessToken());
 
@@ -59,7 +59,7 @@ class GoogleConnector
     }
 
     /**
-     * Get client
+     * Get client.
      *
      * @return Google_Client
      */

@@ -1,24 +1,20 @@
 <?php
+
 namespace Phalcon\UserPlugin\Forms\User;
 
-use Phalcon\Forms\Form,
-Phalcon\Forms\Element\Text,
-Phalcon\Forms\Element\Hidden,
-Phalcon\Forms\Element\Password,
-Phalcon\Forms\Element\Submit,
-Phalcon\Forms\Element\Select,
-Phalcon\Forms\Element\Check,
-Phalcon\Forms\Element\Date,
-Phalcon\Validation\Validator\Identical,
-Phalcon\Validation\Validator\PresenceOf,
-Phalcon\Validation\Validator\Email;
+use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Submit;
+use Phalcon\Forms\Element\Select;
+use Phalcon\Validation\Validator\Identical;
 
 /**
- * Phalcon\UserPlugin\Forms\User\UserProfileForm
+ * Phalcon\UserPlugin\Forms\User\UserProfileForm.
  */
 class UserProfileForm extends Form
 {
-    public function initialize($entity=null, $options=null)
+    public function initialize($entity = null, $options = null)
     {
         if (isset($options['edit']) && $options['edit']) {
             $id = new Hidden('id');
@@ -31,7 +27,7 @@ class UserProfileForm extends Form
 
         $this->add(new Select('gender', array(
             0 => 'Male',
-            1 => 'Female'
+            1 => 'Female',
         )));
 
         //CSRF
@@ -40,14 +36,14 @@ class UserProfileForm extends Form
         $csrf->addValidator(
             new Identical(array(
                 'value' => $this->security->getSessionToken(),
-                'message' => 'CSRF validation failed'
+                'message' => 'CSRF validation failed',
             ))
         );
 
         $this->add($csrf);
 
         $this->add(new Submit('Save', array(
-            'class' => 'btn btn-success'
+            'class' => 'btn btn-success',
         )));
     }
 }

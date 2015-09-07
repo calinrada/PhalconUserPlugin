@@ -1,4 +1,5 @@
 <?php
+
 namespace Phalcon\UserPlugin\Connectors;
 
 use Facebook\FacebookSession;
@@ -7,7 +8,7 @@ use Facebook\FacebookRequestException;
 use Facebook\FacebookRedirectLoginHelper;
 
 /**
- * Phalcon\UserPlugin\Connectors\FacebookConnector
+ * Phalcon\UserPlugin\Connectors\FacebookConnector.
  */
 class FacebookConnector
 {
@@ -21,9 +22,9 @@ class FacebookConnector
 
     public function __construct($di)
     {
-        $this->di  = $di;
-        $fbConfig  = $di->get('config')->pup->connectors->facebook;
-        $protocol  = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://';
+        $this->di = $di;
+        $fbConfig = $di->get('config')->pup->connectors->facebook;
+        $protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))).'://';
         $this->url = $protocol.$_SERVER['HTTP_HOST'].'/user/loginWithFacebook';
 
         FacebookSession::setDefaultApplication($fbConfig->appId, $fbConfig->secret);
@@ -37,13 +38,14 @@ class FacebookConnector
     }
 
     /**
-     * Get facebook user details
-     * @return unknown|boolean
+     * Get facebook user details.
+     *
+     * @return unknown|bool
      */
     public function getUser()
     {
         try {
-            $this->helper     = new FacebookRedirectLoginHelper($this->url);
+            $this->helper = new FacebookRedirectLoginHelper($this->url);
             $this->fb_session = $this->helper->getSessionFromRedirect();
         } catch (FacebookRequestException $ex) {
             $this->di->flashSession->error($ex->getMessage());
@@ -52,9 +54,9 @@ class FacebookConnector
         }
 
         if ($this->fb_session) {
-            $request  = new FacebookRequest($this->fb_session, 'GET', '/me');
+            $request = new FacebookRequest($this->fb_session, 'GET', '/me');
             $response = $request->execute();
-            $fb_user  = $response->getGraphObject()->asArray();
+            $fb_user = $response->getGraphObject()->asArray();
 
             return $fb_user;
         }

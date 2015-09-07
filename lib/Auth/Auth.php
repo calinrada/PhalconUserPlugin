@@ -1,30 +1,31 @@
 <?php
+
 namespace Phalcon\UserPlugin\Auth;
 
-use Phalcon\Mvc\User\Component,
-Phalcon\UserPlugin\Models\User\User,
-Phalcon\UserPlugin\Models\User\UserRememberTokens,
-Phalcon\UserPlugin\Models\User\UserSuccessLogins,
-Phalcon\UserPlugin\Models\User\UserFailedLogins;
-
-use Phalcon\UserPlugin\Connectors\LinkedInConnector,
-    Phalcon\UserPlugin\Connectors\FacebookConnector,
-    Phalcon\UserPlugin\Connectors\GoogleConnector,
-    Phalcon\UserPlugin\Connectors\TwitterConnector;
+use Phalcon\Mvc\User\Component;
+use Phalcon\UserPlugin\Models\User\User;
+use Phalcon\UserPlugin\Models\User\UserRememberTokens;
+use Phalcon\UserPlugin\Models\User\UserSuccessLogins;
+use Phalcon\UserPlugin\Models\User\UserFailedLogins;
+use Phalcon\UserPlugin\Connectors\LinkedInConnector;
+use Phalcon\UserPlugin\Connectors\FacebookConnector;
+use Phalcon\UserPlugin\Connectors\GoogleConnector;
+use Phalcon\UserPlugin\Connectors\TwitterConnector;
 use Phalcon\UserPlugin\Models\User\UserProfile;
 
 /**
- * Phalcon\UserPlugin\Auth\Auth
+ * Phalcon\UserPlugin\Auth\Auth.
  *
  * Manages Authentication/Identity Management
  */
 class Auth extends Component
 {
     /**
-     * Checks the user credentials
+     * Checks the user credentials.
      *
-     * @param  array  $credentials
-     * @return boolean
+     * @param array $credentials
+     *
+     * @return bool
      */
     public function check($credentials)
     {
@@ -50,16 +51,16 @@ class Auth extends Component
     }
 
     /**
-     * Set identity in session
+     * Set identity in session.
      *
      * @param object $user
      */
     private function setIdentity($user)
     {
         $st_identity = array(
-            'id'    => $user->getId(),
+            'id' => $user->getId(),
             'email' => $user->getEmail(),
-            'name'  => $user->getName(),
+            'name' => $user->getName(),
         );
 
         if ($user->profile) {
@@ -70,9 +71,10 @@ class Auth extends Component
     }
 
     /**
-     * Login user - normal way
+     * Login user - normal way.
      *
-     * @param  \Phalcon\UserPlugin\Forms\User\LoginForm $form
+     * @param \Phalcon\UserPlugin\Forms\User\LoginForm $form
+     *
      * @return \Phalcon\Http\ResponseInterface
      */
     public function login($form)
@@ -88,9 +90,9 @@ class Auth extends Component
                 }
             } else {
                 $this->check(array(
-                    'email'    => $this->request->getPost('email'),
+                    'email' => $this->request->getPost('email'),
                     'password' => $this->request->getPost('password'),
-                    'remember' => $this->request->getPost('remember')
+                    'remember' => $this->request->getPost('remember'),
                 ));
 
                 $pupRedirect = $this->getDI()->get('config')->pup->redirect;
@@ -103,17 +105,17 @@ class Auth extends Component
     }
 
     /**
-     * Login with facebook account
+     * Login with facebook account.
      */
     public function loginWithFacebook()
     {
-        $di           = $this->getDI();
-        $facebook     = new FacebookConnector($di);
+        $di = $this->getDI();
+        $facebook = new FacebookConnector($di);
         $facebookUser = $facebook->getUser();
 
         if (!$facebookUser) {
             $scope = [
-                'scope' => 'email,user_birthday,user_location'
+                'scope' => 'email,user_birthday,user_location',
             ];
 
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
@@ -130,15 +132,15 @@ class Auth extends Component
     }
 
     /**
-     * Authenitcate or create a user with a Facebook account
+     * Authenitcate or create a user with a Facebook account.
      *
      * @param array $facebookUser
      */
     protected function authenticateOrCreateFacebookUser($facebookUser)
     {
         $pupRedirect = $this->di->get('config')->pup->redirect;
-        $email       = isset($facebookUser['email']) ? $facebookUser['email'] : "{$facebookUser['id']}@facebook.com";
-        $user        = User::findFirst(" email='$email' OR facebook_id='".$facebookUser['id']."' ");
+        $email = isset($facebookUser['email']) ? $facebookUser['email'] : "{$facebookUser['id']}@facebook.com";
+        $user = User::findFirst(" email='$email' OR facebook_id='".$facebookUser['id']."' ");
 
         if ($user) {
             $this->checkUserFlags($user);
@@ -169,7 +171,7 @@ class Auth extends Component
     }
 
     /**
-     * Login with LinkedIn account
+     * Login with LinkedIn account.
      *
      * @return \Phalcon\Http\ResponseInterface
      */
@@ -186,7 +188,7 @@ class Auth extends Component
         if ($token && $token_expires > time()) {
             $li->setAccessToken($this->session->get('linkedIn_token'));
             $email = $li->get('/people/~/email-address');
-            $info  = $li->get('/people/~');
+            $info = $li->get('/people/~');
 
             return $this->authenticateOrCreateLinkedInUser($email, $info);
         } else { // If token is not set
@@ -199,9 +201,9 @@ class Auth extends Component
         }
 
         $state = uniqid();
-        $url   = $li->getLoginUrl([
+        $url = $li->getLoginUrl([
             LinkedInConnector::SCOPE_BASIC_PROFILE,
-            LinkedInConnector::SCOPE_EMAIL_ADDRESS
+            LinkedInConnector::SCOPE_EMAIL_ADDRESS,
         ], $state);
 
         return $this->response->redirect($url, true);
@@ -213,8 +215,8 @@ class Auth extends Component
 
         preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
 
-        $linkedInId  = str_replace("id=", "", $matches[0]);
-        $user        = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
+        $linkedInId = str_replace('id=', '', $matches[0]);
+        $user = User::findFirst("email='$email' OR linkedin_id='$linkedInId'");
 
         if ($user) {
             $this->checkUserFlags($user);
@@ -244,15 +246,15 @@ class Auth extends Component
     }
 
     /**
-     * Login with Twitter account
+     * Login with Twitter account.
      */
     public function loginWithTwitter()
     {
-        $di          = $this->getDI();
+        $di = $this->getDI();
         $pupRedirect = $di->get('config')->pup->redirect;
-        $oauth       = $this->session->get('twitterOauth');
-        $config      = $di->get('config')->pup->connectors->twitter->toArray();
-        $config      = array_merge($config, array('token' => $oauth['token'], 'secret' => $oauth['secret']));
+        $oauth = $this->session->get('twitterOauth');
+        $config = $di->get('config')->pup->connectors->twitter->toArray();
+        $config = array_merge($config, array('token' => $oauth['token'], 'secret' => $oauth['secret']));
 
         $twitter = new TwitterConnector($config, $di);
         if (!$this->request->get('oauth_token')) {
@@ -262,7 +264,7 @@ class Auth extends Component
         $twitter->access_token();
 
         $code = $twitter->user_request(array(
-            'url' => $twitter->url('1.1/account/verify_credentials')
+            'url' => $twitter->url('1.1/account/verify_credentials'),
         ));
 
         if ($code == 200) {
@@ -272,8 +274,8 @@ class Auth extends Component
                 $code = $twitter->user_request(array(
                     'url' => $twitter->url('1.1/users/show'),
                     'params' => array(
-                        'screen_name' => $data['screen_name']
-                    )
+                        'screen_name' => $data['screen_name'],
+                    ),
                 ));
 
                 if ($code == 200) {
@@ -288,9 +290,8 @@ class Auth extends Component
 
                         return $this->response->redirect($pupRedirect->success);
                     } else {
-
                         $password = $this->generatePassword();
-                        $email    = $response['screen_name'].rand(100000,999999).'@domain.tld'; // Twitter does not prived user's email
+                        $email = $response['screen_name'].rand(100000, 999999).'@domain.tld'; // Twitter does not prived user's email
 
                         $user = $this->newUser()
                             ->setName($response['name'])
@@ -315,10 +316,10 @@ class Auth extends Component
 
     public function loginWithGoogle()
     {
-        $di       = $this->getDI();
-        $config   = $di->get('config')->pup->connectors->google->toArray();
+        $di = $this->getDI();
+        $config = $di->get('config')->pup->connectors->google->toArray();
 
-        $pupRedirect            = $di->get('config')->pup->redirect;
+        $pupRedirect = $di->get('config')->pup->redirect;
         $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
 
         $google = new GoogleConnector($config);
@@ -330,9 +331,9 @@ class Auth extends Component
         }
 
         $gplusId = $response['userinfo']['id'];
-        $email   = $response['userinfo']['email'];
-        $name    = $response['userinfo']['name'];
-        $user    = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
+        $email = $response['userinfo']['email'];
+        $name = $response['userinfo']['name'];
+        $user = User::findFirst("gplus_id='$gplusId' OR email = '$email'");
 
         if ($user) {
             $this->checkUserFlags($user);
@@ -364,7 +365,7 @@ class Auth extends Component
     }
 
     /**
-     * New user
+     * New user.
      *
      * @return \Phalcon\UserPlugin\Models\User\User
      */
@@ -381,7 +382,7 @@ class Auth extends Component
     }
 
     /**
-     * Create (save) new user to DB
+     * Create (save) new user to DB.
      *
      * @param unknown $user
      */
@@ -402,7 +403,7 @@ class Auth extends Component
     }
 
     /**
-     * Creates the remember me environment settings the related cookies and generating tokens
+     * Creates the remember me environment settings the related cookies and generating tokens.
      *
      * @param Phalcon\UserPlugin\Models\User\User $user
      */
@@ -421,7 +422,7 @@ class Auth extends Component
 
     /**
      * Implements login throttling
-     * Reduces the efectiveness of brute force attacks
+     * Reduces the efectiveness of brute force attacks.
      *
      * @param int $user_id
      */
@@ -437,8 +438,8 @@ class Auth extends Component
             'ip_address = ?0 AND attempted >= ?1',
             'bind' => array(
                 $this->request->getClientAddress(),
-                time() - 3600 * 6
-            )
+                time() - 3600 * 6,
+            ),
         ));
 
         switch ($attempts) {
@@ -457,14 +458,14 @@ class Auth extends Component
     }
 
     /**
-     * Creates the remember me environment settings the related cookies and generating tokens
+     * Creates the remember me environment settings the related cookies and generating tokens.
      *
      * @param Phalcon\UserPlugin\Models\User\User $user
      */
     public function createRememberEnviroment($user)
     {
         $user_agent = $this->request->getUserAgent();
-        $token = md5($user->getEmail() . $user->getPassword() . $user_agent);
+        $token = md5($user->getEmail().$user->getPassword().$user_agent);
 
         $remember = new UserRememberTokens();
         $remember->setUserId($user->getId());
@@ -480,9 +481,9 @@ class Auth extends Component
     }
 
     /**
-     * Check if the session has a remember me cookie
+     * Check if the session has a remember me cookie.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRememberMe()
     {
@@ -490,7 +491,7 @@ class Auth extends Component
     }
 
     /**
-     * Logs on using the information in the coookies
+     * Logs on using the information in the coookies.
      *
      * @return Phalcon\Http\Response
      */
@@ -505,13 +506,12 @@ class Auth extends Component
 
         if ($user) {
             $userAgent = $this->request->getUserAgent();
-            $token = md5($user->getEmail() . $user->getPassword() . $userAgent);
+            $token = md5($user->getEmail().$user->getPassword().$userAgent);
 
             if ($cookieToken == $token) {
-
                 $remember = UserRememberTokens::findFirst(array(
                     'user_id = ?0 AND token = ?1',
-                    'bind' => array($user->getId(), $token)
+                    'bind' => array($user->getId(), $token),
                 ));
 
                 if ($remember) {
@@ -537,9 +537,9 @@ class Auth extends Component
     }
 
     /**
-     * Check if the user is signed in
+     * Check if the user is signed in.
      *
-     * @return boolean
+     * @return bool
      */
     public function isUserSignedIn()
     {
@@ -555,7 +555,7 @@ class Auth extends Component
     }
 
     /**
-     * Checks if the user is banned/inactive/suspended
+     * Checks if the user is banned/inactive/suspended.
      *
      * @param Phalcon\UserPlugin\Models\User\User $user
      */
@@ -575,7 +575,7 @@ class Auth extends Component
     }
 
     /**
-     * Returns the current identity
+     * Returns the current identity.
      *
      * @return array
      */
@@ -585,7 +585,7 @@ class Auth extends Component
     }
 
     /**
-     * Returns the name of the user
+     * Returns the name of the user.
      *
      * @return string
      */
@@ -596,7 +596,7 @@ class Auth extends Component
         return isset($identity['name']) ? $identity['name'] : false;
     }
     /**
-     * Returns the id of the user
+     * Returns the id of the user.
      *
      * @return string
      */
@@ -608,7 +608,7 @@ class Auth extends Component
     }
 
     /**
-     * Removes the user identity information from session
+     * Removes the user identity information from session.
      */
     public function remove()
     {
@@ -633,7 +633,7 @@ class Auth extends Component
     }
 
     /**
-     * Auths the user by his/her id
+     * Auths the user by his/her id.
      *
      * @param int $id
      */
@@ -651,7 +651,7 @@ class Auth extends Component
     }
 
     /**
-     * Get the entity related to user in the active identity
+     * Get the entity related to user in the active identity.
      *
      * @return Phalcon\UserPlugin\Models\User\User
      */
@@ -672,15 +672,16 @@ class Auth extends Component
     }
 
     /**
-     * Generate a random password
+     * Generate a random password.
      *
-     * @param  integer $length
+     * @param int $length
+     *
      * @return string
      */
     public function generatePassword($length = 8)
     {
-        $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789#@%_.";
+        $chars = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789#@%_.';
 
-        return substr(str_shuffle($chars),0,$length);
+        return substr(str_shuffle($chars), 0, $length);
     }
 }

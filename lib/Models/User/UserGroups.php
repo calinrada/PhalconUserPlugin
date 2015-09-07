@@ -1,4 +1,5 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\User;
 
 use Phalcon\Mvc\Model\Validator\Uniqueness;
@@ -6,27 +7,25 @@ use Phalcon\Mvc\Model\Validator\Uniqueness;
 class UserGroups extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $active;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -37,9 +36,10 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field name
+     * Method to set the value of field name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -50,9 +50,10 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field active
+     * Method to set the value of field active.
      *
-     * @param  integer $active
+     * @param int $active
+     *
      * @return $this
      */
     public function setActive($active)
@@ -63,9 +64,9 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -73,7 +74,7 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field name
+     * Returns the value of field name.
      *
      * @return string
      */
@@ -83,9 +84,9 @@ class UserGroups extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field active
+     * Returns the value of field active.
      *
-     * @return integer
+     * @return int
      */
     public function getActive()
     {
@@ -116,19 +117,19 @@ class UserGroups extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPermissions', 'group_id', array(
-            'alias' => 'permissions'
+            'alias' => 'permissions',
         ));
     }
 
     /**
-     * Validations and business logic
+     * Validations and business logic.
      */
     public function validation()
     {
         $this->validate(new Uniqueness(
             array(
                 'field' => 'name',
-                'message' => 'Group name already registered'
+                'message' => 'Group name already registered',
             )
         ));
 

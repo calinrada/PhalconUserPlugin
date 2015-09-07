@@ -1,48 +1,44 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\User;
 
 class UserEmailConfirmations extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $user_id;
 
     /**
-     *
      * @var string
      */
     protected $code;
 
     /**
-     *
      * @var string
      */
     protected $created_at;
 
     /**
-     *
      * @var string
      */
     protected $updated_at;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $confirmed;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -53,9 +49,10 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_id
+     * Method to set the value of field user_id.
      *
-     * @param  integer $user_id
+     * @param int $user_id
+     *
      * @return $this
      */
     public function setUserId($user_id)
@@ -66,9 +63,10 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field code
+     * Method to set the value of field code.
      *
-     * @param  string $code
+     * @param string $code
+     *
      * @return $this
      */
     public function setCode($code)
@@ -79,9 +77,10 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field created_at
+     * Method to set the value of field created_at.
      *
-     * @param  string $created_at
+     * @param string $created_at
+     *
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -92,9 +91,10 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field updated_at
+     * Method to set the value of field updated_at.
      *
-     * @param  string $updated_at
+     * @param string $updated_at
+     *
      * @return $this
      */
     public function setUpdatedAt($updated_at)
@@ -105,9 +105,10 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field confirmed
+     * Method to set the value of field confirmed.
      *
-     * @param  integer $confirmed
+     * @param int $confirmed
+     *
      * @return $this
      */
     public function setConfirmed($confirmed)
@@ -118,9 +119,9 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -128,9 +129,9 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_id
+     * Returns the value of field user_id.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -138,7 +139,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field code
+     * Returns the value of field code.
      *
      * @return string
      */
@@ -148,7 +149,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field created_at
+     * Returns the value of field created_at.
      *
      * @return string
      */
@@ -158,7 +159,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field updated_at
+     * Returns the value of field updated_at.
      *
      * @return string
      */
@@ -168,9 +169,9 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field confirmed
+     * Returns the value of field confirmed.
      *
-     * @return integer
+     * @return int
      */
     public function getConfirmed()
     {
@@ -199,17 +200,17 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Before create the user assign a password
+     * Before create the user assign a password.
      */
     public function beforeValidationOnCreate()
     {
         $this->created_at = date('Y-m-d H:i:s');
-        $this->code       = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
-        $this->confirmed  = 0;
+        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
+        $this->confirmed = 0;
     }
 
     /**
-     * Sets the timestamp before update the confirmation
+     * Sets the timestamp before update the confirmation.
      */
     public function beforeValidationOnUpdate()
     {
@@ -217,18 +218,18 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Send a confirmation e-mail to the user after create the account
+     * Send a confirmation e-mail to the user after create the account.
      */
     public function afterCreate()
     {
         $this->getDI()->getMail()->send(
             array(
-                $this->user->getEmail() => $this->user->getName()
+                $this->user->getEmail() => $this->user->getName(),
             ),
             'Please confirm your email',
             'confirmation',
             array(
-                'confirmUrl' => '/user/confirmEmail/' . $this->getCode(). '/' . $this->user->getEmail()
+                'confirmUrl' => '/user/confirmEmail/'.$this->getCode().'/'.$this->user->getEmail(),
             )
         );
     }
@@ -236,7 +237,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
-            'alias' => 'user'
+            'alias' => 'user',
         ));
     }
 }

@@ -1,72 +1,64 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\Location;
 
 class Locations extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
      * @var string
      */
     protected $language;
 
     /**
-     *
      * @var string
      */
     protected $formatted_address;
 
     /**
-     *
      * @var string
      */
     protected $city;
 
     /**
-     *
      * @var string
      */
     protected $country;
 
     /**
-     *
-     * @var double
+     * @var float
      */
     protected $latitude;
 
     /**
-     *
-     * @var double
+     * @var float
      */
     protected $longitude;
 
     /**
-     *
-     * @var double
+     * @var float
      */
     protected $geo_point;
 
     /**
-     *
      * @var string
      */
     protected $created_at;
 
     /**
-     *
      * @var string
      */
     protected $updated_at;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -77,9 +69,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field language
+     * Method to set the value of field language.
      *
-     * @param  string $language
+     * @param string $language
+     *
      * @return $this
      */
     public function setLanguage($language)
@@ -90,9 +83,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field formatted_address
+     * Method to set the value of field formatted_address.
      *
-     * @param  string $formatted_address
+     * @param string $formatted_address
+     *
      * @return $this
      */
     public function setFormattedAddress($formatted_address)
@@ -103,9 +97,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field city
+     * Method to set the value of field city.
      *
-     * @param  string $city
+     * @param string $city
+     *
      * @return $this
      */
     public function setCity($city)
@@ -116,9 +111,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field country
+     * Method to set the value of field country.
      *
-     * @param  string $country
+     * @param string $country
+     *
      * @return $this
      */
     public function setCountry($country)
@@ -129,9 +125,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field latitude
+     * Method to set the value of field latitude.
      *
-     * @param  double $latitude
+     * @param float $latitude
+     *
      * @return $this
      */
     public function setLatitude($latitude)
@@ -142,9 +139,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field longitude
+     * Method to set the value of field longitude.
      *
-     * @param  double $longitude
+     * @param float $longitude
+     *
      * @return $this
      */
     public function setLongitude($longitude)
@@ -155,9 +153,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field geo_point
+     * Method to set the value of field geo_point.
      *
-     * @param  double $geo_point
+     * @param float $geo_point
+     *
      * @return $this
      */
     public function setGeoPoint($geo_point)
@@ -168,9 +167,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field created_at
+     * Method to set the value of field created_at.
      *
-     * @param  string $created_at
+     * @param string $created_at
+     *
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -181,9 +181,10 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field updated_at
+     * Method to set the value of field updated_at.
      *
-     * @param  string $updated_at
+     * @param string $updated_at
+     *
      * @return $this
      */
     public function setUpdatedAt($updated_at)
@@ -194,9 +195,9 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -204,7 +205,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field language
+     * Returns the value of field language.
      *
      * @return string
      */
@@ -214,7 +215,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field formatted_address
+     * Returns the value of field formatted_address.
      *
      * @return string
      */
@@ -224,7 +225,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field city
+     * Returns the value of field city.
      *
      * @return string
      */
@@ -234,7 +235,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field country
+     * Returns the value of field country.
      *
      * @return string
      */
@@ -244,9 +245,9 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field latitude
+     * Returns the value of field latitude.
      *
-     * @return double
+     * @return float
      */
     public function getLatitude()
     {
@@ -254,18 +255,18 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field longitude
+     * Returns the value of field longitude.
      *
-     * @return double
+     * @return float
      */
     public function getLongitude()
     {
         return $this->longitude;
     }
     /**
-     * Returns the value of field geo_point
+     * Returns the value of field geo_point.
      *
-     * @return double
+     * @return float
      */
     public function getGeoPoint()
     {
@@ -273,7 +274,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field created_at
+     * Returns the value of field created_at.
      *
      * @return string
      */
@@ -283,7 +284,7 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field updated_at
+     * Returns the value of field updated_at.
      *
      * @return string
      */
@@ -331,7 +332,8 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Return a custom formatted address
+     * Return a custom formatted address.
+     *
      * @return string
      */
     public function getCustomFormattedAddress()

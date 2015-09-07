@@ -2,20 +2,19 @@
 
 namespace Phalcon\UserPlugin\Plugin;
 
-use Phalcon\Events\Event,
-    Phalcon\Config,
-    Phalcon\Mvc\Dispatcher,
-    Phalcon\Mvc\User\Plugin,
-    Phalcon\UserPlugin\Auth\Auth,
-    Phalcon\Mvc\View,
-    Phalcon\UserPlugin\Exception\UserPluginException as Exception;
+use Phalcon\Events\Event;
+use Phalcon\Config;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\User\Plugin;
+use Phalcon\UserPlugin\Auth\Auth;
+use Phalcon\Mvc\View;
+use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
 /**
- * Phalcon\UserPlugin\Plugin\Security
+ * Phalcon\UserPlugin\Plugin\Security.
  */
 class Security extends Plugin
 {
-
     /* @var Auth $auth */
     private $auth;
 
@@ -23,21 +22,24 @@ class Security extends Plugin
     private $view;
 
     /**
-     * Allowed resource types for the configuration file
+     * Allowed resource types for the configuration file.
+     *
      * @var array
      */
     private $resourceTypes = array(
         'public',
-        'private'
+        'private',
     );
 
     /**
      * @param Auth $auth
+     *
      * @return $this
      */
     public function setAuth(Auth $auth)
     {
         $this->auth = $auth;
+
         return $this;
     }
 
@@ -51,11 +53,13 @@ class Security extends Plugin
 
     /**
      * @param View $view
+     *
      * @return $this
      */
     public function setView(View $view)
     {
         $this->view = $view;
+
         return $this;
     }
 
@@ -68,23 +72,24 @@ class Security extends Plugin
     }
 
     /**
-     * beforeDispatchLoop
+     * beforeDispatchLoop.
      *
-     * @param  Event                           $event
-     * @param  Dispatcher                      $dispatcher
+     * @param Event      $event
+     * @param Dispatcher $dispatcher
+     *
      * @return \Phalcon\Http\ResponseInterface
-    */
+     */
     public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
         if ($this->auth->hasRememberMe()) {
             $this->auth->loginWithRememberMe(false);
         }
 
-        $config    = $dispatcher->getDI()->get('config');
+        $config = $dispatcher->getDI()->get('config');
         $pupConfig = $this->getConfigStructure($config);
 
         if ($this->auth->isUserSignedIn()) {
-            $actionName     = $dispatcher->getActionName();
+            $actionName = $dispatcher->getActionName();
             $controllerName = $dispatcher->getControllerName();
 
             if ($controllerName == 'user' && $actionName == 'login') {
@@ -93,7 +98,7 @@ class Security extends Plugin
         }
 
         $needsIdentity = $this->needsIdentity($pupConfig, $dispatcher);
-        $identity      = $this->auth->getIdentity();
+        $identity = $this->auth->getIdentity();
 
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
@@ -109,15 +114,16 @@ class Security extends Plugin
     }
 
     /**
-     * Check if the controller / action needs identity
+     * Check if the controller / action needs identity.
      *
-     * @param  array      $config
-     * @param  Dispatcher $dispatcher
-     * @return boolean
+     * @param array      $config
+     * @param Dispatcher $dispatcher
+     *
+     * @return bool
      */
     private function needsIdentity($config, Dispatcher $dispatcher)
     {
-        $actionName     = $dispatcher->getActionName();
+        $actionName = $dispatcher->getActionName();
         $controllerName = $dispatcher->getControllerName();
 
         if ($config['type'] == 'public') { // all except ..
@@ -128,12 +134,13 @@ class Security extends Plugin
     }
 
     /**
-     * Check for public resources
+     * Check for public resources.
      *
-     * @param  array   $resources
-     * @param  string  $actionName
-     * @param  string  $controllerName
-     * @return boolean
+     * @param array  $resources
+     * @param string $actionName
+     * @param string $controllerName
+     *
+     * @return bool
      */
     private function checkPublicResources($resources, $actionName, $controllerName)
     {
@@ -155,12 +162,13 @@ class Security extends Plugin
     }
 
     /**
-     * Check for private resources
+     * Check for private resources.
      *
-     * @param  array   $resources
-     * @param  string  $actionName
-     * @param  string  $controllerName
-     * @return boolean
+     * @param array  $resources
+     * @param string $actionName
+     * @param string $controllerName
+     *
+     * @return bool
      */
     private function checkPrivateResources($resources, $actionName, $controllerName)
     {
@@ -182,10 +190,12 @@ class Security extends Plugin
     }
 
     /**
-     * Get the configuration structure for the plugin
+     * Get the configuration structure for the plugin.
      *
      * @param \Phalcon\Config $config
+     *
      * @return \Phalcon\Config
+     *
      * @throws Exception
      */
     private function getConfigStructure(Config $config)

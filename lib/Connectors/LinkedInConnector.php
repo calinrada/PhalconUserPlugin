@@ -1,34 +1,36 @@
 <?php
+
 namespace Phalcon\UserPlugin\Connectors;
 
 /**
- * Phalcon\UserPlugin\Connectors\LinkedInConnector
+ * Phalcon\UserPlugin\Connectors\LinkedInConnector.
  *
  * Original class from https://github.com/redinkdesign/PHP-LinkedIn-SDK
  */
 class LinkedInConnector
 {
-    private $_config               = array();
-    private $_state                = null;
-    private $_access_token         = null;
+    private $_config = array();
+    private $_state = null;
+    private $_access_token = null;
     private $_access_token_expires = null;
-    private $_debug_info           = null;
-    private $_curl_handle          = null;
+    private $_debug_info = null;
+    private $_curl_handle = null;
 
-    const API_BASE   = 'https://api.linkedin.com/v1';
+    const API_BASE = 'https://api.linkedin.com/v1';
     const OAUTH_BASE = 'https://www.linkedin.com/uas/oauth2';
 
-    const SCOPE_BASIC_PROFILE      = 'r_basicprofile'; // Name, photo, headline, and current positions
-    const SCOPE_FULL_PROFILE       = 'r_fullprofile';  // Full profile including experience, education, skills, and recommendations
-    const SCOPE_EMAIL_ADDRESS      = 'r_emailaddress'; // The primary email address you use for your LinkedIn account
-    const SCOPE_NETWORK            = 'r_network';      // Your 1st and 2nd degree connections
-    const SCOPE_CONTACT_INFO       = 'r_contactinfo';  // Address, phone number, and bound accounts
+    const SCOPE_BASIC_PROFILE = 'r_basicprofile'; // Name, photo, headline, and current positions
+    const SCOPE_FULL_PROFILE = 'r_fullprofile';  // Full profile including experience, education, skills, and recommendations
+    const SCOPE_EMAIL_ADDRESS = 'r_emailaddress'; // The primary email address you use for your LinkedIn account
+    const SCOPE_NETWORK = 'r_network';      // Your 1st and 2nd degree connections
+    const SCOPE_CONTACT_INFO = 'r_contactinfo';  // Address, phone number, and bound accounts
     const SCOPE_READ_WRTIE_UPDATES = 'rw_nus';         // Retrieve and post updates to LinkedIn as you
-    const SCOPE_READ_WRITE_GROUPS  = 'rw_groups';      // Retrieve and post group discussions as you
-    const SCOPE_WRITE_MESSAGES     = 'w_messages';     // Send messages and invitations to connect as you
+    const SCOPE_READ_WRITE_GROUPS = 'rw_groups';      // Retrieve and post group discussions as you
+    const SCOPE_WRITE_MESSAGES = 'w_messages';     // Send messages and invitations to connect as you
 
     /**
-     * @param  array                     $config (api_key, api_secret, callback_url)
+     * @param array $config (api_key, api_secret, callback_url)
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
@@ -54,10 +56,11 @@ class LinkedInConnector
     }
 
     /**
-     * Get the login url, pass scope to request specific permissions
+     * Get the login url, pass scope to request specific permissions.
      *
-     * @param  array  $scope - an array of requested permissions (can use scope constants defined in this class)
-     * @param  string $state - a unique identifier for this user, if none is passed, one is generated via uniqid
+     * @param array  $scope - an array of requested permissions (can use scope constants defined in this class)
+     * @param string $state - a unique identifier for this user, if none is passed, one is generated via uniqid
+     *
      * @return string $url
      */
     public function getLoginUrl(array $scope = array(), $state = null)
@@ -71,18 +74,20 @@ class LinkedInConnector
         }
         $this->setState($state);
 
-        $url = self::OAUTH_BASE . "/authorization?response_type=code&client_id={$this->_config['api_key']}&scope={$scope}&state={$state}&redirect_uri=" . urlencode($this->_config['callback_url']);
+        $url = self::OAUTH_BASE."/authorization?response_type=code&client_id={$this->_config['api_key']}&scope={$scope}&state={$state}&redirect_uri=".urlencode($this->_config['callback_url']);
 
         return $url;
     }
 
     /**
-     * Exchange the authorization code for an access token
+     * Exchange the authorization code for an access token.
      *
-     * @param  string                    $authorization_code
+     * @param string $authorization_code
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
-     * @return string                    $access_token
+     *
+     * @return string $access_token
      */
     public function getAccessToken($authorization_code = null)
     {
@@ -99,12 +104,12 @@ class LinkedInConnector
             'code' => $authorization_code,
             'client_id' => $this->_config['api_key'],
             'client_secret' => $this->_config['api_secret'],
-            'redirect_uri' => $this->_config['callback_url']
+            'redirect_uri' => $this->_config['callback_url'],
         );
 
-        $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken', $params, 'POST', array('x-li-format: json'));
+        $data = $this->_makeRequest(self::OAUTH_BASE.'/accessToken', $params, 'POST', array('x-li-format: json'));
         if (isset($data['error']) && !empty($data['error'])) {
-            throw new \RuntimeException('Access Token Request Error: ' . $data['error'] . ' -- ' . $data['error_description']);
+            throw new \RuntimeException('Access Token Request Error: '.$data['error'].' -- '.$data['error_description']);
         }
 
         $this->_access_token = $data['access_token'];
@@ -114,7 +119,7 @@ class LinkedInConnector
     }
 
     /**
-     * This timestamp is "expires in". In other words, the token will expire in now() + expires_in
+     * This timestamp is "expires in". In other words, the token will expire in now() + expires_in.
      *
      * @return int access token expiration time -
      */
@@ -124,10 +129,12 @@ class LinkedInConnector
     }
 
     /**
-     * Set the access token manually
+     * Set the access token manually.
      *
-     * @param  string                                           $token
+     * @param string $token
+     *
      * @throws \InvalidArgumentException
+     *
      * @return \Phalcon\UserPlugin\Connectors\LinkedInConnector
      */
     public function setAccessToken($token)
@@ -143,10 +150,12 @@ class LinkedInConnector
     }
 
     /**
-     * Set the state manually. State is a unique identifier for the user
+     * Set the state manually. State is a unique identifier for the user.
      *
-     * @param  string                                           $state
+     * @param string $state
+     *
      * @throws \InvalidArgumentException
+     *
      * @return \Phalcon\UserPlugin\Connectors\LinkedInConnector
      */
     public function setState($state)
@@ -162,7 +171,7 @@ class LinkedInConnector
     }
 
     /**
-     * Get state
+     * Get state.
      *
      * @return string
      */
@@ -172,10 +181,11 @@ class LinkedInConnector
     }
 
     /**
-     * POST to an authenciated API endpoint w/ payload
+     * POST to an authenciated API endpoint w/ payload.
      *
-     * @param  string $endpoint
-     * @param  array  $payload
+     * @param string $endpoint
+     * @param array  $payload
+     *
      * @return array
      */
     public function post($endpoint, array $payload = array())
@@ -184,10 +194,11 @@ class LinkedInConnector
     }
 
     /**
-     * GET an authenticated API endpoind w/ payload
+     * GET an authenticated API endpoind w/ payload.
      *
-     * @param  unknown_type $endpoint
-     * @param  array        $payload
+     * @param unknown_type $endpoint
+     * @param array        $payload
+     *
      * @return array
      */
     public function get($endpoint, array $payload = array())
@@ -196,10 +207,11 @@ class LinkedInConnector
     }
 
     /**
-     * PUT to an authenciated API endpoint w/ payload
+     * PUT to an authenciated API endpoint w/ payload.
      *
-     * @param  unknown_type $endpoint
-     * @param  array        $payload
+     * @param unknown_type $endpoint
+     * @param array        $payload
+     *
      * @return array
      */
     public function put($endpoint, array $payload = array())
@@ -210,25 +222,26 @@ class LinkedInConnector
     /**
      * Make an authenticated API request to the specified endpoint
      * Headers are for additional headers to be sent along with the request.
-     * Curl options are additional curl options that may need to be set
+     * Curl options are additional curl options that may need to be set.
      *
-     * @param  string $endpoint
-     * @param  array  $payload
-     * @param  string $method
-     * @param  array  $headers
-     * @param  array  $curl_options
+     * @param string $endpoint
+     * @param array  $payload
+     * @param string $method
+     * @param array  $headers
+     * @param array  $curl_options
+     *
      * @return array
      */
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
-        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . (!empty($this->_access_token) ? '?oauth2_access_token=' . $this->getAccessToken() : '');
+        $endpoint = self::API_BASE.'/'.trim($endpoint, '/\\').(!empty($this->_access_token) ? '?oauth2_access_token='.$this->getAccessToken() : '');
         $headers[] = 'x-li-format: json';
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
     }
 
     /**
-     * Get debug info from the CURL request
+     * Get debug info from the CURL request.
      *
      * @return array
      */
@@ -238,14 +251,16 @@ class LinkedInConnector
     }
 
     /**
-     * Make a CURL request
+     * Make a CURL request.
      *
-     * @param  string            $url
-     * @param  array             $payload
-     * @param  string            $method
-     * @param  array             $headers
-     * @param  array             $curl_options
+     * @param string $url
+     * @param array  $payload
+     * @param string $method
+     * @param array  $headers
+     * @param array  $curl_options
+     *
      * @throws \RuntimeException
+     *
      * @return array
      */
     protected function _makeRequest($url, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
@@ -258,13 +273,13 @@ class LinkedInConnector
             CURLOPT_URL => $url,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_FOLLOWLOCATION => true
+            CURLOPT_FOLLOWLOCATION => true,
         );
 
         if (!empty($payload)) {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = http_build_query($payload);
-            $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
+            $headers[] = 'Content-Length: '.strlen($options[CURLOPT_POSTFIELDS]);
             $options[CURLOPT_HTTPHEADER] = $headers;
         }
 
@@ -277,12 +292,12 @@ class LinkedInConnector
         $this->_debug_info = curl_getinfo($ch);
 
         if ($response === false) {
-            throw new \RuntimeException('Request Error: ' . curl_error($ch));
+            throw new \RuntimeException('Request Error: '.curl_error($ch));
         }
 
         $response = json_decode($response, true);
         if (isset($response['status']) && ($response['status'] < 200 || $response['status'] > 300)) {
-            throw new \RuntimeException('Request Error: ' . $response['message'] . '. Raw Response: ' . print_r($response, true));
+            throw new \RuntimeException('Request Error: '.$response['message'].'. Raw Response: '.print_r($response, true));
         }
 
         return $response;

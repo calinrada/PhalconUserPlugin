@@ -1,4 +1,5 @@
 <?php
+
 namespace Phalcon\UserPlugin\Models\User;
 
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
@@ -6,63 +7,55 @@ use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 class UserProfile extends \Phalcon\Mvc\Model
 {
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $user_id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $picture;
 
     /**
-     *
      * @var string
      */
     protected $birth_date;
 
     /**
-     *
      * @var string
      */
     protected $gender;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $home_location_id;
 
     /**
-     *
-     * @var integer
+     * @var int
      */
     protected $current_location_id;
 
     /**
-     *
      * @var string
      */
     protected $created_at;
 
     /**
-     *
      * @var string
      */
     protected $updated_at;
 
     /**
-     * Method to set the value of field id
+     * Method to set the value of field id.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -73,9 +66,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field user_id
+     * Method to set the value of field user_id.
      *
-     * @param  integer $user_id
+     * @param int $user_id
+     *
      * @return $this
      */
     public function setUserId($user_id)
@@ -86,9 +80,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field picture
+     * Method to set the value of field picture.
      *
-     * @param  integer $picture
+     * @param int $picture
+     *
      * @return $this
      */
     public function setPicture($picture)
@@ -99,9 +94,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field birth_date
+     * Method to set the value of field birth_date.
      *
-     * @param  string $birth_date
+     * @param string $birth_date
+     *
      * @return $this
      */
     public function setBirthDate($birth_date)
@@ -112,9 +108,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field gender
+     * Method to set the value of field gender.
      *
-     * @param  string $gender
+     * @param string $gender
+     *
      * @return $this
      */
     public function setGender($gender)
@@ -125,9 +122,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field home_location_id
+     * Method to set the value of field home_location_id.
      *
-     * @param  integer $home_location_id
+     * @param int $home_location_id
+     *
      * @return $this
      */
     public function setHomeLocationId($home_location_id)
@@ -138,9 +136,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field current_locationid
+     * Method to set the value of field current_locationid.
      *
-     * @param  integer $current_location_id
+     * @param int $current_location_id
+     *
      * @return $this
      */
     public function setCurrentLocationId($current_location_id)
@@ -151,9 +150,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field created_at
+     * Method to set the value of field created_at.
      *
-     * @param  string $created_at
+     * @param string $created_at
+     *
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -164,9 +164,10 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field updated_at
+     * Method to set the value of field updated_at.
      *
-     * @param  string $updated_at
+     * @param string $updated_at
+     *
      * @return $this
      */
     public function setUpdatedAt($updated_at)
@@ -177,9 +178,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id
+     * Returns the value of field id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -187,9 +188,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field user_id
+     * Returns the value of field user_id.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -197,9 +198,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field picture
+     * Returns the value of field picture.
      *
-     * @return integer
+     * @return int
      */
     public function getPicture()
     {
@@ -207,7 +208,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field birth_date
+     * Returns the value of field birth_date.
      *
      * @return string
      */
@@ -217,7 +218,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field gender
+     * Returns the value of field gender.
      *
      * @return string
      */
@@ -227,9 +228,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field home_location_id
+     * Returns the value of field home_location_id.
      *
-     * @return integer
+     * @return int
      */
     public function getHomeLocationId()
     {
@@ -237,9 +238,9 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field current_location_id
+     * Returns the value of field current_location_id.
      *
-     * @return integer
+     * @return int
      */
     public function getCurrentLocationId()
     {
@@ -247,7 +248,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field created_at
+     * Returns the value of field created_at.
      *
      * @return string
      */
@@ -257,7 +258,7 @@ class UserProfile extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field updated_at
+     * Returns the value of field updated_at.
      *
      * @return string
      */
@@ -273,17 +274,17 @@ class UserProfile extends \Phalcon\Mvc\Model
     {
         $this->belongsTo('user_id', 'Phalcon\UserPlugin\Models\User\User', 'id', array(
             'alias' => 'user',
-            'reusable' => true
+            'reusable' => true,
         ));
 
         $this->belongsTo('home_location_id', 'Phalcon\UserPlugin\Models\Location\Locations', 'id', array(
             'alias' => 'homeLocation',
-            'reusable' => true
+            'reusable' => true,
         ));
 
         $this->belongsTo('current_location_id', 'Phalcon\UserPlugin\Models\Location\Locations', 'id', array(
             'alias' => 'currentLocation',
-            'reusable' => true
+            'reusable' => true,
         ));
     }
 
@@ -318,7 +319,7 @@ class UserProfile extends \Phalcon\Mvc\Model
         $this->created_at = new \Phalcon\Db\RawValue('now()');
     }
 
-    public static function findByRawSql($what, $conditions, $params=null)
+    public static function findByRawSql($what, $conditions, $params = null)
     {
         $sql = "SELECT $what FROM user_profile WHERE $conditions";
 
@@ -329,5 +330,4 @@ class UserProfile extends \Phalcon\Mvc\Model
 
         return $result;
     }
-
 }

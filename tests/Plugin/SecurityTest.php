@@ -2,8 +2,7 @@
 
 class SecurityTest extends \UnitTestCase
 {
-
-    public function setUp(Phalcon\DiInterface $di = NULL, Phalcon\Config $config = NULL)
+    public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config $config = null)
     {
         parent::setUp($di, $config);
     }
@@ -14,7 +13,7 @@ class SecurityTest extends \UnitTestCase
             ->setConstructorArgs(array('test', 'test'))
             ->getMock();
 
-        $di =  $this->getMockBuilder('Phalcon\DI')
+        $di = $this->getMockBuilder('Phalcon\DI')
             ->setConstructorArgs(array('get'))
             ->getMock();
 
@@ -57,7 +56,7 @@ class SecurityTest extends \UnitTestCase
         $security = new Phalcon\UserPlugin\Plugin\Security();
         $security->setAuth($auth);
 
-        $response  = $security->beforeDispatchLoop($event, $dispatcher);
+        $response = $security->beforeDispatchLoop($event, $dispatcher);
 
         // loginWithRememberMe was called
         $invocations = $spy->getInvocations();
@@ -73,7 +72,7 @@ class SecurityTest extends \UnitTestCase
             ->setConstructorArgs(array('test', 'test'))
             ->getMock();
 
-        $di =  $this->getMockBuilder('Phalcon\DI')
+        $di = $this->getMockBuilder('Phalcon\DI')
             ->setConstructorArgs(array('get'))
             ->getMock();
 
@@ -126,8 +125,8 @@ class SecurityTest extends \UnitTestCase
         $security->setView($view);
 
         /* @var Phalcon\Http\Response $response */
-        $response  = $security->beforeDispatchLoop($event, $dispatcher);
-        $this->expectOutputString('<div class="noticeMessage">Private area. Please login.</div>' . "\n");
+        $response = $security->beforeDispatchLoop($event, $dispatcher);
+        $this->expectOutputString('<div class="noticeMessage">Private area. Please login.</div>'."\n");
 
         // $view->disable()
         $invocations = $spy->getInvocations();
@@ -164,15 +163,15 @@ class SecurityTest extends \UnitTestCase
 
         $resources = array(
             '*' => array(
-                'user' => array('login', 'logout', 'register')
-            )
+                'user' => array('login', 'logout', 'register'),
+            ),
         );
 
         $this->assertTrue($this->invokeMethod($security, 'checkPublicResources', array($resources, 'login', 'user')));
         $this->assertFalse($this->invokeMethod($security, 'checkPublicResources', array($resources, 'invalidAction', 'user')));
 
         $resources = array(
-            'user' => array('login', 'logout', 'register')
+            'user' => array('login', 'logout', 'register'),
         );
 
         $this->assertTrue($this->invokeMethod($security, 'checkPublicResources', array($resources, 'register', 'user')));
@@ -181,22 +180,21 @@ class SecurityTest extends \UnitTestCase
         // TODO, if (isset($controller['*'])) is not tested
     }
 
-
     public function testCheckPrivateResources()
     {
         $security = new Phalcon\UserPlugin\Plugin\Security();
 
         $resources = array(
             '*' => array(
-                'user' => array('login', 'logout', 'register')
-            )
+                'user' => array('login', 'logout', 'register'),
+            ),
         );
 
         $this->assertFalse($this->invokeMethod($security, 'checkPrivateResources', array($resources, 'login', 'user')));
         $this->assertTrue($this->invokeMethod($security, 'checkPrivateResources', array($resources, 'invalidAction', 'user')));
 
         $resources = array(
-            'user' => array('login', 'logout', 'register')
+            'user' => array('login', 'logout', 'register'),
         );
 
         $this->assertTrue($this->invokeMethod($security, 'checkPrivateResources', array($resources, 'register', 'resources')));
@@ -276,6 +274,7 @@ class SecurityTest extends \UnitTestCase
 
     /**
      * @group getConfigureStructure
+     *
      * @throws \Phalcon\UserPlugin\Exception\UserPluginException
      */
     public function testGetConfigStructure()
@@ -283,11 +282,11 @@ class SecurityTest extends \UnitTestCase
         $config = $this->getConfig();
         $security = new Phalcon\UserPlugin\Plugin\Security();
 
-        $matchConfig =  array(
+        $matchConfig = array(
             'type' => 'private',
             'resources' => array(
-                'user' => array('login', 'logout', 'register')
-            )
+                'user' => array('login', 'logout', 'register'),
+            ),
         );
         $this->assertEquals($matchConfig, $this->invokeMethod($security, 'getConfigStructure', array($config)));
     }
@@ -301,15 +300,15 @@ class SecurityTest extends \UnitTestCase
             'pup' => array(
                 'redirect' => array(
                     'success' => 'user/profile',
-                    'failure' => 'user/login'
+                    'failure' => 'user/login',
                 ),
                 'resources' => array(
                     'type' => 'private',
                     'resources' => array(
-                        'user' => array('login', 'logout', 'register')
-                    )
-                )
-            )
+                        'user' => array('login', 'logout', 'register'),
+                    ),
+                ),
+            ),
         ));
 
         return $config;

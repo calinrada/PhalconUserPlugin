@@ -1,11 +1,10 @@
 <?php
 
-use Phalcon\DI,
-    Phalcon\Test\UnitTestCase as PhalconTestCase;
+use Phalcon\DI;
+use Phalcon\Test\UnitTestCase as PhalconTestCase;
 
 abstract class UnitTestCase extends PhalconTestCase
 {
-
     /**
      * @var \Voice\Cache
      */
@@ -21,7 +20,7 @@ abstract class UnitTestCase extends PhalconTestCase
      */
     private $_loaded = false;
 
-    public function setUp(Phalcon\DiInterface $di = NULL, Phalcon\Config $config = NULL)
+    public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config $config = null)
     {
         // Load any additional services that might be required during testing
         $di = DI::getDefault();
@@ -33,15 +32,16 @@ abstract class UnitTestCase extends PhalconTestCase
     }
 
     /**
-     * Check if the test case is setup properly
+     * Check if the test case is setup properly.
+     *
      * @throws \PHPUnit_Framework_IncompleteTestError;
      */
-    public function __destruct() {
-        if(!$this->_loaded) {
+    public function __destruct()
+    {
+        if (!$this->_loaded) {
             throw new \PHPUnit_Framework_IncompleteTestError('Please run parent::setUp().');
         }
     }
-
 
     /**
      * Call protected/private method of a class.
