@@ -44,11 +44,13 @@ class Security extends Plugin
     }
 
     /**
+     * @param Dispatcher $dispatcher
+     *
      * @return Auth
      */
-    public function getAuth()
+    public function getAuth(Dispatcher $dispatcher)
     {
-        return $this->auth;
+        return $dispatcher->getDI()->get('auth');
     }
 
     /**
@@ -64,11 +66,13 @@ class Security extends Plugin
     }
 
     /**
+     * @param Dispatcher $dispatcher
+     *
      * @return View
      */
-    public function getView()
+    public function getView(Dispatcher $dispatcher)
     {
-        return $this->view;
+        return $dispatcher->getDI()->getShared('view');
     }
 
     /**
@@ -81,14 +85,17 @@ class Security extends Plugin
      */
     public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
-        if ($this->auth->hasRememberMe()) {
-            $this->auth->loginWithRememberMe(false);
+        $auth = $this->getAuth($dispatcher);
+        $view = $this->getView($dispatcher);
+
+        if ($auth->hasRememberMe()) {
+            $auth->loginWithRememberMe(false);
         }
 
         $config = $dispatcher->getDI()->get('config');
         $pupConfig = $this->getConfigStructure($config);
 
-        if ($this->auth->isUserSignedIn()) {
+        if ($auth->isUserSignedIn()) {
             $actionName = $dispatcher->getActionName();
             $controllerName = $dispatcher->getControllerName();
 
@@ -98,7 +105,7 @@ class Security extends Plugin
         }
 
         $needsIdentity = $this->needsIdentity($pupConfig, $dispatcher);
-        $identity = $this->auth->getIdentity();
+        $identity = $auth->getIdentity();
 
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
@@ -110,7 +117,7 @@ class Security extends Plugin
             }
         }
 
-        $this->view->setVar('identity', $identity);
+        $view->setVar('identity', $identity);
     }
 
     /**
