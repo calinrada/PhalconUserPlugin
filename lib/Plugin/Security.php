@@ -93,7 +93,7 @@ class Security extends Plugin
         }
 
         $config = $dispatcher->getDI()->get('config');
-        $pupConfig = $this->getConfigStructure($config);
+        $pupConfig = $this->getConfigStructure($config, $dispatcher);
 
         if ($auth->isUserSignedIn()) {
             $actionName = $dispatcher->getActionName();
@@ -200,15 +200,27 @@ class Security extends Plugin
      * Get the configuration structure for the plugin.
      *
      * @param \Phalcon\Config $config
+     * @param Dispatcher      $dispatcher
      *
      * @return \Phalcon\Config
      *
      * @throws Exception
      */
-    private function getConfigStructure(Config $config)
+    private function getConfigStructure(Config $config, Dispatcher $dispatcher)
     {
         if (isset($config->pup)) {
-            $config = $config->pup->resources->toArray();
+            if (!isset($config['pup']['resources'])) {
+                // may be it is multi module configuration
+                $module = $dispatcher->getModuleName();
+
+                if (isset($config['pup'][$module]['resources'])) {
+                    $config = $config->pup->$module->resources->toArray();
+                } else {
+                    throw new Exception('Wrong configuration, need "resources" section or module section not filled ');
+                }
+            } else {
+                $config = $config->pup->resources->toArray();
+            }
 
             if (!isset($config['type']) || (isset($config['type']) && !in_array($config['type'], $this->resourceTypes))) {
                 throw new Exception('Wrong configuration for key "type" or the key does not exists');
