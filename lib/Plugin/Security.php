@@ -12,6 +12,7 @@ use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
 /**
  * Phalcon\UserPlugin\Plugin\Security.
+ * @todo подождать https://github.com/calinrada/PhalconUserPlugin/pull/33, после этот класс можно убирать
  */
 class Security extends Plugin
 {
@@ -216,7 +217,7 @@ class Security extends Plugin
                 if (isset($config['pup'][$module]['resources'])) {
                     $config = $config->pup->$module->resources->toArray();
                 } else {
-                    throw new Exception('Wrong configuration, need "resources" section or module section not filled ');
+                    throw new Exception('Wrong configuration, need "resources" section or module "'.$module.'" section not filled ');
                 }
             } else {
                 $config = $config->pup->resources->toArray();
