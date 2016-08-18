@@ -25,7 +25,12 @@ class FacebookConnector
         $this->di = $di;
         $fbConfig = $di->get('config')->pup->connectors->facebook;
         $protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))).'://';
-        $this->url = $protocol.$_SERVER['HTTP_HOST'].'/user/loginWithFacebook';
+
+        if (isset($fbConfig['route'])) {
+            $this->url = $protocol.$_SERVER['HTTP_HOST'].$fbConfig['route'];
+        } else {
+            $this->url = $protocol.$_SERVER['HTTP_HOST'].'/user/loginWithFacebook';
+        }
 
         FacebookSession::setDefaultApplication($fbConfig->appId, $fbConfig->secret);
     }
@@ -48,9 +53,9 @@ class FacebookConnector
             $this->helper = new FacebookRedirectLoginHelper($this->url);
             $this->fb_session = $this->helper->getSessionFromRedirect();
         } catch (FacebookRequestException $ex) {
-            $this->di->flashSession->error($ex->getMessage());
+            $this->di->get('flashSession')->error($ex->getMessage());
         } catch (\Exception $ex) {
-            $this->di->flashSession->error($ex->getMessage());
+            $this->di->get('flashSession')->error($ex->getMessage());
         }
 
         if ($this->fb_session) {
