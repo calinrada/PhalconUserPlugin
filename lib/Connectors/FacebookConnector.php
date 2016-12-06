@@ -2,10 +2,7 @@
 
 namespace Phalcon\UserPlugin\Connectors;
 
-use Facebook\FacebookSession;
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\FacebookRedirectLoginHelper;
+use \Facebook\FacebookRequest;
 
 /**
  * Phalcon\UserPlugin\Connectors\FacebookConnector.
@@ -14,13 +11,15 @@ class FacebookConnector
 {
     private $di;
 
-    private $fb_session;
+    private $fb;
 
     private $helper;
 
     private $url;
 
-    public function __construct($di)
+    private $scope;
+
+    public function __construct($di, $scope)
     {
         $this->di = $di;
         $fbConfig = $di->get('config')->pup->connectors->facebook;
@@ -32,14 +31,21 @@ class FacebookConnector
             $this->url = $protocol.$_SERVER['HTTP_HOST'].'/user/loginWithFacebook';
         }
 
-        FacebookSession::setDefaultApplication($fbConfig->appId, $fbConfig->secret);
+        $this->scope = $scope;
+
+        $this->fb = new \Facebook\Facebook([
+            'app_id' => $fbConfig->appId,
+            'app_secret' => $fbConfig->secret,
+            'default_graph_version' => 'v2.8',
+        ]);
     }
 
     public function getLoginUrl($scope = [])
     {
-        $this->helper = new FacebookRedirectLoginHelper($this->url);
+        $helper = $this->fb->getRedirectLoginHelper();
+        $loginUrl = $helper->getLoginUrl($this->url, count($scope) > 0 ? $scope : $this->scope);
 
-        return $this->helper->getLoginUrl($scope);
+        return $loginUrl;
     }
 
     /**
@@ -49,23 +55,26 @@ class FacebookConnector
      */
     public function getUser()
     {
+        $helper = $this->fb->getRedirectLoginHelper();
+
         try {
-            $this->helper = new FacebookRedirectLoginHelper($this->url);
-            $this->fb_session = $this->helper->getSessionFromRedirect();
-        } catch (FacebookRequestException $ex) {
+
+            $accessToken = $helper->getAccessToken();
+
+            if (!$accessToken) {
+                $response = new \Phalcon\Http\Response();
+                $response->redirect($this->getLoginUrl($this->scope), true);
+                $response->send();
+            }
+
+            $response = $this->fb->get('/me?fields=id,name,birthday,friends,email,location', $accessToken->getValue());
+
+            return $response->getGraphUser()->asArray();
+
+        } catch (\Facebook\Exceptions\FacebookResponseException $ex) {
             $this->di->get('flashSession')->error($ex->getMessage());
-        } catch (\Exception $ex) {
+        } catch (\Facebook\Exceptions\FacebookSDKException $ex) {
             $this->di->get('flashSession')->error($ex->getMessage());
         }
-
-        if ($this->fb_session) {
-            $request = new FacebookRequest($this->fb_session, 'GET', '/me');
-            $response = $request->execute();
-            $fb_user = $response->getGraphObject()->asArray();
-
-            return $fb_user;
-        }
-
-        return false;
     }
 }

@@ -110,14 +110,15 @@ class Auth extends Component
     public function loginWithFacebook()
     {
         $di = $this->getDI();
-        $facebook = new FacebookConnector($di);
+
+        $scope = [
+            'scope' => 'email,public_profile,user_friends',
+        ];
+
+        $facebook = new FacebookConnector($di, $scope);
         $facebookUser = $facebook->getUser();
 
         if (!$facebookUser) {
-            $scope = [
-                'scope' => 'email,user_birthday,user_location',
-            ];
-
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
 
@@ -146,6 +147,11 @@ class Auth extends Component
             $this->checkUserFlags($user);
             $this->setIdentity($user);
             if (!$user->getFacebookId()) {
+
+                if ($email != $user->getEmail() && !preg_match('#@facebook#', $email)) {
+                    $user->setEmail($email);
+                }
+
                 $user->setFacebookId($facebookUser['id']);
                 $user->setFacebookName($facebookUser['name']);
                 $user->setFacebookData(serialize($facebookUser));
