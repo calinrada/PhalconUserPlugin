@@ -25,7 +25,9 @@
       "phalcon/devtools": "dev-master"
     },
     "autoload": {
-        "files": ["lib/swift_required.php"],
+        "files": ["lib/swift_required.php"]
+    },
+    "autoload": {
         "psr-4": { "Phalcon\\UserPlugin\\": "lib/" }
     },
     "extra": {
