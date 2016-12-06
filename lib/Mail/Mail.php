@@ -20,6 +20,8 @@ class Mail extends Component
 
     protected $images = array();
 
+    protected $mailer;
+
     /**
      * Adds a new file to attach.
      *
@@ -71,6 +73,16 @@ class Mail extends Component
         }
 
         return $content;
+    }
+
+    /**
+     * Get the instance of \Swift_Mailer
+     *
+     * @return \Swift_Mailer
+     */
+    public function getMailer()
+    {
+        return $this->mailer;
     }
 
     /**
@@ -130,8 +142,10 @@ class Mail extends Component
         }
 
         // Create the Mailer using your created Transport
-        $mailer = \Swift_Mailer::newInstance($this->_transport);
-        $result = $mailer->send($message);
+        $this->mailer = \Swift_Mailer::newInstance($this->_transport);
+        $result = $this->mailer->send($message);
+
+        $this->mailer->getTransport()->stop();
 
         $this->attachments = array();
 
