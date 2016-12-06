@@ -1,3 +1,11 @@
+# IMPORATNT! You should switch to branch v3.0.0
+
+We have switched to facebook/graph-sdk 5.4 !
+
+```bash
+$ composer require crada/phalcon-user-plugin:^3.0
+```
+
 # Phalcon User Plugin (v 2.0)
 
 * [About](#about)
