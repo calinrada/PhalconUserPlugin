@@ -23,7 +23,7 @@ class FacebookConnector
     {
         $this->di = $di;
         $fbConfig = $di->get('config')->pup->connectors->facebook;
-        $protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))).'://';
+        $protocol = $di->get('request')->getScheme().'://';
 
         if (isset($fbConfig['route'])) {
             $this->url = $protocol.$_SERVER['HTTP_HOST'].$fbConfig['route'];
