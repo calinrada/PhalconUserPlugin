@@ -67,7 +67,7 @@ class Auth extends Component
             $st_identity['profile_picture'] = $user->profile->getPicture();
         }
 
-        $this->session->set('auth-identity', $st_identity);
+        $this->session->set('', $st_identity);
     }
 
     /**
@@ -587,7 +587,7 @@ class Auth extends Component
      */
     public function getIdentity()
     {
-        return $this->session->get('auth-identity');
+        return $this->session->get('');
     }
 
     /**
@@ -597,7 +597,7 @@ class Auth extends Component
      */
     public function getUserName()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         return isset($identity['name']) ? $identity['name'] : false;
     }
@@ -608,7 +608,7 @@ class Auth extends Component
      */
     public function getUserId()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         return isset($identity['id']) ? $identity['id'] : false;
     }
@@ -629,7 +629,7 @@ class Auth extends Component
             $this->cookies->get('RMT')->delete();
         }
 
-        $this->session->remove('auth-identity');
+        $this->session->remove('');
         $this->session->remove('fb_'.$fbAppId.'_code');
         $this->session->remove('fb_'.$fbAppId.'_access_token');
         $this->session->remove('fb_'.$fbAppId.'_user_id');
@@ -663,7 +663,7 @@ class Auth extends Component
      */
     public function getUser()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         if (!isset($identity['id'])) {
             return false;
