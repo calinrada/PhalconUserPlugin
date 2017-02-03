@@ -67,7 +67,7 @@ class FacebookConnector
                 $response->send();
             }
 
-            $response = $this->fb->get('/me?fields=id,name,birthday,friends,email,location', $accessToken->getValue());
+            $response = $this->fb->get('/me?fields=id,name,friends,email', $accessToken->getValue());
 
             return $response->getGraphUser()->asArray();
 

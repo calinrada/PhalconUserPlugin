@@ -167,7 +167,7 @@ class Auth extends Component
             $user = $this->newUser()
                 ->setName($facebookUser['name'])
                 ->setEmail($email)
-                ->setPassword($di->get('security')->hash($password))
+                ->setPassword($this->getDI()->get('security')->hash($password))
                 ->setFacebookId($facebookUser['id'])
                 ->setFacebookName($facebookUser['name'])
                 ->setFacebookData(serialize($facebookUser));
