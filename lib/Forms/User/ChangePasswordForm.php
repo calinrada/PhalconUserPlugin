@@ -3,6 +3,7 @@
 namespace Phalcon\UserPlugin\Forms\User;
 
 use Phalcon\Forms\Form;
+use Phalcon\Forms\Element\Submit;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
@@ -57,5 +58,9 @@ class ChangePasswordForm extends Form
         ));
 
         $this->add($confirmPassword);
+
+        $this->add(new Submit('Change password', array(
+            'class' => 'btn btn-success',
+        )));
     }
 }
