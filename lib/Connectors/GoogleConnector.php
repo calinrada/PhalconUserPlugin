@@ -3,12 +3,10 @@
 namespace Phalcon\UserPlugin\Connectors;
 
 use Google_Client;
-use Google_Auth_OAuth2 as Oauth2Service;
+use Google_Service_Oauth2 as Oauth2Service;
 
 /**
  * Phalcon\UserPlugin\Connectors\GoogleConnector.
- *
- * This class is using google-api-php-client from https://github.com/Nyholm/google-api-php-client
  */
 class GoogleConnector
 {
@@ -34,7 +32,7 @@ class GoogleConnector
         $oauth2 = new Oauth2Service($client);
 
         if ($request->get('code')) {
-            $client->authenticate($request->get('code'));
+            $client->fetchAccessTokenWithAuthCode($request->get('code'));
             $session->set('googleToken', $client->getAccessToken());
             $redirect = $this->config['redirect_uri'];
 

@@ -326,7 +326,10 @@ class Auth extends Component
         $config = $di->get('config')->pup->connectors->google->toArray();
 
         $pupRedirect = $di->get('config')->pup->redirect;
-        $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
+
+        if ($config['redirect_uri'] == '') {
+            $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
+        }    
 
         $google = new GoogleConnector($config);
 
