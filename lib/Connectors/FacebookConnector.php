@@ -2,8 +2,6 @@
 
 namespace Phalcon\UserPlugin\Connectors;
 
-use \Facebook\FacebookRequest;
-
 /**
  * Phalcon\UserPlugin\Connectors\FacebookConnector.
  */
@@ -18,6 +16,8 @@ class FacebookConnector
     private $url;
 
     private $scope;
+
+    private $extra_fields;
 
     public function __construct($di, $scope)
     {
@@ -38,6 +38,11 @@ class FacebookConnector
             'app_secret' => $fbConfig->secret,
             'default_graph_version' => 'v2.8',
         ]);
+    }
+
+    public function setExtraFields(array $st_fields)
+    {
+        $this->extra_fields = $st_fields;
     }
 
     public function getLoginUrl($scope = [])
@@ -67,7 +72,20 @@ class FacebookConnector
                 $response->send();
             }
 
-            $response = $this->fb->get('/me?fields=id,name,friends,email', $accessToken->getValue());
+            $st_defaultFields = [
+                'id',
+                'name',
+                'friends',
+                'email'
+            ];
+
+            if (is_array($this->extra_fields)) {
+                $st_fields = array_merge($this->extra_fields, $st_defaultFields);
+            } else {
+                $st_fields = $st_defaultFields;
+            }
+
+            $response = $this->fb->get('/me?fields='.implode(',',$st_fields), $accessToken->getValue());
 
             return $response->getGraphUser()->asArray();
 
