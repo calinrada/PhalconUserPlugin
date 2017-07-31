@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS users (
   id                   BIGSERIAL PRIMARY KEY,
   group_id             SMALLINT REFERENCES user_groups (id),
   name                 VARCHAR(64)           DEFAULT NULL,
+  first_name           VARCHAR(32)           DEFAULT NULL,
+  last_name            VARCHAR(32)           DEFAULT NULL,
   email                VARCHAR(48)  NOT NULL,
   password             VARCHAR(128) NOT NULL,
   facebook_id          VARCHAR(20)           DEFAULT NULL,

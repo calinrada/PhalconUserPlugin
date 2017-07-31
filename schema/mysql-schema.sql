@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS `locations` (
 CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `first_name` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `last_name` varchar(32) COLLATE utf8_bin DEFAULT NULL,
   `email` varchar(48) COLLATE utf8_bin NOT NULL,
   `password` varchar(128) COLLATE utf8_bin NOT NULL,
   `facebook_id` varchar(20) COLLATE utf8_bin DEFAULT NULL,
