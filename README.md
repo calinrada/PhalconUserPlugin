@@ -20,8 +20,7 @@ $ composer require crada/phalcon-user-plugin:^3.0
 
 ### <a id="about"></a>About
 
-It is a plugin based on Vokuro ACL idea. This is an alpha version and i do not recommend you to use it in
-a production environment.
+This is a plugin based on Vokuro ACL idea.
     
 ### <a id="features"></a>Features
 
