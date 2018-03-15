@@ -166,6 +166,7 @@ CREATE TABLE IF NOT EXISTS `user_profile` (
   `picture` varchar(255) DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
   `gender` tinyint(1) DEFAULT NULL COMMENT '0=male, 1=female',
+  `description` text COLLATE utf8_bin DEFAULT NULL,
   `home_location_id` bigint(20) unsigned DEFAULT NULL,
   `current_location_id` bigint(20) unsigned DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
