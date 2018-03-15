@@ -27,6 +27,21 @@ class Locations extends \Phalcon\Mvc\Model
     /**
      * @var string
      */
+    protected $admin_area_level_1;
+
+    /**
+     * @var string
+     */
+    protected $admin_area_level_2;
+
+    /**
+     * @var string
+     */
+    protected $postal_code;
+
+    /**
+     * @var string
+     */
     protected $country;
 
     /**
@@ -106,6 +121,48 @@ class Locations extends \Phalcon\Mvc\Model
     public function setCity($city)
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field admin area level 1.
+     *
+     * @param string $admin_area_level_1
+     *
+     * @return $this
+     */
+    public function setAdminAreaLevel1($admin_area_level_1)
+    {
+        $this->admin_area_level_1 = $admin_area_level_1;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field admin area level 2.
+     *
+     * @param string $admin_area_level_2
+     *
+     * @return $this
+     */
+    public function setAdminAreaLevel2($admin_area_level_2)
+    {
+        $this->admin_area_level_2 = $admin_area_level_2;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field postal code.
+     *
+     * @param string $postal_code
+     *
+     * @return $this
+     */
+    public function setPostalCode($postal_code)
+    {
+        $this->postal_code = $postal_code;
 
         return $this;
     }
@@ -235,6 +292,36 @@ class Locations extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field admin area level 1.
+     *
+     * @return string
+     */
+    public function getAdminAreaLevel1()
+    {
+      return $this->admin_area_level_1;
+    }
+
+    /**
+     * Returns the value of field admin area level 2.
+     *
+     * @return string
+     */
+    public function getAdminAreaLevel2()
+    {
+      return $this->admin_area_level_2;
+    }
+
+    /**
+     * Returns the value of field postal code.
+     *
+     * @return string
+     */
+    public function getPostalCode()
+    {
+      return $this->postal_code;
+    }
+
+    /**
      * Returns the value of field country.
      *
      * @return string
@@ -339,5 +426,35 @@ class Locations extends \Phalcon\Mvc\Model
     public function getCustomFormattedAddress()
     {
         return $this->city.', '.$this->country;
+    }
+
+    /**
+     * Return a custom formatted address.
+     *
+     * @return string
+     */
+    public function getCustomFormattedAddressLevel1()
+    {
+        return $this->city.', '.$this->admin_area_level_1.' '.$this->postal_code.', '.$this->country;
+    }
+
+    /**
+     * Return a custom formatted address.
+     *
+     * @return string
+     */
+    public function getCustomFormattedAddressLevel2()
+    {
+        return $this->city.', '.$this->admin_area_level_2.', '.$this->admin_area_level_1.' '.$this->postal_code.', '.$this->country;
+    }
+
+    /**
+     * Return a custom formatted address.
+     *
+     * @return string
+     */
+    public function getCustomFormattedAddressAll()
+    {
+        return $this->city ?: ''.', '.$this->admin_area_level_2 ?: ''.', '.$this->admin_area_level_1 ?: ''.' '.$this->postal_code ?: ''.', '.$this->country ?: '';
     }
 }
