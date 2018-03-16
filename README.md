@@ -30,24 +30,39 @@ This is a plugin based on Vokuro ACL idea.
 
 ### <a id="installation"></a>Installation
 
-The recommended installation is via Composer. Just add the following line to your `composer.json`:
+The recommended installation is via [Composer](https://getcomposer.org/).
+
+For minor / bug releases (based on [semantic versioning](https://semver.org/)):
+```bash
+$ composer require crada/phalcon-user-plugin:^3.0.0
+```
+
+For all commits and most current version (unstable):
+```bash
+$ composer require --dev crada/phalcon-user-plugin:v3.0.0
+```
+
+For bug releases only (maximum stability):
+```bash
+$ composer require crada/phalcon-user-plugin:~3.0.0
+```
+
+Or manually by adding the following to your `composer.json`:
 
 ```json
 {
     "require": {
-        "crada/phalcon-user-plugin": "^3.0"
+        "crada/phalcon-user-plugin": "^3.0.0"
     }
 }
 ```
 
-```bash
-$ php composer.phar update
-```
-OR simply execute
+and then updating composer:
 
 ```bash
-$ composer require crada/phalcon-user-plugin:^3.0
+$ composer update
 ```
+
 
 ### <a id="plug-it"></a>Plug it
 
