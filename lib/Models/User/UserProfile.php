@@ -30,6 +30,11 @@ class UserProfile extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $gender;
+  
+    /**
+     * @var string
+     */
+    protected $description;
 
     /**
      * @var int
@@ -119,6 +124,20 @@ class UserProfile extends \Phalcon\Mvc\Model
         $this->gender = $gender;
 
         return $this;
+    }
+  
+    /**
+     * Method to set the value of field description.
+     *
+     * @param string $description
+     *
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+      $this->description = $description;
+      
+      return $this;
     }
 
     /**
@@ -225,6 +244,15 @@ class UserProfile extends \Phalcon\Mvc\Model
     public function getGender()
     {
         return $this->gender;
+    }
+  
+    /**
+     * Returns the value of field description.
+     *
+     * @return string
+     */
+    public function getDescription() {
+      return $this->description;
     }
 
     /**
