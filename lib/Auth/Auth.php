@@ -388,6 +388,7 @@ class Auth extends Component
      */
     protected function createUser($user)
     {
+        $pupRedirect = $this->getDI()->get('config')->pup->redirect;
         if (true === $user->create()) {
             $this->setIdentity($user);
             $this->saveSuccessLogin($user);
