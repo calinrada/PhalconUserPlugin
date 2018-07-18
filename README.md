@@ -93,21 +93,21 @@ use Phalcon\UserPlugin\Acl\Acl;
 use Phalcon\UserPlugin\Mail\Mail;
 
 $di->setShared(
-    'auth'
+    'auth',
     function() {
         return new Auth();
     }
 );
 
 $di->setShared(
-    'acl'
+    'acl',
     function() {
         return new Acl();
     }
 );
 
 $di->setShared(
-    'mail'
+    'mail',
     function() {
         return new Mail();
     }
