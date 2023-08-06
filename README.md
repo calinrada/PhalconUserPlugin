@@ -1,27 +1,19 @@
-# IMPORATNT! You should switch to branch v3.0.0
+# Phalcon User Plugin (v 3.0)
 
-We have switched to facebook/graph-sdk 5.4 !
-
-```bash
-$ composer require crada/phalcon-user-plugin:^3.0
-```
-
-# Phalcon User Plugin (v 2.0)
-
-* [About](#about)
-* [Features](#features)
-* [Installation](#installation)
-* [Plug it](#plug-it)
-* [Configuration](#configuration)
-* [Example controller](#example-controller)
-* [Known issues](#known-issues)
-* [Examples](#examples)
-* [TODO](#todo)
+- [About](#about)
+- [Features](#features)
+- [Installation](#installation)
+- [Plug it](#plug-it)
+- [Configuration](#configuration)
+- [Example controller](#example-controller)
+- [Known issues](#known-issues)
+- [Examples](#examples)
+- [TODO](#todo)
 
 ### <a id="about"></a>About
 
 This is a plugin based on Vokuro ACL idea.
-    
+
 ### <a id="features"></a>Features
 
 - Login / Register with Facebook account
@@ -38,18 +30,40 @@ This is a plugin based on Vokuro ACL idea.
 
 ### <a id="installation"></a>Installation
 
-The recommended installation is via Composer. Just add the following line to your `composer.json`:
+The recommended installation is via [Composer](https://getcomposer.org/).
+
+For minor / bug releases (based on [semantic versioning](https://semver.org/)):
+
+```bash
+$ composer require crada/phalcon-user-plugin:^3.0.0
+```
+
+For all commits and most current version (unstable):
+
+```bash
+$ composer require --dev crada/phalcon-user-plugin:v3.0.0
+```
+
+For bug releases only (maximum stability):
+
+```bash
+$ composer require crada/phalcon-user-plugin:~3.0.0
+```
+
+Or manually by adding the following to your `composer.json`:
 
 ```json
 {
-    "require": {
-        "crada/phalcon-user-plugin": "~2.0"
-    }
+  "require": {
+    "crada/phalcon-user-plugin": "^3.0.0"
+  }
 }
 ```
 
+and then updating composer:
+
 ```bash
-$ php composer.phar update
+$ composer update
 ```
 
 ### <a id="plug-it"></a>Plug it
@@ -128,7 +142,7 @@ controller:
 'pup' => [
     'redirect' => [
         'success' => 'user/profile',
-        'failure' => 'user/login'    
+        'failure' => 'user/login'
     ],
     'resources' => [
         'type' => 'public',
@@ -148,7 +162,7 @@ In the example bellow, the ONLY PUBLIC resources are the actions LOGIN and REGIS
 'pup' => [
     'redirect' => [
         'success' => 'user/profile',
-        'failure' => 'user/login'    
+        'failure' => 'user/login'
     ],
     'resources' => [
         'type' => 'public',
@@ -168,7 +182,7 @@ controller:
 'pup' => [
     'redirect' => [
         'success' => 'user/profile',
-        'failure' => 'user/login'    
+        'failure' => 'user/login'
     ],
     'resources' => [
         'type' => 'private',
@@ -188,7 +202,7 @@ In the example bellow, the ONLY PRIVATE resources are the actions ACCOUNT and PR
 'pup' => [
     'redirect' => [
         'success' => 'user/profile',
-        'failure' => 'user/login'    
+        'failure' => 'user/login'
     ],
     'resources' => [
         'type' => 'private',
@@ -208,7 +222,7 @@ Configuration example with connectors:
 'pup' => [
     'redirect' => [
         'success' => 'user/profile',
-        'failure' => 'user/login'    
+        'failure' => 'user/login'
     ],
     'resources' => [
         'type' => 'public',
@@ -248,7 +262,7 @@ Configuration example with connectors:
 
 ### <a id="example-controller"></a>Example controller
 
-* For a complete controller example read the Wiki page: https://github.com/calinrada/PhalconUserPlugin/wiki/Controller
+- For a complete controller example read the Wiki page: https://github.com/calinrada/PhalconUserPlugin/wiki/Controller
 
 ```php
 class UserController extends Controller
@@ -340,12 +354,13 @@ class UserController extends Controller
 ```
 
 ### <a id="known-issues"></a>Known issues
+
 - Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
 
 ### <a id="examples"></a>Examples
 
-* [Notifications](https://github.com/calinrada/PhalconUserPlugin/wiki/Notifications)
+- [Notifications](https://github.com/calinrada/PhalconUserPlugin/wiki/Notifications)
 
 ### <a id="todo"></a>TODO
-- Implement CRUD templates for ACl, UserManagement, etc
 
+- Implement CRUD templates for ACl, UserManagement, etc

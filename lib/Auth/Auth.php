@@ -67,7 +67,7 @@ class Auth extends Component
             $st_identity['profile_picture'] = $user->profile->getPicture();
         }
 
-        $this->session->set('auth-identity', $st_identity);
+        $this->session->set('', $st_identity);
     }
 
     /**
@@ -110,14 +110,15 @@ class Auth extends Component
     public function loginWithFacebook()
     {
         $di = $this->getDI();
-        $facebook = new FacebookConnector($di);
+
+        $scope = [
+            'scope' => 'email,public_profile,user_friends',
+        ];
+
+        $facebook = new FacebookConnector($di, $scope);
         $facebookUser = $facebook->getUser();
 
         if (!$facebookUser) {
-            $scope = [
-                'scope' => 'email,user_birthday,user_location',
-            ];
-
             return $this->response->redirect($facebook->getLoginUrl($scope), true);
         }
 
@@ -146,6 +147,11 @@ class Auth extends Component
             $this->checkUserFlags($user);
             $this->setIdentity($user);
             if (!$user->getFacebookId()) {
+
+                if ($email != $user->getEmail() && !preg_match('#@facebook#', $email)) {
+                    $user->setEmail($email);
+                }
+
                 $user->setFacebookId($facebookUser['id']);
                 $user->setFacebookName($facebookUser['name']);
                 $user->setFacebookData(serialize($facebookUser));
@@ -161,7 +167,7 @@ class Auth extends Component
             $user = $this->newUser()
                 ->setName($facebookUser['name'])
                 ->setEmail($email)
-                ->setPassword($this->di->get('security')->hash($password))
+                ->setPassword($this->getDI()->get('security')->hash($password))
                 ->setFacebookId($facebookUser['id'])
                 ->setFacebookName($facebookUser['name'])
                 ->setFacebookData(serialize($facebookUser));
@@ -320,7 +326,10 @@ class Auth extends Component
         $config = $di->get('config')->pup->connectors->google->toArray();
 
         $pupRedirect = $di->get('config')->pup->redirect;
-        $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
+
+        if ($config['redirect_uri'] == '') {
+            $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
+        }    
 
         $google = new GoogleConnector($config);
 
@@ -388,7 +397,6 @@ class Auth extends Component
      */
     protected function createUser($user)
     {
-        $pupRedirect = $this->getDI()->get('config')->pup->redirect;
         if (true === $user->create()) {
             $this->setIdentity($user);
             $this->saveSuccessLogin($user);
@@ -582,7 +590,7 @@ class Auth extends Component
      */
     public function getIdentity()
     {
-        return $this->session->get('auth-identity');
+        return $this->session->get('');
     }
 
     /**
@@ -592,7 +600,7 @@ class Auth extends Component
      */
     public function getUserName()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         return isset($identity['name']) ? $identity['name'] : false;
     }
@@ -603,7 +611,7 @@ class Auth extends Component
      */
     public function getUserId()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         return isset($identity['id']) ? $identity['id'] : false;
     }
@@ -624,7 +632,7 @@ class Auth extends Component
             $this->cookies->get('RMT')->delete();
         }
 
-        $this->session->remove('auth-identity');
+        $this->session->remove('');
         $this->session->remove('fb_'.$fbAppId.'_code');
         $this->session->remove('fb_'.$fbAppId.'_access_token');
         $this->session->remove('fb_'.$fbAppId.'_user_id');
@@ -658,7 +666,7 @@ class Auth extends Component
      */
     public function getUser()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get('');
 
         if (!isset($identity['id'])) {
             return false;

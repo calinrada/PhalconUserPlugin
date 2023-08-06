@@ -2,7 +2,8 @@
 
 namespace Phalcon\UserPlugin\Models\User;
 
-use Phalcon\Mvc\Model\Validator\Uniqueness;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Uniqueness;
 
 class User extends \Phalcon\Mvc\Model
 {
@@ -23,6 +24,16 @@ class User extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string
+     */
+    protected $first_name;
+
+    /**
+     * @var string
+     */
+    protected $last_name;
 
     /**
      * @var string
@@ -169,6 +180,34 @@ class User extends \Phalcon\Mvc\Model
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field first_name.
+     *
+     * @param string $first_name
+     *
+     * @return $this
+     */
+    public function setFirstName($first_name)
+    {
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field last_name.
+     *
+     * @param string $last_name
+     *
+     * @return $this
+     */
+    public function setLastName($last_name)
+    {
+        $this->last_name = $last_name;
 
         return $this;
     }
@@ -522,6 +561,26 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field first_name.
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * Returns the value of field last_name.
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->last_name;
+    }
+
+    /**
      * Returns the value of field email.
      *
      * @return string
@@ -808,14 +867,15 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
-        $this->validate(new Uniqueness(
-            array(
-                'field' => 'email',
-                'message' => 'The email is already registered',
-            )
-        ));
+        $validator = new Validation();
+        $validator->add(
+          'email',
+          new Uniqueness([
+              "message" => "The email is already registered"
+          ])
+        );
 
-        return true !== $this->validationHasFailed();
+        return $this->validate($validator);
     }
 
     /**

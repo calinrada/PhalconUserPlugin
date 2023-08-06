@@ -14,13 +14,38 @@ class Mail extends Component
 {
     protected $_transport;
 
+    protected $_message;
+
+    protected $_mailer;
+
     protected $_directSmtp = true;
 
-    protected $attachments = array();
+    protected $attachments = [];
 
-    protected $images = array();
+    protected $images = [];
 
-    protected $mailer;
+    protected $mailSettings;
+
+    /**
+     * Initialize required components
+     */
+    public function init()
+    {
+        $this->_message = \Swift_Message::newInstance();
+        $this->mailSettings = $this->config->mail;
+
+        if (!$this->_transport) {
+            $this->_transport = \Swift_SmtpTransport::newInstance(
+                    $this->mailSettings->smtp->server,
+                    $this->mailSettings->smtp->port,
+                    $this->mailSettings->smtp->security
+            )
+            ->setUsername($this->mailSettings->smtp->username)
+            ->setPassword($this->mailSettings->smtp->password);
+        }
+
+        $this->_mailer = \Swift_Mailer::newInstance($this->_transport);
+    }
 
     /**
      * Adds a new file to attach.
@@ -82,7 +107,17 @@ class Mail extends Component
      */
     public function getMailer()
     {
-        return $this->mailer;
+        return $this->_mailer;
+    }
+
+    /**
+     * Ge instance of \Swift_Message
+     *
+     * @return \Swift_Message
+     */
+    public function getMessage()
+    {
+        return $this->_message;
     }
 
     /**
@@ -97,55 +132,36 @@ class Mail extends Component
      */
     public function send($to, $subject, $name = null, $params = null, $body = null)
     {
-        // Create the message
-        $message = \Swift_Message::newInstance();
-
-        //Settings
-        $mailSettings = $this->config->mail;
-
         //Images
         if (isset($params['images'])) {
             $this->images = $params['images'];
         }
 
         if (null === $body) {
-            $template = $this->getTemplate($message, $name, $params);
+            $template = $this->getTemplate($this->_message, $name, $params);
         } else {
-            $template = $this->insertImages($message, $body);
+            $template = $this->insertImages($this->_message, $body);
         }
 
          // Setting message params
-        $message->setSubject($subject)
+        $this->_message->setSubject($subject)
             ->setTo($to)
             ->setFrom(array(
-                $mailSettings->fromEmail => $mailSettings->fromName,
+                $this->mailSettings->fromEmail => $this->mailSettings->fromName,
             ))
             ->setBody($template, 'text/html');
 
         // Check attachments to add
         foreach ($this->attachments as $file) {
-            $message->attach(\Swift_Attachment::newInstance()
+            $this->_message->attach(\Swift_Attachment::newInstance()
                 ->setBody($file['content'])
                 ->setFilename($file['name'])
                 ->setContentType($file['type'])
             );
         }
 
-        if (!$this->_transport) {
-            $this->_transport = \Swift_SmtpTransport::newInstance(
-                $mailSettings->smtp->server,
-                $mailSettings->smtp->port,
-                $mailSettings->smtp->security
-            )
-            ->setUsername($mailSettings->smtp->username)
-            ->setPassword($mailSettings->smtp->password);
-        }
-
-        // Create the Mailer using your created Transport
-        $this->mailer = \Swift_Mailer::newInstance($this->_transport);
-        $result = $this->mailer->send($message);
-
-        $this->mailer->getTransport()->stop();
+        $result = $this->_mailer->send($this->_message);
+        $this->_mailer->getTransport()->stop();
 
         $this->attachments = array();
 
