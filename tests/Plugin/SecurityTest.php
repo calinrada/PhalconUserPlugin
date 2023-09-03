@@ -13,7 +13,7 @@ class SecurityTest extends \UnitTestCase
             ->setConstructorArgs(array('test', 'test'))
             ->getMock();
 
-        $di = $this->getMockBuilder('Phalcon\DI')
+        $di = $this->getMockBuilder('Phalcon\Di\Di')
             ->setConstructorArgs(array('get'))
             ->getMock();
 
@@ -72,7 +72,7 @@ class SecurityTest extends \UnitTestCase
             ->setConstructorArgs(array('test', 'test'))
             ->getMock();
 
-        $di = $this->getMockBuilder('Phalcon\DI')
+        $di = $this->getMockBuilder('Phalcon\Di\Di')
             ->setConstructorArgs(array('get'))
             ->getMock();
 

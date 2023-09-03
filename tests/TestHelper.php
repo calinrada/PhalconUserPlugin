@@ -1,7 +1,7 @@
 <?php
 
-use Phalcon\DI;
-use Phalcon\DI\FactoryDefault;
+use Phalcon\Di\Di;
+use Phalcon\Di\FactoryDefault;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -18,14 +18,14 @@ include __DIR__.'/../vendor/autoload.php';
 
 // use the application autoloader to autoload the classes
 // autoload the dependencies found in composer
-$loader = new \Phalcon\Loader();
+$loader = new \Phalcon\Autoload\Loader();
 
-$loader->registerDirs(array(
+$loader->setDirectories(array(
     ROOT_PATH,
     LIBRARY_PATH,
 ));
 
-$loader->registerNamespaces(array(
+$loader->setNamespaces(array(
     'Phalcon\UserPlugin' => LIBRARY_PATH,
 ));
 

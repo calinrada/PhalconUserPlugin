@@ -338,6 +338,8 @@ class UserController extends Controller
 ### <a id="known-issues"></a>Known issues
 
 - Twitter does not provide us the email. We are generating a random email for the user. It is your choice how you handle this
+- Facebook lib has no php8 support so it has been removed, login with facebook has been deleted
+- Phalcon/incubator has no phalcon5 support, so there will be workarounds
 
 ### <a id="examples"></a>Examples
 

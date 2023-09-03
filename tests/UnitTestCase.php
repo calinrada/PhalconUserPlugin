@@ -1,6 +1,6 @@
 <?php
 
-use Phalcon\DI;
+use Phalcon\Di\Di;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
 
 abstract class UnitTestCase extends PhalconTestCase

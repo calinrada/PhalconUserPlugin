@@ -28,7 +28,6 @@
         "phalcon/devtools": ">=5.0"
     },
     "autoload": {
-        "files": ["lib/swift_required.php"],
         "psr-4": { "Phalcon\\UserPlugin\\": "lib/" }
     },
     "scripts": {
