@@ -7,6 +7,8 @@ class Db extends \Phalcon\Di\Injectable
     public static function migrate()
     {
         try {
+            // @TODO upgrade phalcon db class and methods
+
             /* $db = \Phalcon\DI::getDefault()->get('db');
             $db->execute('ALTER TABLE `user_email_confirmations` CHANGE  `modified_at`  `updated_at` DATETIME NULL DEFAULT NULL ;');
             $db->execute('ALTER TABLE `user` DROP COLUMN profile_id ;');

@@ -46,21 +46,6 @@ class User extends \Phalcon\Mvc\Model
     protected $password;
 
     /**
-     * @var string
-     */
-    protected $facebook_id;
-
-    /**
-     * @var string
-     */
-    protected $facebook_name;
-
-    /**
-     * @var string
-     */
-    protected $facebook_data;
-
-    /**
      * @var int
      */
     protected $linkedin_id;
@@ -236,48 +221,6 @@ class User extends \Phalcon\Mvc\Model
     public function setPassword($password)
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field facebook_id.
-     *
-     * @param string $facebook_id
-     *
-     * @return $this
-     */
-    public function setFacebookId($facebook_id)
-    {
-        $this->facebook_id = $facebook_id;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field facebook_name.
-     *
-     * @param string $facebook_name
-     *
-     * @return $this
-     */
-    public function setFacebookName($facebook_name)
-    {
-        $this->facebook_name = $facebook_name;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field facebook_data.
-     *
-     * @param string $facebook_data
-     *
-     * @return $this
-     */
-    public function setFacebookData($facebook_data)
-    {
-        $this->facebook_data = $facebook_data;
 
         return $this;
     }
@@ -598,36 +541,6 @@ class User extends \Phalcon\Mvc\Model
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     * Returns the value of field facebook_id.
-     *
-     * @return string
-     */
-    public function getFacebookId()
-    {
-        return $this->facebook_id;
-    }
-
-    /**
-     * Returns the value of field facebook_name.
-     *
-     * @return string
-     */
-    public function getFacebookName()
-    {
-        return $this->facebook_name;
-    }
-
-    /**
-     * Returns the value of field facebook_data.
-     *
-     * @return string
-     */
-    public function getFacebookData()
-    {
-        return $this->facebook_data;
     }
 
     /**
