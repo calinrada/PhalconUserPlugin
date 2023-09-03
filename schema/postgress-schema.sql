@@ -38,9 +38,6 @@ CREATE TABLE IF NOT EXISTS users (
   last_name            VARCHAR(32)           DEFAULT NULL,
   email                VARCHAR(48)  NOT NULL,
   password             VARCHAR(128) NOT NULL,
-  facebook_id          VARCHAR(20)           DEFAULT NULL,
-  facebook_name        VARCHAR(64)           DEFAULT NULL,
-  facebook_data        TEXT,
   linkedin_id          BIGINT                DEFAULT NULL,
   linkedin_name        VARCHAR(64)           DEFAULT NULL,
   linkedin_data        TEXT,
@@ -194,7 +191,6 @@ CREATE TABLE IF NOT EXISTS user_success_logins (
 ) WITHOUT OIDS;
 
 DROP INDEX IF EXISTS idx_city_country_formatted_address;
-DROP INDEX IF EXISTS idx_facebook_id;
 DROP INDEX IF EXISTS idx_linkedin_id;
 DROP INDEX IF EXISTS idx_gplus_id;
 DROP INDEX IF EXISTS idx_name;
@@ -202,7 +198,6 @@ DROP INDEX IF EXISTS idx_active;
 DROP INDEX IF EXISTS idx_token;
 
 CREATE INDEX idx_city_country_formatted_address ON locations (city, country, formatted_address);
-CREATE INDEX idx_facebook_id ON users (facebook_id, facebook_name);
 CREATE INDEX idx_linkedin_id ON users (linkedin_id, linkedin_name);
 CREATE INDEX idx_gplus_id ON users (gplus_id, gplus_name, twitter_id, twitter_name);
 CREATE INDEX idx_name ON users (name);

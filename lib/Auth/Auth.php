@@ -8,7 +8,6 @@ use Phalcon\UserPlugin\Models\User\UserRememberTokens;
 use Phalcon\UserPlugin\Models\User\UserSuccessLogins;
 use Phalcon\UserPlugin\Models\User\UserFailedLogins;
 use Phalcon\UserPlugin\Connectors\LinkedInConnector;
-use Phalcon\UserPlugin\Connectors\FacebookConnector;
 use Phalcon\UserPlugin\Connectors\GoogleConnector;
 use Phalcon\UserPlugin\Connectors\TwitterConnector;
 use Phalcon\UserPlugin\Models\User\UserProfile;
@@ -102,78 +101,6 @@ class Auth extends Component
         }
 
         return false;
-    }
-
-    /**
-     * Login with facebook account.
-     */
-    public function loginWithFacebook()
-    {
-        $di = $this->getDI();
-
-        $scope = [
-            'scope' => 'email,public_profile,user_friends',
-        ];
-
-        $facebook = new FacebookConnector($di, $scope);
-        $facebookUser = $facebook->getUser();
-
-        if (!$facebookUser) {
-            return $this->response->redirect($facebook->getLoginUrl($scope), true);
-        }
-
-        try {
-            return $this->authenticateOrCreateFacebookUser($facebookUser);
-        } catch (\FacebookApiException $e) {
-            $di->logger->begin();
-            $di->logger->error($e->getMessage());
-            $di->logger->commit();
-            $facebookUser = null;
-        }
-    }
-
-    /**
-     * Authenitcate or create a user with a Facebook account.
-     *
-     * @param array $facebookUser
-     */
-    protected function authenticateOrCreateFacebookUser($facebookUser)
-    {
-        $pupRedirect = $this->di->get('config')->pup->redirect;
-        $email = isset($facebookUser['email']) ? $facebookUser['email'] : "{$facebookUser['id']}@facebook.com";
-        $user = User::findFirst(" email='$email' OR facebook_id='".$facebookUser['id']."' ");
-
-        if ($user) {
-            $this->checkUserFlags($user);
-            $this->setIdentity($user);
-            if (!$user->getFacebookId()) {
-
-                if ($email != $user->getEmail() && !preg_match('#@facebook#', $email)) {
-                    $user->setEmail($email);
-                }
-
-                $user->setFacebookId($facebookUser['id']);
-                $user->setFacebookName($facebookUser['name']);
-                $user->setFacebookData(serialize($facebookUser));
-                $user->update();
-            }
-
-            $this->saveSuccessLogin($user);
-
-            return $this->response->redirect($pupRedirect->success);
-        } else {
-            $password = $this->generatePassword();
-
-            $user = $this->newUser()
-                ->setName($facebookUser['name'])
-                ->setEmail($email)
-                ->setPassword($this->getDI()->get('security')->hash($password))
-                ->setFacebookId($facebookUser['id'])
-                ->setFacebookName($facebookUser['name'])
-                ->setFacebookData(serialize($facebookUser));
-
-            return $this->createUser($user);
-        }
     }
 
     /**
@@ -622,7 +549,6 @@ class Auth extends Component
     public function remove()
     {
         $pupConfig = $this->getDI()->get('config')->pup;
-        $fbAppId = $pupConfig->connectors->facebook->appId;
 
         if ($this->cookies->has('RMU')) {
             $this->cookies->get('RMU')->delete();
@@ -633,9 +559,6 @@ class Auth extends Component
         }
 
         $this->session->remove('');
-        $this->session->remove('fb_'.$fbAppId.'_code');
-        $this->session->remove('fb_'.$fbAppId.'_access_token');
-        $this->session->remove('fb_'.$fbAppId.'_user_id');
         $this->session->remove('googleToken');
         $this->session->remove('linkedIn_token');
         $this->session->remove('linkedIn_token_expires_on');
