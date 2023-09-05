@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./TestHelper.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         verbose="true"
-         colors="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="true">
+    <phpunit bootstrap="./TestHelper.php"
+        backupGlobals="false"
+        colors="false"
+        processIsolation="false"
+        stopOnFailure="false"
+    >
     <testsuite name="UserPlugin - Testsuite">
         <directory>./</directory>
     </testsuite>
