@@ -2,8 +2,10 @@
 
 namespace Phalcon\UserPlugin\Mail;
 
-use Phalcon\Mvc\User\Component;
+use Phalcon\Di\Injectable as Component;
 use Phalcon\Mvc\View;
+
+// @TODO Upgrade to Symfony Mailer
 
 /**
  * Phalcon\UserPlugin\Mail\Mail.

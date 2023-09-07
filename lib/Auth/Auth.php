@@ -2,7 +2,7 @@
 
 namespace Phalcon\UserPlugin\Auth;
 
-use Phalcon\Mvc\User\Component;
+use Phalcon\Di\Injectable as Component;
 use Phalcon\UserPlugin\Models\User\User;
 use Phalcon\UserPlugin\Models\User\UserRememberTokens;
 use Phalcon\UserPlugin\Models\User\UserSuccessLogins;

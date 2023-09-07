@@ -2,7 +2,7 @@
 
 class SecurityTest extends \UnitTestCase
 {
-    public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config $config = null)
+    public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config\Config $config = null): void
     {
         parent::setUp($di, $config);
     }
@@ -10,7 +10,7 @@ class SecurityTest extends \UnitTestCase
     public function testBeforeDispatchLoopRedirect()
     {
         $event = $this->getMockBuilder('Phalcon\Events\Event')
-            ->setConstructorArgs(array('test', 'test'))
+            ->setConstructorArgs(array('test', new stdClass()))
             ->getMock();
 
         $di = $this->getMockBuilder('Phalcon\Di\Di')
@@ -23,33 +23,33 @@ class SecurityTest extends \UnitTestCase
             ->will($this->returnValue($this->getConfig()));
 
         $dispatcher = $this->getMockBuilder('Phalcon\Mvc\Dispatcher')
-            ->setMethods(array('getDI', 'getActionName', 'getControllerName'))
+            ->onlyMethods(array('getDI', 'getActionName', 'getControllerName'))
             ->getMock();
 
         $dispatcher->expects($this->any())
             ->method('getDI')
             ->will($this->returnValue($di));
 
-        $dispatcher->expects($this->at(1))
+        $dispatcher->expects($this->any())
             ->method('getActionName')
             ->will($this->returnValue('login'));
 
-        $dispatcher->expects($this->at(2))
+        $dispatcher->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue('user'));
 
         $auth = $this->getMockBuilder('Phalcon\UserPlugin\Auth\Auth')
-            ->setMethods(array('hasRememberMe', 'loginWithRememberMe', 'isUserSignedIn', 'getIdentity'))
+            ->onlyMethods(array('hasRememberMe', 'loginWithRememberMe', 'isUserSignedIn', 'getIdentity'))
             ->getMock();
 
-        $auth->expects($this->at(0))
+        $auth->expects($this->any())
             ->method('hasRememberMe')
             ->will($this->returnValue(true));
 
         $auth->expects($spy = $this->any())
             ->method('loginWithRememberMe');
 
-        $auth->expects($this->at(2))
+        $auth->expects($this->any())
             ->method('isUserSignedIn')
             ->will($this->returnValue(true));
 
@@ -69,7 +69,7 @@ class SecurityTest extends \UnitTestCase
     public function testBeforeDispatchLoopFail()
     {
         $event = $this->getMockBuilder('Phalcon\Events\Event')
-            ->setConstructorArgs(array('test', 'test'))
+            ->setConstructorArgs(array('test', new stdClass()))
             ->getMock();
 
         $di = $this->getMockBuilder('Phalcon\Di\Di')
@@ -82,39 +82,39 @@ class SecurityTest extends \UnitTestCase
             ->will($this->returnValue($this->getConfig()));
 
         $dispatcher = $this->getMockBuilder('Phalcon\Mvc\Dispatcher')
-            ->setMethods(array('getDI', 'getActionName', 'getControllerName'))
+            ->onlyMethods(array('getDI', 'getActionName', 'getControllerName'))
             ->getMock();
 
         $dispatcher->expects($this->any())
             ->method('getDI')
             ->will($this->returnValue($di));
 
-        $dispatcher->expects($this->at(1))
+        $dispatcher->expects($this->any())
             ->method('getActionName')
             ->will($this->returnValue('notLogin'));
 
-        $dispatcher->expects($this->at(2))
+        $dispatcher->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue('notUser'));
 
         $auth = $this->getMockBuilder('Phalcon\UserPlugin\Auth\Auth')
-            ->setMethods(array('hasRememberMe', 'isUserSignedIn', 'getIdentity'))
+            ->onlyMethods(array('hasRememberMe', 'isUserSignedIn', 'getIdentity'))
             ->getMock();
 
-        $auth->expects($this->at(0))
+        $auth->expects($this->any())
             ->method('hasRememberMe')
             ->will($this->returnValue(false));
 
-        $auth->expects($this->at(1))
+        $auth->expects($this->any())
             ->method('isUserSignedIn')
             ->will($this->returnValue(false));
 
-        $auth->expects($this->at(2))
+        $auth->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue('notArray'));
 
         $view = $this->getMockBuilder('Phalcon\Mvc\View')
-            ->setMethods(array('disable'))
+            ->onlyMethods(array('disable'))
             ->getMock();
 
         $view->expects($spy = $this->any())
@@ -138,8 +138,8 @@ class SecurityTest extends \UnitTestCase
     public function testNeedsIdentity()
     {
         $dispatcher = $this->getMockBuilder('Phalcon\Mvc\Dispatcher')
-            ->setConstructorArgs(array('getActionName', 'getControllerName'))
             ->getMock();
+            //->setConstructorArgs(array('getActionName', 'getControllerName'))
 
         $dispatcher->expects($this->any())
             ->method('getActionName')
@@ -211,9 +211,13 @@ class SecurityTest extends \UnitTestCase
      */
     public function testGetConfigStructureEmptyConfig()
     {
-        $config = new Phalcon\Config();
+        $config = new Phalcon\Config\Config();
         $security = new Phalcon\UserPlugin\Plugin\Security();
-        $this->invokeMethod($security, 'getConfigStructure', array($config));
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
+
+        $this->expectException(Phalcon\UserPlugin\Exception\UserPluginException::class);
+        $this->expectExceptionMessageMatches('/Configuration error: I couldn\'t find the configuration key "pup"/');
+        $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher));
     }
 
     /**
@@ -227,7 +231,11 @@ class SecurityTest extends \UnitTestCase
         $config = $this->getConfig();
         unset($config->pup->resources->type);
         $security = new Phalcon\UserPlugin\Plugin\Security();
-        $this->invokeMethod($security, 'getConfigStructure', array($config));
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
+
+        $this->expectException(Phalcon\UserPlugin\Exception\UserPluginException::class);
+        $this->expectExceptionMessageMatches('/Wrong configuration for key "type" or the key does not exists/');
+        $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher));
     }
 
     /**
@@ -241,7 +249,11 @@ class SecurityTest extends \UnitTestCase
         $config = $this->getConfig();
         $config->pup->resources->type = 'NotInArray';
         $security = new Phalcon\UserPlugin\Plugin\Security();
-        $this->invokeMethod($security, 'getConfigStructure', array($config));
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
+
+        $this->expectException(Phalcon\UserPlugin\Exception\UserPluginException::class);
+        $this->expectExceptionMessageMatches('/Wrong configuration for key "type" or the key does not exists/');
+        $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher));
     }
 
     /**
@@ -255,7 +267,11 @@ class SecurityTest extends \UnitTestCase
         $config = $this->getConfig();
         unset($config->pup->resources->resources);
         $security = new Phalcon\UserPlugin\Plugin\Security();
-        $this->invokeMethod($security, 'getConfigStructure', array($config));
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
+
+        $this->expectException(Phalcon\UserPlugin\Exception\UserPluginException::class);
+        $this->expectExceptionMessageMatches('/Resources key must be an array/');
+        $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher));
     }
 
     /**
@@ -269,7 +285,11 @@ class SecurityTest extends \UnitTestCase
         $config = $this->getConfig();
         $config->pup->resources->resources = 'NoSuchResource';
         $security = new Phalcon\UserPlugin\Plugin\Security();
-        $this->invokeMethod($security, 'getConfigStructure', array($config));
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
+
+        $this->expectException(Phalcon\UserPlugin\Exception\UserPluginException::class);
+        $this->expectExceptionMessageMatches('/Resources key must be an array/');
+        $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher));
     }
 
     /**
@@ -281,6 +301,7 @@ class SecurityTest extends \UnitTestCase
     {
         $config = $this->getConfig();
         $security = new Phalcon\UserPlugin\Plugin\Security();
+        $dispatcher = new Phalcon\Mvc\Dispatcher();
 
         $matchConfig = array(
             'type' => 'private',
@@ -288,15 +309,15 @@ class SecurityTest extends \UnitTestCase
                 'user' => array('login', 'logout', 'register'),
             ),
         );
-        $this->assertEquals($matchConfig, $this->invokeMethod($security, 'getConfigStructure', array($config)));
+        $this->assertEquals($matchConfig, $this->invokeMethod($security, 'getConfigStructure', array($config, $dispatcher)));
     }
 
     /**
-     * @return \Phalcon\Config
+     * @return \Phalcon\Config\Config
      */
-    private function getConfig()
+    public function getConfig()
     {
-        $config = new \Phalcon\Config(array(
+        $config = new \Phalcon\Config\Config(array(
             'pup' => array(
                 'redirect' => array(
                     'success' => 'user/profile',

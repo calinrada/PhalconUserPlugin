@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 
 define('ROOT_PATH', __DIR__);
 define('LIBRARY_PATH', __DIR__.'/../lib/');
+define('LIBRARY_PLUGIN_PATH', __DIR__.'/../lib/Plugin');
 define('INCUBATOR_PATH', __DIR__.'/../incubator/'); // workaround until incubator gets updated
 
 set_include_path(
@@ -28,6 +29,7 @@ $loader->setDirectories(array(
 
 $loader->setNamespaces(array(
     'Phalcon\UserPlugin' => LIBRARY_PATH,
+    'Phalcon\UserPlugin\Plugin' => LIBRARY_PLUGIN_PATH,
     'Phalcon\Incubator\Test' => INCUBATOR_PATH
 ));
 

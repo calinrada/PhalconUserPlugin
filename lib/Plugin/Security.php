@@ -2,12 +2,12 @@
 
 namespace Phalcon\UserPlugin\Plugin;
 
-use Phalcon\Events\Event;
-use Phalcon\Config;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\User\Plugin;
-use Phalcon\UserPlugin\Auth\Auth;
 use Phalcon\Mvc\View;
+use Phalcon\Events\Event;
+use Phalcon\Config\Config;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\UserPlugin\Auth\Auth;
+use Phalcon\Di\Injectable as Plugin;
 use Phalcon\UserPlugin\Exception\UserPluginException as Exception;
 
 /**
@@ -200,10 +200,10 @@ class Security extends Plugin
     /**
      * Get the configuration structure for the plugin.
      *
-     * @param \Phalcon\Config $config
-     * @param Dispatcher      $dispatcher
+     * @param \Phalcon\Config\Config    $config
+     * @param Dispatcher                $dispatcher
      *
-     * @return \Phalcon\Config
+     * @return \Phalcon\Config\Config
      *
      * @throws Exception
      */

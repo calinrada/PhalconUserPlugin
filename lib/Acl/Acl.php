@@ -2,10 +2,10 @@
 
 namespace Phalcon\UserPlugin\Acl;
 
-use Phalcon\Mvc\User\Component;
+use Phalcon\Di\Injectable as Component;
 use Phalcon\Acl\Adapter\Memory as AclAdapter;
 use Phalcon\Acl\Role as AclRole;
-use Phalcon\Acl\Resource as AclResource;
+use Phalcon\Acl\Component as AclResource;
 use Phalcon\UserPlugin\Models\User\User;
 use Phalcon\UserPlugin\Models\User\UserGroups;
 
