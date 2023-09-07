@@ -348,3 +348,5 @@ class UserController extends Controller
 ### <a id="todo"></a>TODO
 
 - Implement CRUD templates for ACl, UserManagement, etc
+- Update Swift Mailer to Symfony Mailer
+- Fix failing test for testBeforeDispatchLoopRedirect and testBeforeDispatchLoopFail
